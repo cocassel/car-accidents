@@ -85,7 +85,14 @@ data = data[data$V_TYPE != "NN",]
 # data cleaning: V_YEAR
 data = data[data$V_YEAR != "NNNN",] 
 data = data[data$V_YEAR != "UUUU",] 
-data = data[data$V_YEAR != "QQQQ",] 
+data = data[data$V_YEAR != "QQQQ",]
+data$V_YEAR = as.numeric(data$V_YEAR)
+data$V_YEAR[data$V_YEAR > 1899 & data$V_YEAR <= 1950] = 1
+data$V_YEAR[data$V_YEAR > 1950 & data$V_YEAR <= 1980] = 11
+data$V_YEAR[data$V_YEAR > 1980 & data$V_YEAR <= 1990] = 21
+data$V_YEAR[data$V_YEAR > 1990 & data$V_YEAR <= 2000] = 31
+data$V_YEAR[data$V_YEAR > 2000 & data$V_YEAR <= 2010] = 41
+data$V_YEAR[data$V_YEAR > 2010] = 51
 
 # data cleaning: P_ID
 data = data[data$P_ID != "NN",]
@@ -169,7 +176,7 @@ nrow(dataTest)
 severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
-summary(severeLog)
+summary(severeLog1)
 
 
 # Model 2: Collison Info
@@ -177,21 +184,21 @@ summary(severeLog)
 severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                   C_RSUR + C_RALN + C_TRAF, 
                 data = dataTrain, family = binomial(link = "logit")) 
-summary(severeLog)
+summary(severeLog2)
 
 
 # Model 3: Vehicle Info
 # V_ID is a sequence number, so it is not included 
 severeLog3 = glm(P_ISEV ~  V_TYPE + V_YEAR, 
                 data = dataTrain, family = binomial(link = "logit")) 
-summary(severeLog)
+summary(severeLog3)
 
 
 # Model 4: Person Info
 # P_ID is a sequence number, so it is not included
 severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
-summary(severeLog)
+summary(severeLog4)
 
 
 # Get the number of injured vs not
