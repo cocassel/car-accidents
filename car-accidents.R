@@ -43,6 +43,12 @@ data = data[data$C_HOUR != "XX",]
 # data cleaning: C_VEHS
 data = data[data$C_VEHS != "UU",]
 data = data[data$C_VEHS != "XX",]
+# Make vehicle collided-group categories rather than usually indidvidual number of cars in collision
+data$C_VEHS = as.numeric(data$C_VEHS)
+data$C_VEHS[data$C_VEHS > 1 & data$C_VEHS <= 5] = 2
+data$C_VEHS[data$C_VEHS > 5 & data$C_VEHS <= 25] = 3
+data$C_VEHS[data$C_VEHS > 25 & data$C_VEHS <= 98] = 4
+data$C_VEHS[data$C_VEHS > 99] = 5
 
 # data cleaning: C_CONF
 data = data[data$C_CONF != "QQ",]
@@ -90,6 +96,7 @@ data = data[data$V_TYPE != "NN",]
 data = data[data$V_YEAR != "NNNN",] 
 data = data[data$V_YEAR != "UUUU",] 
 data = data[data$V_YEAR != "QQQQ",]
+# Make vehicle year-group categories rather than usually indidvidual years
 data$V_YEAR = as.numeric(as.character(data$V_YEAR))
 data$V_YEAR[data$V_YEAR > 1900 & data$V_YEAR <= 1950] = 1901
 data$V_YEAR[data$V_YEAR > 1950 & data$V_YEAR <= 1980] = 1951
