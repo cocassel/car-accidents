@@ -160,7 +160,7 @@ dataTest = subset(data, split == FALSE)  # Observations to be put in the testing
 nrow(dataTrain)
 nrow(dataTest)
 
-# --------------------------------------------- MODELS --------------------------------------------------
+# --------------------------------------------- BUILDING MODELS --------------------------------------------------
 
 # Model 1: All variables
 # C_SEV is not included because the severity of the crash should not be used to predict the severity of a person in the crash
@@ -169,29 +169,39 @@ nrow(dataTest)
 severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
-summary(severeLog)
+summary(severeLog1)
 
+severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
+                   C_RSUR + C_RALN + C_TRAF + V_TYPE + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
+                 data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog1)
 
 # Model 2: Collison Info
 # C_SEV is not included because the severity of the crash should not be used to predict the severity of a person in the crash
 severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                   C_RSUR + C_RALN + C_TRAF, 
                 data = dataTrain, family = binomial(link = "logit")) 
-summary(severeLog)
+summary(severeLog2)
 
 
 # Model 3: Vehicle Info
 # V_ID is a sequence number, so it is not included 
 severeLog3 = glm(P_ISEV ~  V_TYPE + V_YEAR, 
                 data = dataTrain, family = binomial(link = "logit")) 
-summary(severeLog)
+summary(severeLog3)
 
 
 # Model 4: Person Info
 # P_ID is a sequence number, so it is not included
 severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
-summary(severeLog)
+summary(severeLog4)
+
+
+
+# --------------------------------------------- FINAL MODELS --------------------------------------------------
+
+
 
 
 # Get the number of injured vs not
@@ -206,11 +216,11 @@ if(injuredFreq$Freq[2] > injuredFreq$Freq[1]) {
 }
 
 predictTrain = predict(severeLog1, type = "response") 
-trainConfMatrix = table(dataTrain$P_ISEV, predictTrain>0.6)
+trainConfMatrix = table(dataTrain$P_ISEV, predictTrain>0.5)
 trainConfMatrix
 trainConfMatrix = as.data.frame(trainConfMatrix)
 
 predictTest = predict(severeLog1, type = "response", newdata = dataTest)
-testConfMatrix = table(dataTest$P_ISEV, predictTest>0.6) 
+testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
