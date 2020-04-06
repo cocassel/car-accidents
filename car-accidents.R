@@ -19,7 +19,7 @@ data=read.csv("data.csv")
 data = data[data$P_ISEV != "N",]
 data = data[data$P_ISEV != "U",]
 data = data[data$P_ISEV != "X",]
-data$P_ISEV = as.numeric(data$P_ISEV)
+data$P_ISEV = as.numeric(as.character(data$P_ISEV))
 # Since what we want to classify is injured vs not, use 0s for non-injured and 1s for injured and fatalities
 data$P_ISEV[data$P_ISEV == 1 ] = 0
 data$P_ISEV[data$P_ISEV == 2 | data$P_ISEV == 3] = 1
@@ -48,6 +48,10 @@ data = data[data$C_VEHS != "XX",]
 data = data[data$C_CONF != "QQ",]
 data = data[data$C_CONF != "UU",]
 data = data[data$C_CONF != "XX",]
+data$C_CONF = as.numeric(as.character(data$C_CONF))
+data$C_CONF[data$C_CONF >= 1 & data$C_CONF <= 6] = 1
+data$C_CONF[data$C_CONF >= 21 & data$C_CONF <= 25] = 21
+data$C_CONF[data$C_CONF >= 31 & data$C_CONF <= 36] = 31
 
 # data cleaning: C_RCFG
 data = data[data$C_RCFG !=  "QQ",]
@@ -86,13 +90,13 @@ data = data[data$V_TYPE != "NN",]
 data = data[data$V_YEAR != "NNNN",] 
 data = data[data$V_YEAR != "UUUU",] 
 data = data[data$V_YEAR != "QQQQ",]
-data$V_YEAR = as.numeric(data$V_YEAR)
-data$V_YEAR[data$V_YEAR > 1899 & data$V_YEAR <= 1950] = 1
-data$V_YEAR[data$V_YEAR > 1950 & data$V_YEAR <= 1980] = 11
-data$V_YEAR[data$V_YEAR > 1980 & data$V_YEAR <= 1990] = 21
-data$V_YEAR[data$V_YEAR > 1990 & data$V_YEAR <= 2000] = 31
-data$V_YEAR[data$V_YEAR > 2000 & data$V_YEAR <= 2010] = 41
-data$V_YEAR[data$V_YEAR > 2010] = 51
+data$V_YEAR = as.numeric(as.character(data$V_YEAR))
+data$V_YEAR[data$V_YEAR > 1900 & data$V_YEAR <= 1950] = 1901
+data$V_YEAR[data$V_YEAR > 1950 & data$V_YEAR <= 1980] = 1951
+data$V_YEAR[data$V_YEAR > 1980 & data$V_YEAR <= 1990] = 1981
+data$V_YEAR[data$V_YEAR > 1990 & data$V_YEAR <= 2000] = 1991
+data$V_YEAR[data$V_YEAR > 2000 & data$V_YEAR <= 2010] = 2001
+data$V_YEAR[data$V_YEAR > 2010] = 2011
 
 # data cleaning: P_ID
 data = data[data$P_ID != "NN",]
@@ -103,7 +107,7 @@ data = data[data$P_AGE != "NN",]
 data = data[data$P_AGE != "UU",]
 data = data[data$P_AGE != "XX",]
 # Make age-group categories rather than usually indidvidual ages
-data$P_AGE = as.numeric(data$P_AGE)
+data$P_AGE = as.numeric(as.character(data$P_AGE))
 data$P_AGE[data$P_AGE > 0 & data$P_AGE <= 10] = 1
 data$P_AGE[data$P_AGE > 10 & data$P_AGE <= 20] = 11
 data$P_AGE[data$P_AGE > 20 & data$P_AGE <= 30] = 21
@@ -114,7 +118,6 @@ data$P_AGE[data$P_AGE > 60 & data$P_AGE <= 70] = 61
 data$P_AGE[data$P_AGE > 70 & data$P_AGE <= 80] = 71
 data$P_AGE[data$P_AGE > 80 & data$P_AGE <= 90] = 81
 data$P_AGE[data$P_AGE > 90] = 91
-
 
 # data cleaning: P_PSN
 data = data[data$P_PSN != "NN",]
@@ -141,6 +144,7 @@ data = read.csv("cleanedData.csv")
 # Treat all data as categorical, not numerical
 data$P_ISEV = as.factor(data$P_ISEV)
 data$P_SEX = as.factor(data$P_SEX)
+data$C_YEAR = as.factor(data$C_YEAR)
 data$C_MNTH = as.factor(data$C_MNTH)
 data$C_WDAY = as.factor(data$C_WDAY)
 data$C_HOUR = as.factor(data$C_HOUR)
@@ -178,11 +182,6 @@ severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF +
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog1)
 
-severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
-                   C_RSUR + C_RALN + C_TRAF + V_TYPE + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
-                 data = dataTrain, family = binomial(link = "logit")) 
-summary(severeLog1)
-
 # Model 2: Collison Info
 # C_SEV is not included because the severity of the crash should not be used to predict the severity of a person in the crash
 severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
@@ -203,15 +202,9 @@ summary(severeLog3)
 severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog4)
-<<<<<<< HEAD
-
 
 
 # --------------------------------------------- FINAL MODELS --------------------------------------------------
-
-
-=======
->>>>>>> 67230f04bda1ac35f06ffcc00e27d7c87346a041
 
 
 # Get the number of injured vs not
