@@ -145,13 +145,32 @@ dataTest = subset(data, split == FALSE)  # Observations to be put in the testing
 nrow(dataTrain)
 nrow(dataTest)
 
+####Model(s)
 # C_SEV is not included because the severity of the crash should not be used to predict the severity of a person in the crash
 # V_ID is a sequence number, so it is not included 
 # P_ID is a sequence number, so it is not included
+# Model 1
 severeLog = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog)
+
+# Model 2: Collison Info
+severeLog = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
+                  C_RSUR + C_RALN + C_TRAF, 
+                data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog)
+
+# Model 3: Vehicle Info
+severeLog = glm(P_ISEV ~  V_TYPE + V_YEAR, 
+                data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog)
+
+# Model 4: Person Info
+severeLog = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
+                data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog)
+
 
 # Get the number of injured vs not
 injuredFreq = as.data.frame(table(data$P_ISEV))
