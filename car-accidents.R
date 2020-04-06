@@ -85,7 +85,14 @@ data = data[data$V_TYPE != "NN",]
 # data cleaning: V_YEAR
 data = data[data$V_YEAR != "NNNN",] 
 data = data[data$V_YEAR != "UUUU",] 
-data = data[data$V_YEAR != "QQQQ",] 
+data = data[data$V_YEAR != "QQQQ",]
+data$V_YEAR = as.numeric(data$V_YEAR)
+data$V_YEAR[data$V_YEAR > 1899 & data$V_YEAR <= 1950] = 1
+data$V_YEAR[data$V_YEAR > 1950 & data$V_YEAR <= 1980] = 11
+data$V_YEAR[data$V_YEAR > 1980 & data$V_YEAR <= 1990] = 21
+data$V_YEAR[data$V_YEAR > 1990 & data$V_YEAR <= 2000] = 31
+data$V_YEAR[data$V_YEAR > 2000 & data$V_YEAR <= 2010] = 41
+data$V_YEAR[data$V_YEAR > 2010] = 51
 
 # data cleaning: P_ID
 data = data[data$P_ID != "NN",]
@@ -196,12 +203,15 @@ summary(severeLog3)
 severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog4)
+<<<<<<< HEAD
 
 
 
 # --------------------------------------------- FINAL MODELS --------------------------------------------------
 
 
+=======
+>>>>>>> 67230f04bda1ac35f06ffcc00e27d7c87346a041
 
 
 # Get the number of injured vs not
