@@ -131,6 +131,7 @@ write.csv(data, "cleanedData.csv")
 
 # Read in CSV
 data = read.csv("cleanedData.csv")
+# Treat all data as categorical, not numerical
 data$P_ISEV = as.factor(data$P_ISEV)
 data$P_SEX = as.factor(data$P_SEX)
 data$C_MNTH = as.factor(data$C_MNTH)
@@ -159,28 +160,35 @@ dataTest = subset(data, split == FALSE)  # Observations to be put in the testing
 nrow(dataTrain)
 nrow(dataTest)
 
-####Model(s)
+# --------------------------------------------- MODELS --------------------------------------------------
+
+# Model 1: All variables
 # C_SEV is not included because the severity of the crash should not be used to predict the severity of a person in the crash
 # V_ID is a sequence number, so it is not included 
 # P_ID is a sequence number, so it is not included
-# Model 1
 severeLog = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog)
 
+
 # Model 2: Collison Info
+# C_SEV is not included because the severity of the crash should not be used to predict the severity of a person in the crash
 severeLog = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                   C_RSUR + C_RALN + C_TRAF, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog)
 
+
 # Model 3: Vehicle Info
+# V_ID is a sequence number, so it is not included 
 severeLog = glm(P_ISEV ~  V_TYPE + V_YEAR, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog)
 
+
 # Model 4: Person Info
+# P_ID is a sequence number, so it is not included
 severeLog = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog)
