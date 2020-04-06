@@ -128,7 +128,9 @@ data$P_USER = as.factor(data$P_USER)
 # Write cleaned data to CSV
 write.csv(data, "cleanedData.csv")
 
-# Read in CSV (for convenience)
+########################################## LOGISTIC REGRESSION ############################################
+
+# Read in CSV
 data = read.csv("cleanedData.csv")
 
 split = sample.split(data$C_SEV, SplitRatio = 0.7)
@@ -137,5 +139,5 @@ dataTest = subset(data, split == FALSE)  # Observations to be put in the testing
 nrow(dataTrain)
 nrow(dataTest)
 
-severeLog = glm(C_SEV ~ P_AGE + P_SEX, data = dataTrain, family = binomial(link = "logit")) 
+severeLog = glm(C_SEV ~ C_HOUR + C_YEAR, data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog)
