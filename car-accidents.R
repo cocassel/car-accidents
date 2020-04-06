@@ -17,4 +17,5 @@ dataTest = subset(data, split == FALSE)  # Observations to be put in the testing
 nrow(dataTrain)
 nrow(dataTest)
 
-qualityLog = glm(C_SEV ~ P_AGE + P_SEX, data = dataTrain, family = binomial) 
+severeLog = glm(C_SEV ~ P_AGE + P_SEX, data = dataTrain, family = binomial) 
+summary(severeLog)
