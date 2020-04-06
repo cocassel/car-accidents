@@ -1,5 +1,4 @@
 rm(list=ls())
-#install.packages("caTools")
 library(caTools) 
 library(gurobi)
 
@@ -9,8 +8,15 @@ library(gurobi)
 setwd("/Users/Celeste/Documents/GitHub/car-accidents/")
 data=read.csv("data.csv")
 
-# Replace 2s with 0s. End up with 1s as fatalities and 0s as non-fatal
-data$C_SEV[data$C_SEV == 2] = 0
+# data cleaning: P_ISEV
+data = data[data$P_ISEV != "N",]
+data = data[data$P_ISEV != "U",]
+data = data[data$P_ISEV != "X",]
+data$P_ISEV = as.numeric(data$P_ISEV)
+# Since what we want to classify is fatal vs non-fatal, use 0s for non-injured and injured. Use 1s for fatalities
+data$P_ISEV[data$P_ISEV == 1 | data$P_ISEV == 2] = 0
+data$P_ISEV[data$P_ISEV == 3] = 1
+data$P_ISEV = as.factor(data$P_ISEV)
 
 # data cleaning: P_SEX
 data = data[data$P_SEX != "N",]
@@ -108,12 +114,6 @@ data = data[data$P_PSN != "UU",]
 data = data[data$P_PSN != "XX",]
 data$P_PSN = as.factor(data$P_PSN)
 
-# data cleaning: P_ISEV
-data = data[data$P_ISEV != "N",]
-data = data[data$P_ISEV != "U",]
-data = data[data$P_ISEV != "X",]
-data$P_ISEV = as.factor(data$P_ISEV)
-
 # data cleaning: P_SAFE
 data = data[data$P_SAFE != "NN",]
 data = data[data$P_SAFE != "QQ",]
@@ -133,11 +133,16 @@ write.csv(data, "cleanedData.csv")
 # Read in CSV
 data = read.csv("cleanedData.csv")
 
-split = sample.split(data$C_SEV, SplitRatio = 0.7)
+split = sample.split(data$P_ISEV, SplitRatio = 0.7)
 dataTrain = subset(data, split == TRUE)   # Observations to be put in the training set           
 dataTest = subset(data, split == FALSE)  # Observations to be put in the testing set 
 nrow(dataTrain)
 nrow(dataTest)
 
-severeLog = glm(C_SEV ~ C_HOUR + C_YEAR, data = dataTrain, family = binomial(link = "logit")) 
+# C_SEV is not included because the severity of the crash should not be used to predict the severity of a person in the crash
+# V_ID is a sequence number, so it is not included 
+# P_ID is a sequence number, so it is not included
+severeLog = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
+                  C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
+                data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog)
