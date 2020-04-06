@@ -2,6 +2,9 @@ rm(list=ls())
 library(caTools) 
 library(gurobi)
 
+#setwd("/Users/Ahmad Dakhqan/Desktop/MSCI 433/Project/car-accidents/")
+setwd("/Users/Celeste/Documents/GitHub/car-accidents/")
+
 ############################################ DATA PREPARATION ############################################
 
 # data = read.csv("NCDB_1999_to_2014.csv")
@@ -10,8 +13,6 @@ library(gurobi)
 # data = data[m:n,]
 # write.csv("data.csv")
 
-#setwd("/Users/Ahmad Dakhqan/Desktop/MSCI 433/Project/car-accidents/")
-setwd("/Users/Celeste/Documents/GitHub/car-accidents/")
 data=read.csv("data.csv")
 
 # data cleaning: P_ISEV
@@ -94,6 +95,19 @@ data = data[data$P_ID != "UU",]
 data = data[data$P_AGE != "NN",]
 data = data[data$P_AGE != "UU",]
 data = data[data$P_AGE != "XX",]
+# Make age-group categories rather than usually indidvidual ages
+data$P_AGE = as.numeric(data$P_AGE)
+data$P_AGE[data$P_AGE > 0 & data$P_AGE <= 10] = 1
+data$P_AGE[data$P_AGE > 10 & data$P_AGE <= 20] = 11
+data$P_AGE[data$P_AGE > 20 & data$P_AGE <= 30] = 21
+data$P_AGE[data$P_AGE > 30 & data$P_AGE <= 40] = 31
+data$P_AGE[data$P_AGE > 40 & data$P_AGE <= 50] = 41
+data$P_AGE[data$P_AGE > 50 & data$P_AGE <= 60] = 51
+data$P_AGE[data$P_AGE > 60 & data$P_AGE <= 70] = 61
+data$P_AGE[data$P_AGE > 70 & data$P_AGE <= 80] = 71
+data$P_AGE[data$P_AGE > 80 & data$P_AGE <= 90] = 81
+data$P_AGE[data$P_AGE > 90] = 91
+
 
 # data cleaning: P_PSN
 data = data[data$P_PSN != "NN",]
