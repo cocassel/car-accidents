@@ -6,8 +6,7 @@ library(gurobi)
 
 #setwd("/Users/Ahmad Dakhqan/Desktop/MSCI 433/Project/")
 setwd("/Users/Celeste/Documents/GitHub/car-accidents/")
-data=read.csv("NCDB_1999_to_2014.csv")
-
+data=read.csv("data.csv")
                          
 split = sample.split(data$C_SEV, SplitRatio = 0.7)
 dataTrain = subset(data, split == TRUE)   # Observations to be put in the training set           
