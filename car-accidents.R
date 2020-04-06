@@ -4,7 +4,7 @@ library(gurobi)
 
 ############################################ DATA PREPARATION ############################################
 
-#setwd("/Users/Ahmad Dakhqan/Desktop/MSCI 433/Project/")
+#setwd("/Users/Ahmad Dakhqan/Desktop/MSCI 433/Project/car-accidents/")
 setwd("/Users/Celeste/Documents/GitHub/car-accidents/")
 data=read.csv("data.csv")
                          
