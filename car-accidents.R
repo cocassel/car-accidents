@@ -166,7 +166,7 @@ nrow(dataTest)
 # C_SEV is not included because the severity of the crash should not be used to predict the severity of a person in the crash
 # V_ID is a sequence number, so it is not included 
 # P_ID is a sequence number, so it is not included
-severeLog = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
+severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog)
@@ -174,7 +174,7 @@ summary(severeLog)
 
 # Model 2: Collison Info
 # C_SEV is not included because the severity of the crash should not be used to predict the severity of a person in the crash
-severeLog = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
+severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                   C_RSUR + C_RALN + C_TRAF, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog)
@@ -182,14 +182,14 @@ summary(severeLog)
 
 # Model 3: Vehicle Info
 # V_ID is a sequence number, so it is not included 
-severeLog = glm(P_ISEV ~  V_TYPE + V_YEAR, 
+severeLog3 = glm(P_ISEV ~  V_TYPE + V_YEAR, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog)
 
 
 # Model 4: Person Info
 # P_ID is a sequence number, so it is not included
-severeLog = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
+severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog)
 
@@ -205,12 +205,12 @@ if(injuredFreq$Freq[2] > injuredFreq$Freq[1]) {
   injuredFreq$Freq[1]/(injuredFreq$Freq[1] + injuredFreq$Freq[2])
 }
 
-predictTrain = predict(severeLog, type = "response") 
+predictTrain = predict(severeLog1, type = "response") 
 trainConfMatrix = table(dataTrain$P_ISEV, predictTrain>0.6)
 trainConfMatrix
 trainConfMatrix = as.data.frame(trainConfMatrix)
 
-predictTest = predict(severeLog, type = "response", newdata = dataTest)
+predictTest = predict(severeLog1, type = "response", newdata = dataTest)
 testConfMatrix = table(dataTest$P_ISEV, predictTest>0.6) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
