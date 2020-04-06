@@ -11,7 +11,12 @@ data=read.csv("data.csv")
 # Replace 2s with 0s. End up with 1s as fatalities and 0s as non-fatal
 data$C_SEV[data$C_SEV == 2] = 0
 
-data = subset(data, P_SEX!="U")
+cleaned = subset(data, P_SEX=="M" | P_SEX=="F")
+# Write cleaned data to CSV
+write.csv(cleaned, "cleaned.csv")
+
+# Read in CSV (for convenience)
+cleaned = read.csv("cleaned.csv")
 
 split = sample.split(data$C_SEV, SplitRatio = 0.7)
 dataTrain = subset(data, split == TRUE)   # Observations to be put in the training set           
