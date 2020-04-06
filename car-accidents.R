@@ -43,6 +43,12 @@ data = data[data$C_HOUR != "XX",]
 # data cleaning: C_VEHS
 data = data[data$C_VEHS != "UU",]
 data = data[data$C_VEHS != "XX",]
+# Make vehicle collided-group categories rather than usually indidvidual number of cars in collision
+data$C_VEHS = as.numeric(data$C_VEHS)
+data$C_VEHS[data$C_VEHS > 1 & data$C_VEHS <= 5] = 2
+data$C_VEHS[data$C_VEHS > 5 & data$C_VEHS <= 25] = 3
+data$C_VEHS[data$C_VEHS > 25 & data$C_VEHS <= 98] = 4
+data$C_VEHS[data$C_VEHS > 99] = 5
 
 # data cleaning: C_CONF
 data = data[data$C_CONF != "QQ",]
@@ -86,6 +92,7 @@ data = data[data$V_TYPE != "NN",]
 data = data[data$V_YEAR != "NNNN",] 
 data = data[data$V_YEAR != "UUUU",] 
 data = data[data$V_YEAR != "QQQQ",]
+# Make vehicle year-group categories rather than usually indidvidual years
 data$V_YEAR = as.numeric(data$V_YEAR)
 data$V_YEAR[data$V_YEAR > 1899 & data$V_YEAR <= 1950] = 1
 data$V_YEAR[data$V_YEAR > 1950 & data$V_YEAR <= 1980] = 11
@@ -203,15 +210,11 @@ summary(severeLog3)
 severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog4)
-<<<<<<< HEAD
 
 
 
 # --------------------------------------------- FINAL MODELS --------------------------------------------------
 
-
-=======
->>>>>>> 67230f04bda1ac35f06ffcc00e27d7c87346a041
 
 
 # Get the number of injured vs not
