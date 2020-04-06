@@ -149,8 +149,7 @@ write.csv(data, "cleanedData.csv")
 # Read in CSV
 data = read.csv("cleanedData.csv")
 # Treat all data as categorical, not numerical
-data$P_ISEV = as.factor(data$P_ISEV)
-data$P_SEX = as.factor(data$P_SEX)
+
 data$C_YEAR = as.factor(data$C_YEAR)
 data$C_MNTH = as.factor(data$C_MNTH)
 data$C_WDAY = as.factor(data$C_WDAY)
@@ -166,10 +165,12 @@ data$V_ID = as.factor(data$V_ID)
 data$V_TYPE = as.factor(data$V_TYPE)
 data$V_YEAR = as.factor(data$V_YEAR)
 data$P_ID = as.factor(data$P_ID)
+data$P_SEX = as.factor(data$P_SEX)
 data$P_AGE = as.factor(data$P_AGE)
 data$P_PSN = as.factor(data$P_PSN)
 data$P_SAFE = as.factor(data$P_SAFE)
 data$P_USER = as.factor(data$P_USER)
+data$P_ISEV = as.factor(data$P_ISEV)
 
 
 split = sample.split(data$P_ISEV, SplitRatio = 0.7)
