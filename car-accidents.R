@@ -1,6 +1,7 @@
 rm(list=ls())
 library(caTools) 
 library(gurobi)
+set.seed(3859)
 
 #setwd("/Users/Ahmad Dakhqan/Desktop/MSCI 433/Project/car-accidents/")
 setwd("/Users/Celeste/Documents/GitHub/car-accidents/")
@@ -95,6 +96,19 @@ data = data[data$C_RALN != "X",]
 data = data[data$C_TRAF != "QQ",]
 data = data[data$C_TRAF != "UU",]
 data = data[data$C_TRAF != "XX",]
+data$C_TRAF = as.numeric(as.character(data$C_TRAF))
+# Group traffic signals together
+data$C_TRAF[data$C_TRAF >= 1 & data$C_TRAF <= 2] = 1
+# Group signs together
+data$C_TRAF[data$C_TRAF >= 3 & data$C_TRAF <= 5] = 3
+# Group schools together
+data$C_TRAF[data$C_TRAF >= 8 & data$C_TRAF <= 9] = 8
+# Group school bus together
+data$C_TRAF[data$C_TRAF >= 10 & data$C_TRAF <= 12] = 10
+# Group school bus together
+data$C_TRAF[data$C_TRAF >= 13 & data$C_TRAF <= 14] = 13
+# Group schools together
+data$C_TRAF[data$C_TRAF >= 15 & data$C_TRAF <= 16] = 15
 
 # data cleaning: V_ID 
 data = data[data$V_ID != "UU",]
