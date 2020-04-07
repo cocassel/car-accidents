@@ -54,8 +54,11 @@ data = data[data$C_CONF != "QQ",]
 data = data[data$C_CONF != "UU",]
 data = data[data$C_CONF != "XX",]
 data$C_CONF = as.numeric(as.character(data$C_CONF))
+# Combine all categories for single vehicle in motion
 data$C_CONF[data$C_CONF >= 1 & data$C_CONF <= 6] = 1
+# Combine all categories for two vehicles in motion (same direction of travel)
 data$C_CONF[data$C_CONF >= 21 & data$C_CONF <= 25] = 21
+# Combine all categories for two vehicles in motion (different direction of travel)
 data$C_CONF[data$C_CONF >= 31 & data$C_CONF <= 36] = 31
 
 # data cleaning: C_RCFG
@@ -137,16 +140,14 @@ data = data[data$P_PSN != "UU",]
 data = data[data$P_PSN != "XX",]
 # Make person position categories
 data$P_PSN = as.numeric(as.character(data$P_PSN))
+# 96 is position unknown so get rid of rows with this
 data = data[data$P_PSN != 96,]
-data$P_PSN[data$P_PSN > 10 & data$P_PSN <= 20] = 1
-data$P_PSN[data$P_PSN > 20 & data$P_PSN <= 30] = 11
-data$P_PSN[data$P_PSN > 30 & data$P_PSN <= 40] = 21
-data$P_PSN[data$P_PSN > 40 & data$P_PSN <= 50] = 31
-data$P_PSN[data$P_PSN > 50 & data$P_PSN <= 60] = 41
-data$P_PSN[data$P_PSN > 60 & data$P_PSN <= 70] = 51
-data$P_PSN[data$P_PSN > 70 & data$P_PSN <= 80] = 61
-data$P_PSN[data$P_PSN > 80 & data$P_PSN <= 90] = 71
-data$P_PSN[data$P_PSN > 90] = 81
+# First row of vehicle
+data$P_PSN[data$P_PSN >= 11 & data$P_PSN <= 13] = 11
+# Second row of vehicle
+data$P_PSN[data$P_PSN >= 21 & data$P_PSN <= 23] = 21
+# Third row of vehicle
+data$P_PSN[data$P_PSN >= 31 & data$P_PSN <= 33] = 31
 
 # data cleaning: P_SAFE
 data = data[data$P_SAFE != "NN",]
@@ -205,7 +206,6 @@ severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF +
                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog1)
-
 
 # Model 2: Collison Info
 # C_SEV is not included because the severity of the crash should not be used to predict the severity of a person in the crash
