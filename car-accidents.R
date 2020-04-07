@@ -39,6 +39,12 @@ data = data[data$C_WDAY != "X",]
 # data cleaning: C_HOUR
 data = data[data$C_HOUR != "UU",]
 data = data[data$C_HOUR != "XX",]
+# Make colliosn hour group categories
+data$C_HOUR = as.numeric(data$C_HOUR)
+data$C_HOUR[data$C_HOUR >= 0 & data$C_HOUR <= 5] = 0
+data$C_HOUR[data$C_HOUR >= 6 & data$C_HOUR <= 11] = 6
+data$C_HOUR[data$C_HOUR >= 12 & data$C_HOUR <= 17] = 12
+data$C_HOUR[data$C_HOUR >= 18 & data$C_HOUR <= 23] = 18
 
 # data cleaning: C_VEHS
 data = data[data$C_VEHS != "UU",]
