@@ -91,12 +91,17 @@ data = data[data$V_ID != "UU",]
 data = data[data$V_TYPE != "QQ",] 
 data = data[data$V_TYPE != "UU",] 
 data = data[data$V_TYPE != "NN",] 
+data$V_TYPE = as.numeric(as.character(data$V_TYPE))
+# Group trucks together
+data$V_TYPE[data$V_TYPE >= 5 & data$V_TYPE <= 7] = 5
+# Group busses together
+data$V_TYPE[data$V_TYPE >= 9 & data$V_TYPE <= 11] = 9
 
 # data cleaning: V_YEAR
 data = data[data$V_YEAR != "NNNN",] 
 data = data[data$V_YEAR != "UUUU",] 
 data = data[data$V_YEAR != "QQQQ",]
-# Make vehicle year-group categories rather than usually indidvidual years
+# Make vehicle year group categories rather than using indidvidual years
 data$V_YEAR = as.numeric(as.character(data$V_YEAR))
 data$V_YEAR[data$V_YEAR > 1900 & data$V_YEAR <= 1950] = 1901
 data$V_YEAR[data$V_YEAR > 1950 & data$V_YEAR <= 1980] = 1951
@@ -113,7 +118,7 @@ data = data[data$P_ID != "UU",]
 data = data[data$P_AGE != "NN",]
 data = data[data$P_AGE != "UU",]
 data = data[data$P_AGE != "XX",]
-# Make age-group categories rather than usually indidvidual ages
+# Make age-group categories rather than usuing indidvidual ages
 data$P_AGE = as.numeric(as.character(data$P_AGE))
 data$P_AGE[data$P_AGE > 0 & data$P_AGE <= 10] = 1
 data$P_AGE[data$P_AGE > 10 & data$P_AGE <= 20] = 11
@@ -189,6 +194,7 @@ severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF +
                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog1)
+
 
 # Model 2: Collison Info
 # C_SEV is not included because the severity of the crash should not be used to predict the severity of a person in the crash
