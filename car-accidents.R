@@ -136,6 +136,18 @@ data = data[data$P_PSN != "NN",]
 data = data[data$P_PSN != "QQ",]
 data = data[data$P_PSN != "UU",]
 data = data[data$P_PSN != "XX",]
+# Make person position categories
+data$P_PSN = as.numeric(as.character(data$P_PSN))
+data = data[data$P_PSN != 96,]
+data$P_PSN[data$P_PSN > 10 & data$P_PSN <= 20] = 1
+data$P_PSN[data$P_PSN > 20 & data$P_PSN <= 30] = 11
+data$P_PSN[data$P_PSN > 30 & data$P_PSN <= 40] = 21
+data$P_PSN[data$P_PSN > 40 & data$P_PSN <= 50] = 31
+data$P_PSN[data$P_PSN > 50 & data$P_PSN <= 60] = 41
+data$P_PSN[data$P_PSN > 60 & data$P_PSN <= 70] = 51
+data$P_PSN[data$P_PSN > 70 & data$P_PSN <= 80] = 61
+data$P_PSN[data$P_PSN > 80 & data$P_PSN <= 90] = 71
+data$P_PSN[data$P_PSN > 90] = 81
 
 # data cleaning: P_SAFE
 data = data[data$P_SAFE != "NN",]
