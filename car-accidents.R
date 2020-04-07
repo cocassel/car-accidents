@@ -43,12 +43,11 @@ data = data[data$C_HOUR != "XX",]
 # data cleaning: C_VEHS
 data = data[data$C_VEHS != "UU",]
 data = data[data$C_VEHS != "XX",]
-# Make vehicle collided-group categories rather than usually indidvidual number of cars in collision
+# Make vehicle collided group categories rather than usuing indidvidual number of cars in collision
 data$C_VEHS = as.numeric(data$C_VEHS)
-data$C_VEHS[data$C_VEHS > 1 & data$C_VEHS <= 5] = 2
-data$C_VEHS[data$C_VEHS > 5 & data$C_VEHS <= 25] = 3
-data$C_VEHS[data$C_VEHS > 25 & data$C_VEHS <= 98] = 4
-data$C_VEHS[data$C_VEHS > 99] = 5
+data$C_VEHS[data$C_VEHS >= 1 & data$C_VEHS <= 5] = 1
+data$C_VEHS[data$C_VEHS >= 6 & data$C_VEHS <= 25] = 6
+data$C_VEHS[data$C_VEHS >= 26] = 26
 
 # data cleaning: C_CONF
 data = data[data$C_CONF != "QQ",]
