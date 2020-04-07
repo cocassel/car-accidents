@@ -41,10 +41,14 @@ data = data[data$C_HOUR != "UU",]
 data = data[data$C_HOUR != "XX",]
 # Make colliosn hour group categories
 data$C_HOUR = as.numeric(data$C_HOUR)
-data$C_HOUR[data$C_HOUR >= 0 & data$C_HOUR <= 5] = 0
-data$C_HOUR[data$C_HOUR >= 6 & data$C_HOUR <= 11] = 6
-data$C_HOUR[data$C_HOUR >= 12 & data$C_HOUR <= 17] = 12
-data$C_HOUR[data$C_HOUR >= 18 & data$C_HOUR <= 23] = 18
+data$C_HOUR[data$C_HOUR >= 0 & data$C_HOUR <= 2] = 0
+data$C_HOUR[data$C_HOUR >= 3 & data$C_HOUR <= 5] = 3
+data$C_HOUR[data$C_HOUR >= 6 & data$C_HOUR <= 8] = 6
+data$C_HOUR[data$C_HOUR >= 9 & data$C_HOUR <= 11] = 9
+data$C_HOUR[data$C_HOUR >= 12 & data$C_HOUR <= 14] = 12
+data$C_HOUR[data$C_HOUR >= 15 & data$C_HOUR <= 17] = 15
+data$C_HOUR[data$C_HOUR >= 18 & data$C_HOUR <= 20] = 18
+data$C_HOUR[data$C_HOUR >= 21 & data$C_HOUR <= 23] = 21
 
 # data cleaning: C_VEHS
 data = data[data$C_VEHS != "UU",]
