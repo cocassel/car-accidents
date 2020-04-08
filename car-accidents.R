@@ -1,10 +1,10 @@
 rm(list=ls())
 library(caTools) 
 library(gurobi)
-set.seed(3859)
 
 #setwd("/Users/Ahmad Dakhqan/Desktop/MSCI 433/Project/car-accidents/")
 setwd("/Users/Celeste/Documents/GitHub/car-accidents/")
+set.seed(3859)
 
 ############################################ DATA PREPARATION ############################################
 
@@ -103,7 +103,7 @@ data$C_TRAF[data$C_TRAF >= 1 & data$C_TRAF <= 2] = 1
 data$C_TRAF[data$C_TRAF >= 3 & data$C_TRAF <= 5] = 3
 # Group schools together
 data$C_TRAF[data$C_TRAF >= 8 & data$C_TRAF <= 9] = 8
-# Group school bus together
+# Group no passing and low speed zones
 data$C_TRAF[data$C_TRAF >= 10 & data$C_TRAF <= 12] = 10
 # Group school bus together
 data$C_TRAF[data$C_TRAF >= 13 & data$C_TRAF <= 14] = 13
@@ -185,12 +185,18 @@ data = data[data$P_USER != "U",]
 # Write cleaned data to CSV
 write.csv(data, "cleanedData.csv")
 
-########################################## LOGISTIC REGRESSION ############################################
+
+# Also want a dataset with just drivers
+# Filter rows to get a dataset of only drivers
+# P_USER = 1 corresponds to a motor vehicle driver and P_PSN = 11 corresponds to sitting in the driver seat 
+driverData = data[data$P_USER == 1 & data$P_PSN == 11,]
+write.csv(driverData, "cleanedDriverData.csv")
+
+############################################## LOGISTIC REGRESSION ###############################################
 
 # Read in CSV
 data = read.csv("cleanedData.csv")
 # Treat all data as categorical, not numerical
-
 data$C_YEAR = as.factor(data$C_YEAR)
 data$C_MNTH = as.factor(data$C_MNTH)
 data$C_WDAY = as.factor(data$C_WDAY)
@@ -213,16 +219,33 @@ data$P_SAFE = as.factor(data$P_SAFE)
 data$P_USER = as.factor(data$P_USER)
 data$P_ISEV = as.factor(data$P_ISEV)
 
-
+# For model with all data
 split = sample.split(data$P_ISEV, SplitRatio = 0.7)
 dataTrain = subset(data, split == TRUE)   # Observations to be put in the training set           
 dataTest = subset(data, split == FALSE)  # Observations to be put in the testing set 
 nrow(dataTrain)
 nrow(dataTest)
 
+
+# Read in driver data CSV
+driverData = read.csv("cleanedDriverData.csv")
+# Treat all data as categorical, not numerical
+driverData$V_TYPE = as.factor(driverData$V_TYPE)
+driverData$V_YEAR = as.factor(driverData$V_YEAR)
+driverData$P_SEX = as.factor(driverData$P_SEX)
+driverData$P_AGE = as.factor(driverData$P_AGE)
+driverData$P_ISEV = as.factor(driverData$P_ISEV)
+
+# For model with only driver data
+driverSplit = sample.split(driverData$P_ISEV, SplitRatio = 0.7)
+driverDataTrain = subset(driverData, driverSplit == TRUE)   # Observations to be put in the training set           
+driverDataTest = subset(driverData, driverSplit == FALSE)  # Observations to be put in the testing set 
+nrow(driverDataTrain)
+nrow(driverDataTest)
+
 # --------------------------------------------- BUILDING MODELS --------------------------------------------------
 
-# Model 1: All variables
+# MODEL 1: All variables
 # C_SEV is not included because the severity of the crash should not be used to predict the severity of a person in the crash
 # V_ID is a sequence number, so it is not included 
 # P_ID is a sequence number, so it is not included
@@ -231,69 +254,139 @@ severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF +
                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog1)
-#AIC = 238153
-#Highest p VALUE: V_YEAR
-# We removed V_YEAR from Model 1.1
-#Model 1.2
+# AIC = 238153
+# Highest p VALUE: V_YEAR
+# Try removing V_YEAR from Model 1.1
+# Model 1.2
 severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                    C_RSUR + C_RALN + C_TRAF + V_TYPE + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                  data = dataTrain, family = binomial(link = "logit"))
 summary(severeLog1)
-#AIC = 238234
-#Model 1.2 AIC went up so best fit model is Model 1.1
+# AIC = 238234
+# Model 1.2 AIC went up so best fit model is Model 1.1
+# Final model
+severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
+                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
+                 data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog1)
 
-# Model 2: Collison Info
+
+
+# MODEL 2: Collison Info
 # C_SEV is not included because the severity of the crash should not be used to predict the severity of a person in the crash
-#Model 2.1
+# Model 2.1
 severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                   C_RSUR + C_RALN + C_TRAF, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog2)
-#AIC = 251937
-#Highest p VALUE: C_TRAF
+# AIC = 251937
+# Highest p VALUE: C_TRAF
 # We removed C_TRAF from Model 2.1
-#Model 2.2
+# Model 2.2
 severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                    C_RSUR + C_RALN , 
                  data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog2)
-#AIC = 252235
-#Model 2.2 AIC went up so best fit model is Model 2.1
+# AIC = 252235
+# Model 2.2 AIC went up so best fit model is Model 2.1
+# Final model
+severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
+                   C_RSUR + C_RALN + C_TRAF, 
+                 data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog2)
 
-# Model 3: Vehicle Info
+
+
+# MODEL 3: Vehicle Info
 # V_ID is a sequence number, so it is not included 
-#Model 3.1
+# Model 3.1
 severeLog3 = glm(P_ISEV ~  V_TYPE + V_YEAR, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog3)
-#AIC = 255853
-#Highest p VALUE: V_YEAR
+# AIC = 255853
+# Highest p VALUE: V_YEAR
 # We removed V_YEAR from Model 3.1
-#Model 3.2
+# Model 3.2
 severeLog3 = glm(P_ISEV ~  V_TYPE , 
                  data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog3)
-#AIC = 255902
-#Model 3.2 AIC went up so best fit model is Model 3.1
+# AIC = 255902
+# Model 3.2 AIC went up so best fit model is Model 3.1
+# Final model
+severeLog3 = glm(P_ISEV ~  V_TYPE + V_YEAR, 
+                 data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog3)
 
-# Model 4: Person Info
+
+
+# MODEL 4: Person Info
 # P_ID is a sequence number, so it is not included
-#Model 4.1
+# Model 4.1
 severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog4)
-#AIC = 246586
-#Highest p VALUE: P_PSN
+# AIC = 246586
+# Highest p VALUE: P_PSN
 # We removed P_PSN from Model 4.1
-#Model 4.2
+# Model 4.2
 severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_SAFE + P_USER, 
                  data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog4)
-#AIC = 247199
-#Model 4.2 AIC went up so best fit model is Model 4.1
+# AIC = 247199
+# Model 4.2 AIC went up so best fit model is Model 4.1
+# Final model
+severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
+                 data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog4)
 
-# --------------------------------------------- FINAL MODELS --------------------------------------------------
 
+
+# MODEL 5: Person Info + Vehicle info
+# This model will be used to derive parameters/constraints for our optimization problem
+# Only use variables that an insurance company would have access to when deciding how much to charge someone per year
+# Use our dataset with drivers only since we are interested in making insurance policies for drivers (e.g. not passengers)
+# Model 5.1
+severeLog5 = glm(P_ISEV ~ V_TYPE + V_YEAR + P_SEX + P_AGE, 
+                 data = driverDataTrain, family = binomial(link = "logit")) 
+summary(severeLog5)
+# AIC = 33871
+# Try taking out V_TYPE
+# Model 5.2
+severeLog5 = glm(P_ISEV ~ V_YEAR + P_SEX + P_AGE, 
+                 data = driverDataTrain, family = binomial(link = "logit")) 
+summary(severeLog5)
+# AIC = 34318
+# Model 5.2 AIC went up so add V_TYPE back
+# Try taking out V_YEAR
+# Model 5.3
+severeLog5 = glm(P_ISEV ~ V_TYPE + P_SEX + P_AGE, 
+                 data = driverDataTrain, family = binomial(link = "logit")) 
+summary(severeLog5)
+# AIC = 33886
+# Model 5.3 AIC went up so add V_YEAR back
+# Try taking out P_SEX
+# Model 5.4
+severeLog5 = glm(C=P_ISEV ~ V_TYPE + V_YEAR + P_AGE, 
+                 data = driverDataTrain, family = binomial(link = "logit")) 
+summary(severeLog5)
+# AIC = 34113
+# Model 5.4 AIC went up so add P_SEX back
+# Try taking out P_AGE
+# Model 5.5
+severeLog5 = glm(P_ISEV ~ V_TYPE + V_YEAR + P_SEX, 
+                 data = driverDataTrain, family = binomial(link = "logit")) 
+summary(severeLog5)
+# AIC = 33972
+# Model 5.5 AIC went up so add P_AGE back. Best fit model is Model 5.1
+# Final model 
+severeLog5 = glm(P_ISEV ~ V_TYPE + V_YEAR + P_SEX + P_AGE, 
+                 data = driverDataTrain, family = binomial(link = "logit")) 
+summary(severeLog5)
+
+
+# -------------------------------------------- TESTING THE MODELS --------------------------------------------------
+
+# MODEL 1
 
 # Get the number of injured vs not
 injuredFreq = as.data.frame(table(data$P_ISEV))
@@ -315,3 +408,36 @@ predictTest = predict(severeLog1, type = "response", newdata = dataTest)
 testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
+
+
+# MODEL 5
+
+# Get the number of injured vs not
+driverInjuredFreq = as.data.frame(table(driverData$P_ISEV))
+driverInjuredFreq
+
+# Get baseline accuracy
+if(driverInjuredFreq$Freq[2] > driverInjuredFreq$Freq[1]) {
+  driverInjuredFreq$Freq[2]/(driverInjuredFreq$Freq[1] + driverInjuredFreq$Freq[2])
+} else {
+  driverInjuredFreq$Freq[1]/(driverInjuredFreq$Freq[1] + driverInjuredFreq$Freq[2])
+}
+
+driverPredictTrain = predict(severeLog5, type = "response") 
+driverTrainConfMatrix = table(driverDataTrain$P_ISEV, driverPredictTrain>0.5)
+driverTrainConfMatrix
+driverTrainConfMatrix = as.data.frame(driverTrainConfMatrix)
+
+
+driverPredictTest = predict(severeLog5, type = "response", newdata = driverDataTest)
+driverTestConfMatrix = table(driverDataTest$P_ISEV, driverPredictTest>0.5) 
+driverTestConfMatrix
+driverTestConfMatrix = as.data.frame(driverTestConfMatrix)
+
+################################################ OPTIMIZATION ###################################################
+
+# --------------------------------------- MODEL WITHOUT RISK FACTORS --------------------------------------------------
+
+
+fixedCost = 2000
+maxVariableCost = 1000
