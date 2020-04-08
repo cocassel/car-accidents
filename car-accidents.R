@@ -8,11 +8,12 @@ set.seed(3859)
 
 ############################################ DATA PREPARATION ############################################
 
+# Due to memory issues, only use the last 1 million lines of the data (most recent)
 # data = read.csv("NCDB_1999_to_2014.csv")
 # n = nrow(data)
 # m = n - 1000000 + 1
 # data = data[m:n,]
-# write.csv("data.csv")
+# write.csv(data, "data.csv")
 
 data=read.csv("data.csv")
 
