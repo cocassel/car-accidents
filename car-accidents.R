@@ -270,7 +270,7 @@ severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF +
                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog1)
-# AIC = 238153
+# AIC = 488257
 # Highest p VALUE: V_YEAR
 # Try removing V_YEAR from Model 1.1
 # Model 1.2
@@ -278,7 +278,7 @@ severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF +
                    C_RSUR + C_RALN + C_TRAF + V_TYPE + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                  data = dataTrain, family = binomial(link = "logit"))
 summary(severeLog1)
-# AIC = 238234
+# AIC = 488724
 # Model 1.2 AIC went up so best fit model is Model 1.1
 # Final model
 severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
@@ -295,7 +295,7 @@ severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF +
                   C_RSUR + C_RALN + C_TRAF, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog2)
-# AIC = 251937
+# AIC = 518380
 # Highest p VALUE: C_TRAF
 # We removed C_TRAF from Model 2.1
 # Model 2.2
@@ -303,7 +303,7 @@ severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF +
                    C_RSUR + C_RALN , 
                  data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog2)
-# AIC = 252235
+# AIC = 518559
 # Model 2.2 AIC went up so best fit model is Model 2.1
 # Final model
 severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
@@ -319,14 +319,14 @@ summary(severeLog2)
 severeLog3 = glm(P_ISEV ~  V_TYPE + V_YEAR, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog3)
-# AIC = 255853
+# AIC = 526611
 # Highest p VALUE: V_YEAR
 # We removed V_YEAR from Model 3.1
 # Model 3.2
 severeLog3 = glm(P_ISEV ~  V_TYPE , 
                  data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog3)
-# AIC = 255902
+# AIC = 527227
 # Model 3.2 AIC went up so best fit model is Model 3.1
 # Final model
 severeLog3 = glm(P_ISEV ~  V_TYPE + V_YEAR, 
@@ -341,14 +341,14 @@ summary(severeLog3)
 severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog4)
-# AIC = 246586
+# AIC = 509650
 # Highest p VALUE: P_PSN
 # We removed P_PSN from Model 4.1
 # Model 4.2
 severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_SAFE + P_USER, 
                  data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog4)
-# AIC = 247199
+# AIC = 510128
 # Model 4.2 AIC went up so best fit model is Model 4.1
 # Final model
 severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
