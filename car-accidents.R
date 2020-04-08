@@ -140,23 +140,6 @@ data$V_YEAR[data$V_YEAR > 2010] = 2011
 data = data[data$P_ID != "NN",]
 data = data[data$P_ID != "UU",]
 
-# data cleaning: P_AGE
-data = data[data$P_AGE != "NN",]
-data = data[data$P_AGE != "UU",]
-data = data[data$P_AGE != "XX",]
-# Make age-group categories rather than usuing indidvidual ages
-data$P_AGE = as.numeric(as.character(data$P_AGE))
-data$P_AGE[data$P_AGE > 0 & data$P_AGE <= 10] = 1
-data$P_AGE[data$P_AGE > 10 & data$P_AGE <= 20] = 11
-data$P_AGE[data$P_AGE > 20 & data$P_AGE <= 30] = 21
-data$P_AGE[data$P_AGE > 30 & data$P_AGE <= 40] = 31
-data$P_AGE[data$P_AGE > 40 & data$P_AGE <= 50] = 41
-data$P_AGE[data$P_AGE > 50 & data$P_AGE <= 60] = 51
-data$P_AGE[data$P_AGE > 60 & data$P_AGE <= 70] = 61
-data$P_AGE[data$P_AGE > 70 & data$P_AGE <= 80] = 71
-data$P_AGE[data$P_AGE > 80 & data$P_AGE <= 90] = 81
-data$P_AGE[data$P_AGE > 90] = 91
-
 # data cleaning: P_PSN
 data = data[data$P_PSN != "NN",]
 data = data[data$P_PSN != "QQ",]
@@ -182,6 +165,25 @@ data = data[data$P_SAFE != "XX",]
 # data cleaning: P_USER
 data = data[data$P_USER != "U",] 
 
+# data cleaning: P_AGE
+data = data[data$P_AGE != "NN",]
+data = data[data$P_AGE != "UU",]
+data = data[data$P_AGE != "XX",]
+# Store curernt dataset for use below
+dataAgeNotGrouped = data
+# Make age-group categories rather than usuing indidvidual ages
+data$P_AGE = as.numeric(as.character(data$P_AGE))
+data$P_AGE[data$P_AGE > 0 & data$P_AGE <= 10] = 1
+data$P_AGE[data$P_AGE > 10 & data$P_AGE <= 20] = 11
+data$P_AGE[data$P_AGE > 20 & data$P_AGE <= 30] = 21
+data$P_AGE[data$P_AGE > 30 & data$P_AGE <= 40] = 31
+data$P_AGE[data$P_AGE > 40 & data$P_AGE <= 50] = 41
+data$P_AGE[data$P_AGE > 50 & data$P_AGE <= 60] = 51
+data$P_AGE[data$P_AGE > 60 & data$P_AGE <= 70] = 61
+data$P_AGE[data$P_AGE > 70 & data$P_AGE <= 80] = 71
+data$P_AGE[data$P_AGE > 80 & data$P_AGE <= 90] = 81
+data$P_AGE[data$P_AGE > 90] = 91
+
 # Write cleaned data to CSV
 write.csv(data, "cleanedData.csv")
 
@@ -189,7 +191,20 @@ write.csv(data, "cleanedData.csv")
 # Also want a dataset with just drivers
 # Filter rows to get a dataset of only drivers
 # P_USER = 1 corresponds to a motor vehicle driver and P_PSN = 11 corresponds to sitting in the driver seat 
-driverData = data[data$P_USER == 1 & data$P_PSN == 11,]
+driverData = dataAgeNotGrouped[dataAgeNotGrouped$P_USER == 1 & dataAgeNotGrouped$P_PSN == 11,]
+# Get rid of illegal drivers (under 16) since they cannot be provided insurance
+driverData$P_AGE = as.numeric(as.character(driverData$P_AGE))
+driverData = driverData[driverData$P_AGE >= 16,]
+# Make age-group categories rather than usuing indidvidual ages
+driverData$P_AGE[driverData$P_AGE > 15 & driverData$P_AGE <= 20] = 16
+driverData$P_AGE[driverData$P_AGE > 20 & driverData$P_AGE <= 30] = 21
+driverData$P_AGE[driverData$P_AGE > 30 & driverData$P_AGE <= 40] = 31
+driverData$P_AGE[driverData$P_AGE > 40 & driverData$P_AGE <= 50] = 41
+driverData$P_AGE[driverData$P_AGE > 50 & driverData$P_AGE <= 60] = 51
+driverData$P_AGE[driverData$P_AGE > 60 & driverData$P_AGE <= 70] = 61
+driverData$P_AGE[driverData$P_AGE > 70 & driverData$P_AGE <= 80] = 71
+driverData$P_AGE[driverData$P_AGE > 80 & driverData$P_AGE <= 90] = 81
+driverData$P_AGE[driverData$P_AGE > 90] = 91
 write.csv(driverData, "cleanedDriverData.csv")
 
 ############################################## LOGISTIC REGRESSION ###############################################
@@ -428,7 +443,6 @@ driverTrainConfMatrix = table(driverDataTrain$P_ISEV, driverPredictTrain>0.5)
 driverTrainConfMatrix
 driverTrainConfMatrix = as.data.frame(driverTrainConfMatrix)
 
-
 driverPredictTest = predict(severeLog5, type = "response", newdata = driverDataTest)
 driverTestConfMatrix = table(driverDataTest$P_ISEV, driverPredictTest>0.5) 
 driverTestConfMatrix
@@ -436,8 +450,19 @@ driverTestConfMatrix = as.data.frame(driverTestConfMatrix)
 
 ################################################ OPTIMIZATION ###################################################
 
-# --------------------------------------- MODEL WITHOUT RISK FACTORS --------------------------------------------------
-
+# --------------------------------------- MODEL WITHOUT RISK FACTORS ---------------------------------------------
 
 fixedCost = 2000
 maxVariableCost = 1000
+
+table(driverData$P_SEX)
+table(driverData$P_AGE)
+table(driverData$V_YEAR)
+table(driverData$V_TYPE)
+# P_SEX: female, male
+# P_AGE: 11-20, 21-30, 31-40, 41-50, 51-60, 61-70, 71-80, 81-90, 91+
+# V_TYPE: Light duty vehicle (1), trucks/vans (5), road tractor (8), school busses (9), motorhomes (18), firetruck (21), streetcar(23)
+# V_YEAR: 1901-1950, 1951-1980, 1981-1990, 1991-2000, 2001-2010, 2011+
+# Total variables: 24
+
+
