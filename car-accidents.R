@@ -459,8 +459,9 @@ table(driverData$P_SEX)
 table(driverData$P_AGE)
 table(driverData$V_YEAR)
 table(driverData$V_TYPE)
+
 # P_SEX: female, male
-# P_AGE: 11-20, 21-30, 31-40, 41-50, 51-60, 61-70, 71-80, 81-90, 91+
+# P_AGE: 16-20, 21-30, 31-40, 41-50, 51-60, 61-70, 71-80, 81-90, 91+
 # V_TYPE: Light duty vehicle (1), trucks/vans (5), road tractor (8), school busses (9), motorhomes (18), firetruck (21), streetcar(23)
 # V_YEAR: 1901-1950, 1951-1980, 1981-1990, 1991-2000, 2001-2010, 2011+
 # Total variables: 24
