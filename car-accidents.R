@@ -510,6 +510,8 @@ categoriesMatrix
 # --------------------------------------- MODEL 1: BASE MODEL ---------------------------------------------
 
 # In this model (base case), our only constraint is that the factors from all categories must sum to 1. 
+# This model can be thought of as a demand-based model. Factors will be determined based on the frequency of 
+# categorical values. 
 
 # Set the variable types
 vtype = matrix('C', nrow = 1, ncol = numVars)
@@ -615,7 +617,7 @@ result$x
 
 # In this model we add constraints based on our logistic regression. The constraints are used to restrict our factors 
 # based on ranked risks of categorical factors. If males present a higher risk of injury, we should charge them more than 
-# females. The model will tell us by how much. The prior models ultimtely end up optimizing based on frequency of categorical
+# females. The model will tell us by how much. Some of the prior models end up optimizing based on frequency of categorical
 # values (e.g. if there are more male customers than females, charge them more). Rather than using models that optimize 
 # solely based on demand, we should also consider risk. If males present a higher risk of severe car crashes, charge them more.
 
