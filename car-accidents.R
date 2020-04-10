@@ -449,17 +449,30 @@ driverTestConfMatrix = table(driverDataTest$P_ISEV, driverPredictTest>0.5)
 driverTestConfMatrix
 driverTestConfMatrix = as.data.frame(driverTestConfMatrix)
 
+
 ################################################ OPTIMIZATION ###################################################
 
-# --------------------------------------- MODEL WITHOUT RISK FACTORS ---------------------------------------------
+# The idea is to make an insurance policy that maximizes revenue
+# Every driver will pay a base cost of $1000 and up to an additional $1000 based on categories they fit into
+# Each category value will have an associated factor. For example, males might have a factor of 0.1 and females could 
+# have a factor of 0.2. Then males pay 0.1*1000 extra and females pay 0.2*1000 extra. The factors for ALL category values
+# should sum to 1 so that the maximum possible value charge is $3000
+
+# ASSUMPTIONS: We have filtered our dataset for specifically drivers (not passengers, pedestrians, etc.)
+# but these drivers all have been in car accidents. Hence, we are making insurance policies for people who have been 
+# in accidents. In these models, the number of times someone has been in a car accident is irrelevant (our data does
+# not indicate repeat offenders)
+
+# Create out dataset for the optimization problem
+insuranceData = subset(driverData, select = c(P_SEX, P_AGE, V_TYPE, V_YEAR))
 
 fixedCost = 2000
 maxVariableCost = 1000
 
-table(driverData$P_SEX)
-table(driverData$P_AGE)
-table(driverData$V_YEAR)
-table(driverData$V_TYPE)
+sexTable = as.data.frame(table(driverData$P_SEX))
+ageTable = as.data.frame(table(driverData$P_AGE))
+vehicleTypeTable = as.data.frame(table(driverData$V_TYPE))
+vehicleYearTable = as.data.frame(table(driverData$V_YEAR))
 
 # P_SEX: female, male
 # P_AGE: 16-20, 21-30, 31-40, 41-50, 51-60, 61-70, 71-80, 81-90, 91+
@@ -467,4 +480,139 @@ table(driverData$V_TYPE)
 # V_YEAR: 1901-1950, 1951-1980, 1981-1990, 1991-2000, 2001-2010, 2011+
 # Total variables: 24
 
+sexCategories = as.vector(sexTable$Var1)
+ageCategories = as.vector(ageTable$Var1)
+vehicleTypeCategories = as.vector(vehicleTypeTable$Var1)
+vehicleYearCategories = as.vector(vehicleYearTable$Var1)
 
+numVars = nrow(sexTable) + nrow(ageTable) + nrow(vehicleTypeTable) + nrow(vehicleYearTable) 
+
+# Want our categories matrix in 1s and 0s (one-hot encoding)
+# When a person matches a category value, use a 1, else use 0
+sexMatrix = matrix(0, nrow = NROW(insuranceData), ncol = NROW(sexCategories))
+ageMatrix = matrix(0, nrow = NROW(insuranceData), ncol = NROW(ageCategories))
+vehicleTypeMatrix = matrix(0, nrow = NROW(insuranceData), ncol = NROW(vehicleTypeCategories))
+vehicleYearMatrix = matrix(0, nrow = NROW(insuranceData), ncol = NROW(vehicleYearCategories))
+
+for(i in 1:NROW(insuranceData)) {
+  sex = insuranceData$P_SEX[i]
+  age = insuranceData$P_AGE[i]
+  vehicleType = insuranceData$V_TYPE[i]
+  vehicleYear = insuranceData$V_YEAR[i]
+  sexMatrix[i, which(sexCategories == sex)] = 1
+  ageMatrix[i, which(ageCategories == age)] = 1
+  vehicleTypeMatrix[i, which(vehicleTypeCategories == vehicleType)] = 1
+  vehicleYearMatrix[i, which(vehicleYearCategories == vehicleYear)] = 1
+}
+categoriesMatrix = cbind(sexMatrix, ageMatrix, vehicleTypeMatrix, vehicleYearMatrix)
+categoriesMatrix
+
+# --------------------------------------- MODEL 1: NO FACTOR CONSTRAINTS ---------------------------------------------
+
+# In this model (base case), our only constraint is that the factors from all categories must sum to 1. 
+
+# Set the variable types
+vtype = matrix('C', nrow = 1, ncol = numVars)
+
+# Set the A matrix 
+# All the factors should add to at most 1
+A = matrix(1, nrow = 1, ncol = numVars)
+
+# Set the B vector
+# All the factors should add to at most 1
+b = matrix(1, nrow = 1, ncol = 1)
+
+# Set the operators vector
+operators = matrix('<=', nrow = 1, ncol = 1)
+
+# Set the objective function vector
+# The insurance cost a person is $2000 + (sum of all applicable factors)*1000
+# Since every person is charged $2000 regardless, it does not need to be added to our objective function
+coeffs = categoriesMatrix*1000
+obj = colSums(coeffs)
+
+# Solve
+model = list()
+model$A = A
+model$obj = obj
+model$modelsense = "max"
+model$rhs = b
+model$sense = operators
+model$vtype = vtype
+result = gurobi(model)
+
+# Resulting factors
+result$x
+
+# --------------------------------------- MODEL 2: FACTOR CONSTRAINTS ---------------------------------------------
+
+# In this model, we set upper bounds for factors based on category. All factors for sex must sum to at most 0.25,
+# All factors for for age must sum to at most 0.25, etc. This maintains an upper bound of 1 for the sum of all factors
+
+# Set the variable types
+vtype = matrix('C', nrow = 1, ncol = numVars)
+
+# Set the A matrix 
+# All the factors should add to at most 1
+A = matrix(0, nrow = 0, ncol = numVars)
+sexStartIndex = 1
+ageStartIndex = sexStartIndex + NROW(sexCategories)
+vehicleTypeStartIndex = ageStartIndex + NROW(ageCategories)
+vehicleYearStartIndex = vehicleTypeStartIndex + NROW(vehicleTypeCategories)
+endIndex = vehicleYearStartIndex + NROW(vehicleYearCategories) - 1
+  
+sexRow = vector("numeric", numVars)
+sexRow[sexStartIndex:(ageStartIndex-1)] = 1
+ageRow = vector("numeric", numVars)
+ageRow[ageStartIndex:(vehicleTypeStartIndex - 1)] = 1
+vehicleTypeRow = vector("numeric", numVars)
+vehicleTypeRow[vehicleTypeStartIndex:(vehicleYearStartIndex - 1)] = 1
+vehicleYearRow = vector("numeric", numVars)
+vehicleYearRow[vehicleYearStartIndex:endIndex] = 1
+A = rbind(sexRow, ageRow, vehicleTypeRow, vehicleYearRow)
+
+# Set the B vector
+# All the factors for a given category should at to at most 0.25 (highest possible sum of all factors is 1)
+b = matrix(0.25, nrow = 4, ncol = 1)
+
+# Set the operators vector
+operators = matrix('<=', nrow = 4, ncol = 1)
+
+# Set the objective function vector
+# The insurance cost a person is $2000 + (sum of all applicable factors)*1000
+# Since every person is charged $2000 regardless, it does not need to be added to our objective function
+coeffs = categoriesMatrix*1000
+obj = colSums(coeffs)
+
+# Solve
+model = list()
+model$A = A
+model$obj = obj
+model$modelsense = "max"
+model$rhs = b
+model$sense = operators
+model$vtype = vtype
+result = gurobi(model)
+
+# Resulting factors
+result$x
+
+# --------------------------------------- MODEL 4: FAIRNESS CONSTRAINTS ---------------------------------------------
+
+# In this model we add constraints for the fairness of the policy. For example, we can charge males more than females,
+# but not by too much or this will be received as unfair by the public.
+
+
+
+# --------------------------------------- MODEL 5: RISK CONSTRAINTS ---------------------------------------------
+
+# In this model we add constraints based on our logistic regression. The constraints are used to restrict our factors 
+# based on ranked risks of categorical factors. If males present a higher risk of injury, we should charge them more than 
+# females. The model will tell us by how much. The prior models ultimtely end up optimizing based on frequency of categorical
+# values (e.g. if there are more male customers than females, charge them more). Rather than using models that optimize 
+# solely based on demand, we should also consider risk. If males present a higher risk of severe car crashes, charge them more.
+
+
+# --------------------------------------- MODEL 6: RISK-BASED PAY ---------------------------------------------
+
+# Use actual prediction values of injury in this model
