@@ -507,7 +507,7 @@ for(i in 1:NROW(insuranceData)) {
 categoriesMatrix = cbind(sexMatrix, ageMatrix, vehicleTypeMatrix, vehicleYearMatrix)
 categoriesMatrix
 
-# --------------------------------------- MODEL 1: NO FACTOR CONSTRAINTS ---------------------------------------------
+# --------------------------------------- MODEL 1: BASE MODEL ---------------------------------------------
 
 # In this model (base case), our only constraint is that the factors from all categories must sum to 1. 
 
@@ -597,14 +597,21 @@ result = gurobi(model)
 # Resulting factors
 result$x
 
-# --------------------------------------- MODEL 4: FAIRNESS CONSTRAINTS ---------------------------------------------
+# -------------------------------- MODEL 4: FAIRNESS BETWEEN CATEGORIES CONSTRAINTS ------------------------------------
 
 # In this model we add constraints for the fairness of the policy. For example, we can charge males more than females,
 # but not by too much or this will be received as unfair by the public.
 
 
+# ------------------------------------- MODEL 5: PRE-DETERMINED INTERVALS ---------------------------------------------
 
-# --------------------------------------- MODEL 5: RISK CONSTRAINTS ---------------------------------------------
+# In this model, we will use predetermined intervals for pay. For example, 50% of people should pay an extra $1-$200,
+# 30% of people should pay an extra $201-$500, and 20% of peole should pay an extra $501-$1000. This is a way to create a
+# a policy that creates a reasonable dispersion of people throughout the pay range. The idea here is that the majority of
+# people should pay on the lower end while only exceptions to the rule should pay on the higher end.
+
+
+# --------------------------------------- MODEL 6: RISK CONSTRAINTS ---------------------------------------------
 
 # In this model we add constraints based on our logistic regression. The constraints are used to restrict our factors 
 # based on ranked risks of categorical factors. If males present a higher risk of injury, we should charge them more than 
@@ -613,6 +620,6 @@ result$x
 # solely based on demand, we should also consider risk. If males present a higher risk of severe car crashes, charge them more.
 
 
-# --------------------------------------- MODEL 6: RISK-BASED PAY ---------------------------------------------
+# --------------------------------------- MODEL 7: RISK-BASED PAY ---------------------------------------------
 
 # Use actual prediction values of injury in this model
