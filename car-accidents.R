@@ -42,7 +42,7 @@ data = data[data$C_WDAY != "X",]
 data = data[data$C_HOUR != "UU",]
 data = data[data$C_HOUR != "XX",]
 # Make colliosn hour group categories
-data$C_HOUR = as.numeric(data$C_HOUR)
+data$C_HOUR = as.numeric(as.character(data$C_HOUR))
 data$C_HOUR[data$C_HOUR >= 0 & data$C_HOUR <= 2] = 0
 data$C_HOUR[data$C_HOUR >= 3 & data$C_HOUR <= 5] = 3
 data$C_HOUR[data$C_HOUR >= 6 & data$C_HOUR <= 8] = 6
@@ -56,7 +56,7 @@ data$C_HOUR[data$C_HOUR >= 21 & data$C_HOUR <= 23] = 21
 data = data[data$C_VEHS != "UU",]
 data = data[data$C_VEHS != "XX",]
 # Make vehicle collided group categories rather than usuing indidvidual number of cars in collision
-data$C_VEHS = as.numeric(data$C_VEHS)
+data$C_VEHS = as.numeric(as.character(data$C_VEHS))
 data$C_VEHS[data$C_VEHS >= 1 & data$C_VEHS <= 5] = 1
 data$C_VEHS[data$C_VEHS >= 6 & data$C_VEHS <= 25] = 6
 data$C_VEHS[data$C_VEHS >= 26] = 26
@@ -108,7 +108,7 @@ data$C_TRAF[data$C_TRAF >= 8 & data$C_TRAF <= 9] = 8
 data$C_TRAF[data$C_TRAF >= 10 & data$C_TRAF <= 12] = 10
 # Group school bus together
 data$C_TRAF[data$C_TRAF >= 13 & data$C_TRAF <= 14] = 13
-# Group schools together
+# Group railway crossings together
 data$C_TRAF[data$C_TRAF >= 15 & data$C_TRAF <= 16] = 15
 
 # data cleaning: V_ID 
@@ -425,6 +425,17 @@ testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5)
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
 
+# MODEL 2
+
+
+
+# MODEL 3
+
+
+
+# MODEL 4
+
+
 
 # MODEL 5
 
@@ -450,7 +461,7 @@ driverTestConfMatrix
 driverTestConfMatrix = as.data.frame(driverTestConfMatrix)
 
 
-################################################ OPTIMIZATION ###################################################
+################################################## OPTIMIZATION #####################################################
 
 # The idea is to make an insurance policy that maximizes revenue
 # Every driver will pay a base cost of $1000 and up to an additional $1000 based on categories they fit into
@@ -485,6 +496,12 @@ ageCategories = as.vector(ageTable$Var1)
 vehicleTypeCategories = as.vector(vehicleTypeTable$Var1)
 vehicleYearCategories = as.vector(vehicleYearTable$Var1)
 
+sexStartIndex = 1
+ageStartIndex = sexStartIndex + NROW(sexCategories)
+vehicleTypeStartIndex = ageStartIndex + NROW(ageCategories)
+vehicleYearStartIndex = vehicleTypeStartIndex + NROW(vehicleTypeCategories)
+endIndex = vehicleYearStartIndex + NROW(vehicleYearCategories) - 1
+
 numVars = nrow(sexTable) + nrow(ageTable) + nrow(vehicleTypeTable) + nrow(vehicleYearTable) 
 
 # Want our categories matrix in 1s and 0s (one-hot encoding)
@@ -507,7 +524,7 @@ for(i in 1:NROW(insuranceData)) {
 categoriesMatrix = cbind(sexMatrix, ageMatrix, vehicleTypeMatrix, vehicleYearMatrix)
 categoriesMatrix
 
-# --------------------------------------- MODEL 1: BASE MODEL ---------------------------------------------
+# ----------------------------------------------- MODEL 1: BASE MODEL ------------------------------------------------
 
 # In this model (base case), our only constraint is that the factors from all categories must sum to 1. 
 # This model can be thought of as a demand-based model. Factors will be determined based on the frequency of 
@@ -546,7 +563,7 @@ result = gurobi(model)
 # Resulting factors
 result$x
 
-# --------------------------------------- MODEL 2: FACTOR CONSTRAINTS ---------------------------------------------
+# ------------------------------------------- MODEL 2: FACTOR CONSTRAINTS ---------------------------------------------
 
 # In this model, we set upper bounds for factors based on category. All factors for sex must sum to at most 0.25,
 # All factors for for age must sum to at most 0.25, etc. This maintains an upper bound of 1 for the sum of all factors
@@ -556,13 +573,8 @@ vtype = matrix('C', nrow = 1, ncol = numVars)
 
 # Set the A matrix 
 # All the factors should add to at most 1
-A = matrix(0, nrow = 0, ncol = numVars)
-sexStartIndex = 1
-ageStartIndex = sexStartIndex + NROW(sexCategories)
-vehicleTypeStartIndex = ageStartIndex + NROW(ageCategories)
-vehicleYearStartIndex = vehicleTypeStartIndex + NROW(vehicleTypeCategories)
-endIndex = vehicleYearStartIndex + NROW(vehicleYearCategories) - 1
-  
+A2 = matrix(0, nrow = 0, ncol = numVars)
+
 sexRow = vector("numeric", numVars)
 sexRow[sexStartIndex:(ageStartIndex-1)] = 1
 ageRow = vector("numeric", numVars)
@@ -571,14 +583,14 @@ vehicleTypeRow = vector("numeric", numVars)
 vehicleTypeRow[vehicleTypeStartIndex:(vehicleYearStartIndex - 1)] = 1
 vehicleYearRow = vector("numeric", numVars)
 vehicleYearRow[vehicleYearStartIndex:endIndex] = 1
-A = rbind(sexRow, ageRow, vehicleTypeRow, vehicleYearRow)
+A2 = rbind(sexRow, ageRow, vehicleTypeRow, vehicleYearRow)
 
 # Set the B vector
-# All the factors for a given category should at to at most 0.25 (highest possible sum of all factors is 1)
-b = matrix(0.25, nrow = 4, ncol = 1)
+# All the factors for a given category should add to at most 0.25 (highest possible sum of all factors is 1)
+b2 = matrix(0.25, nrow = 4, ncol = 1)
 
 # Set the operators vector
-operators = matrix('<=', nrow = 4, ncol = 1)
+operators2 = matrix('<=', nrow = 4, ncol = 1)
 
 # Set the objective function vector
 # The insurance cost a person is $2000 + (sum of all applicable factors)*1000
@@ -588,32 +600,18 @@ obj = colSums(coeffs)
 
 # Solve
 model = list()
-model$A = A
+model$A = A2
 model$obj = obj
 model$modelsense = "max"
-model$rhs = b
-model$sense = operators
+model$rhs = b2
+model$sense = operators2
 model$vtype = vtype
 result = gurobi(model)
 
 # Resulting factors
 result$x
 
-# -------------------------------- MODEL 4: FAIRNESS BETWEEN CATEGORIES CONSTRAINTS ------------------------------------
-
-# In this model we add constraints for the fairness of the policy. For example, we can charge males more than females,
-# but not by too much or this will be received as unfair by the public.
-
-
-# ------------------------------------- MODEL 5: PRE-DETERMINED INTERVALS ---------------------------------------------
-
-# In this model, we will use predetermined intervals for pay. For example, 50% of people should pay an extra $1-$200,
-# 30% of people should pay an extra $201-$500, and 20% of peole should pay an extra $501-$1000. This is a way to create a
-# a policy that creates a reasonable dispersion of people throughout the pay range. The idea here is that the majority of
-# people should pay on the lower end while only exceptions to the rule should pay on the higher end.
-
-
-# --------------------------------------- MODEL 6: RISK CONSTRAINTS ---------------------------------------------
+# ------------------------------------------- MODEL 3: RISK CONSTRAINTS ---------------------------------------------
 
 # In this model we add constraints based on our logistic regression. The constraints are used to restrict our factors 
 # based on ranked risks of categorical factors. If males present a higher risk of injury, we should charge them more than 
@@ -621,7 +619,135 @@ result$x
 # values (e.g. if there are more male customers than females, charge them more). Rather than using models that optimize 
 # solely based on demand, we should also consider risk. If males present a higher risk of severe car crashes, charge them more.
 
+# TO DO: CHANGE THESE TO REAL !!!
+# Ordered from highest risk to lowest risk
+sexRanks = c(1,2)
+ageRanks = c(1,9,3,8,4,2,5,6,7)
+vehicleTypeRanks = c(1,7,2,4,5,3,6)
+vehicleYearRanks = c(4,2,3,1,6,5)
 
-# --------------------------------------- MODEL 7: RISK-BASED PAY ---------------------------------------------
+
+# Set the variable types
+vtype = matrix('C', nrow = 1, ncol = numVars)
+
+# Set the A matrix 
+# All the factors should add to at most 1
+A3 = matrix(1, nrow = 1, ncol = numVars)
+
+# Set the B vector
+# All the factors should add to at most 1
+b3 = matrix(1, nrow = 1, ncol = 1)
+
+# Set the operators vector
+operators3 = matrix('<=', nrow = 1, ncol = 1)
+
+# Add risk constraints based on ranks
+# High risk should pay equal to or greater than low risk
+for(i in 1:(NROW(sexRanks)-1)) {
+  rowVector = vector("numeric", numVars)
+  rowVector[sexRanks[i]] = 1
+  rowVector[sexRanks[i+1]] = -1
+  A3 = rbind(A3, rowVector)
+  operators3 = rbind(operators3, ">=")
+  b3 = rbind(b3, 0)
+}
+for(i in 1:(NROW(ageRanks)-1)) {
+  rowVector = vector("numeric", numVars)
+  rowVector[ageStartIndex -1 + ageRanks[i]] = 1
+  rowVector[ageStartIndex -1 + ageRanks[i+1]] = -1
+  A3 = rbind(A3, rowVector)
+  operators3 = rbind(operators3, ">=")
+  b3 = rbind(b3, 0)
+}
+for(i in 1:(NROW(vehicleTypeRanks)-1)) {
+  rowVector = vector("numeric", numVars)
+  rowVector[vehicleTypeStartIndex -1 + vehicleTypeRanks[i]] = 1
+  rowVector[vehicleTypeStartIndex -1 + vehicleTypeRanks[i+1]] = -1
+  A3 = rbind(A3, rowVector)
+  operators3 = rbind(operators3, ">=")
+  b3 = rbind(b3, 0)
+}
+for(i in 1:(NROW(vehicleYearRanks)-1)) {
+  rowVector = vector("numeric", numVars)
+  rowVector[vehicleYearStartIndex -1 + vehicleYearRanks[i]] = 1
+  rowVector[vehicleYearStartIndex -1 + vehicleYearRanks[i+1]] = -1
+  A3 = rbind(A3, rowVector)
+  operators3 = rbind(operators3, ">=")
+  b3 = rbind(b3, 0)
+}
+
+# Set the objective function vector
+# The insurance cost a person is $2000 + (sum of all applicable factors)*1000
+# Since every person is charged $2000 regardless, it does not need to be added to our objective function
+coeffs = categoriesMatrix*1000
+obj = colSums(coeffs)
+
+# Solve
+model = list()
+model$A = A3
+model$obj = obj
+model$modelsense = "max"
+model$rhs = b3
+model$sense = operators3
+model$vtype = vtype
+result = gurobi(model)
+
+# Resulting factors
+result$x
+
+# --------------------------------------- MODEL 4: RISK AND FACTOR CONSTRAINTS -------------------------------------------
+
+# This model combines model 2 and model 5 (uses constraints from both)
+
+# Set the variable types
+vtype = matrix('C', nrow = 1, ncol = numVars)
+
+# Set the A matrix 
+A4 = rbind(A2,A3)
+
+# Set the B vector
+b4 = rbind(b2, b3)
+
+# Set the operators vector
+operators4 = rbind(operators2, operators3)
+
+# Set the objective function vector
+coeffs = categoriesMatrix*1000
+obj = colSums(coeffs)
+
+# Solve
+model = list()
+model$A = A4
+model$obj = obj
+model$modelsense = "max"
+model$rhs = b4
+model$sense = operators4
+model$vtype = vtype
+result = gurobi(model)
+
+# Resulting factors
+result$x
+
+# ---------------------------------- MODEL 5: FAIRNESS BETWEEN CATEGORIES CONSTRAINTS ----------------------------------
+
+# In this model we add constraints for the fairness of the policy. For example, we can charge males more than females,
+# but not by too much or this will be received as unfair by the public.
+
+
+# ---------------------------------------------- MODEL 6: RISK-BASED PAY ----------------------------------------------
 
 # Use actual prediction values of injury in this model
+# Base model but multiply each obj value by prediction?
+
+
+# ----------------------------------------- MODEL 7: PRE-DETERMINED INTERVALS -------------------------------------------
+
+# In this model, we will use predetermined intervals for pay. For example, 50% of people should pay an extra $1-$200,
+# 30% of people should pay an extra $201-$500, and 20% of peole should pay an extra $501-$1000. This is a way to create a
+# a policy that creates a reasonable dispersion of people throughout the pay range. The idea here is that the majority of
+# people should pay on the lower end while only exceptions to the rule should pay on the higher end.
+
+
+# ---------------------------------------------- MODEL 8: COMBINATION -------------------------------------------------
+
+
