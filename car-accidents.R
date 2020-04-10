@@ -391,7 +391,7 @@ summary(severeLog5)
 # Model 5.3 AIC went up so add V_YEAR back
 # Try taking out P_SEX
 # Model 5.4
-severeLog5 = glm(C=P_ISEV ~ V_TYPE + V_YEAR + P_AGE, 
+severeLog5 = glm(P_ISEV ~ V_TYPE + V_YEAR + P_AGE, 
                  data = driverDataTrain, family = binomial(link = "logit")) 
 summary(severeLog5)
 # AIC = 34113
@@ -411,8 +411,6 @@ summary(severeLog5)
 
 # -------------------------------------------- TESTING THE MODELS --------------------------------------------------
 
-# MODEL 1
-
 # Get the number of injured vs not
 injuredFreq = as.data.frame(table(data$P_ISEV))
 injuredFreq
@@ -423,6 +421,9 @@ if(injuredFreq$Freq[2] > injuredFreq$Freq[1]) {
 } else {
   injuredFreq$Freq[1]/(injuredFreq$Freq[1] + injuredFreq$Freq[2])
 }
+
+
+# MODEL 1
 
 predictTrain = predict(severeLog1, type = "response") 
 trainConfMatrix = table(dataTrain$P_ISEV, predictTrain>0.5)
@@ -436,15 +437,39 @@ testConfMatrix = as.data.frame(testConfMatrix)
 
 # MODEL 2
 
+predictTrain = predict(severeLog2, type = "response") 
+trainConfMatrix = table(dataTrain$P_ISEV, predictTrain>0.5)
+trainConfMatrix
+trainConfMatrix = as.data.frame(trainConfMatrix)
 
+predictTest = predict(severeLog2, type = "response", newdata = dataTest)
+testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
+testConfMatrix
+testConfMatrix = as.data.frame(testConfMatrix)
 
 # MODEL 3
 
+predictTrain = predict(severeLog3, type = "response") 
+trainConfMatrix = table(dataTrain$P_ISEV, predictTrain>0.5)
+trainConfMatrix
+trainConfMatrix = as.data.frame(trainConfMatrix)
 
+predictTest = predict(severeLog3, type = "response", newdata = dataTest)
+testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
+testConfMatrix
+testConfMatrix = as.data.frame(testConfMatrix)
 
 # MODEL 4
 
+predictTrain = predict(severeLog4, type = "response") 
+trainConfMatrix = table(dataTrain$P_ISEV, predictTrain>0.5)
+trainConfMatrix
+trainConfMatrix = as.data.frame(trainConfMatrix)
 
+predictTest = predict(severeLog4, type = "response", newdata = dataTest)
+testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
+testConfMatrix
+testConfMatrix = as.data.frame(testConfMatrix)
 
 # MODEL 5
 
@@ -575,7 +600,8 @@ result$x
 # ------------------------------------------- MODEL 2: FACTOR CONSTRAINTS ---------------------------------------------
 
 # In this model, we set upper bounds for factors based on category. All factors for sex must sum to at most 0.25,
-# All factors for for age must sum to at most 0.25, etc. This maintains an upper bound of 1 for the sum of all factors
+# All factors for for age must sum to at most 0.25, etc. This maintains an upper bound of 1 for the sum of all factors.
+# The goal here is to not put too much emphasis on one variable. Instead, we want a more even dispersion.
 
 # Set the variable types
 vtype = matrix('C', nrow = 1, ncol = numVars)
@@ -737,19 +763,165 @@ result = gurobi(model)
 # Resulting factors
 result$x
 
-# ---------------------------------- MODEL 5: FAIRNESS BETWEEN CATEGORIES CONSTRAINTS ----------------------------------
+# ----------------------------------------- MODEL 5: FAIRNESS WITHIN VARIABLES  ---------------------------------------
 
 # In this model we add constraints for the fairness of the policy. For example, we can charge males more than females,
-# but not by too much or this will be received as unfair by the public.
+# but not by too much or this will be received as unfair by the public. We will add constraints to introduce fairness 
+# within categories. No two category values should be more than 0.1 different than each other. Note that the overall 
+# difference in what people pay can still be greater than 0.1*1000 because their total cost is based on multiple variables.
+
+differenceThreshold = 0.1
+  
+# Set the variable types
+vtype = matrix('C', nrow = 1, ncol = numVars)
+
+# Set the A matrix 
+# All the factors should add to at most 1
+A5 = matrix(1, nrow = 1, ncol = numVars)
+
+# Set the B vector
+# All the factors should add to at most 1
+b5 = matrix(1, nrow = 1, ncol = 1)
+
+# Set the operators vector
+operators5 = matrix('<=', nrow = 1, ncol = 1)
 
 
-# ---------------------------------------------- MODEL 6: RISK-BASED PAY ----------------------------------------------
+# Add fairness constraints for each variable
+# Need a constraint for each pair of values in a category
+# Since we are dealing with abolsolute values, we need two constraints for each pair
+for(i in 1:(NROW(sexCategories)-1)) {
+  for(j in (i+1):(NROW(sexCategories))) {
+    rowVector = vector("numeric", numVars)
+    rowVector[i] = 1
+    rowVector[j] = -1
+    A5 = rbind(A5, rowVector, rowVector)
+    operators5 = rbind(operators5, "<=", ">=")
+    b5 = rbind(b5, differenceThreshold, (-1)*differenceThreshold)
+  }
+}
+for(i in 1:(NROW(ageCategories)-1)) {
+  for(j in (i+1):(NROW(ageCategories))) {
+    rowVector = vector("numeric", numVars)
+    rowVector[ageStartIndex -1 + i] = 1
+    rowVector[ageStartIndex -1 + j] = -1
+    A5 = rbind(A5, rowVector, rowVector)
+    operators5 = rbind(operators5, "<=", ">=")
+    b5 = rbind(b5, differenceThreshold, (-1)*differenceThreshold)
+  }
+}
+for(i in 1:(NROW(vehicleTypeCategories)-1)) {
+  for(j in (i+1):(NROW(vehicleTypeCategories))) {
+    rowVector = vector("numeric", numVars)
+    rowVector[vehicleTypeStartIndex -1 + i] = 1
+    rowVector[vehicleTypeStartIndex -1 + j] = -1
+    A5 = rbind(A5, rowVector, rowVector)
+    operators5 = rbind(operators5, "<=", ">=")
+    b5 = rbind(b5, differenceThreshold, (-1)*differenceThreshold)
+  }
+}
+for(i in 1:(NROW(vehicleYearCategories)-1)) {
+  for(j in (i+1):(NROW(vehicleYearCategories))) {
+    rowVector = vector("numeric", numVars)
+    rowVector[vehicleYearStartIndex -1 + i] = 1
+    rowVector[vehicleYearStartIndex -1 + j] = -1
+    A5 = rbind(A5, rowVector, rowVector)
+    operators5 = rbind(operators5, "<=", ">=")
+    b5 = rbind(b5, differenceThreshold, (-1)*differenceThreshold)
+  }
+}
+
+
+# Set the objective function vector
+# The insurance cost a person is $2000 + (sum of all applicable factors)*1000
+# Since every person is charged $2000 regardless, it does not need to be added to our objective function
+coeffs = categoriesMatrix*1000
+obj = colSums(coeffs)
+
+# Solve
+model = list()
+model$A = A5
+model$obj = obj
+model$modelsense = "max"
+model$rhs = b5
+model$sense = operators5
+model$vtype = vtype
+result = gurobi(model)
+
+# Resulting factors
+result$x
+
+# --------------------------------------- MODEL 6: FAIRNESS BETWEEN ALL CATEGORIES  -------------------------------------
+
+# This model is similar to model 5, but in this model, we consider fairness between all categories, rather than just 
+# within categories. In model 4, we only disallowed differences greater than 0.1 within the category. In this model,
+# we will disallow differences greater than 0.1 within the entire proble (i.e. no two categories may have a difference
+# in factors that is greater than 0.1)
+
+differenceThreshold = 0.1
+
+# Set the variable types
+vtype = matrix('C', nrow = 1, ncol = numVars)
+
+# Set the A matrix 
+# All the factors should add to at most 1
+A6 = matrix(1, nrow = 1, ncol = numVars)
+
+# Set the B vector
+# All the factors should add to at most 1
+b6 = matrix(1, nrow = 1, ncol = 1)
+
+# Set the operators vector
+operators6 = matrix('<=', nrow = 1, ncol = 1)
+
+
+# Add fairness constraints for all variables
+# Need a constraint for each pair of category values
+# Since we are dealing with abolsolute values, we need two constraints for each pair
+for(i in 1:(numVars-1)) {
+  for(j in (i+1):numVars) {
+    rowVector = vector("numeric", numVars)
+    rowVector[i] = 1
+    rowVector[j] = -1
+    A6 = rbind(A6, rowVector, rowVector)
+    operators6 = rbind(operators6, "<=", ">=")
+    b6 = rbind(b6, differenceThreshold, (-1)*differenceThreshold)
+  }
+}
+
+
+# Set the objective function vector
+# The insurance cost a person is $2000 + (sum of all applicable factors)*1000
+# Since every person is charged $2000 regardless, it does not need to be added to our objective function
+coeffs = categoriesMatrix*1000
+obj = colSums(coeffs)
+
+# Solve
+model = list()
+model$A = A6
+model$obj = obj
+model$modelsense = "max"
+model$rhs = b6
+model$sense = operators6
+model$vtype = vtype
+result = gurobi(model)
+
+# Resulting factors
+result$x
+
+# ----------------------------- MODEL 7: FAIRNESS WITHIN VARIABLES AND FACTOR CONSTRAINTS  ------------------------------
+
+
+# ---------------------------- MODEL 7: FAIRNESS BETWEEN ALL CATEGORIES AND FACTOR CONSTRAINTS  ------------------------------
+
+
+# ---------------------------------------------- MODEL 7: RISK-BASED PAY ----------------------------------------------
 
 # Use actual prediction values of injury in this model
 # Base model but multiply each obj value by prediction?
 
 
-# ----------------------------------------- MODEL 7: PRE-DETERMINED INTERVALS -------------------------------------------
+# ----------------------------------------- MODEL 8: PRE-DETERMINED INTERVALS -------------------------------------------
 
 # In this model, we will use predetermined intervals for pay. For example, 50% of people should pay an extra $1-$200,
 # 30% of people should pay an extra $201-$500, and 20% of peole should pay an extra $501-$1000. This is a way to create a
@@ -757,6 +929,6 @@ result$x
 # people should pay on the lower end while only exceptions to the rule should pay on the higher end.
 
 
-# ---------------------------------------------- MODEL 8: COMBINATION -------------------------------------------------
+# ---------------------------------------------- MODEL 9: COMBINATION -------------------------------------------------
 
 
