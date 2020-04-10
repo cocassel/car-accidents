@@ -6,7 +6,7 @@ library(gurobi)
 setwd("/Users/Celeste/Documents/GitHub/car-accidents/")
 set.seed(3859)
 
-############################################ DATA PREPARATION ############################################
+#################################################### DATA PREPARATION ###################################################
 
 # Due to memory issues, only use the last 1 million lines of the data (most recent)
 # data = read.csv("NCDB_1999_to_2014.csv")
@@ -208,7 +208,16 @@ driverData$P_AGE[driverData$P_AGE > 80 & driverData$P_AGE <= 90] = 81
 driverData$P_AGE[driverData$P_AGE > 90] = 91
 write.csv(driverData, "cleanedDriverData.csv")
 
-############################################## LOGISTIC REGRESSION ###############################################
+
+#################################################### DATA VISUALIZATION ##################################################
+
+# ------------------------------------------------------ ALL DATA ------------------------------------------------------
+
+
+# ----------------------------------------------------- DRIVER DATA -----------------------------------------------------
+
+
+################################################### LOGISTIC REGRESSION ##################################################
 
 # Read in CSV
 data = read.csv("cleanedData.csv")
@@ -259,7 +268,7 @@ driverDataTest = subset(driverData, driverSplit == FALSE)  # Observations to be 
 nrow(driverDataTrain)
 nrow(driverDataTest)
 
-# --------------------------------------------- BUILDING MODELS --------------------------------------------------
+# ----------------------------------------------- BUILDING MODELS --------------------------------------------------
 
 # MODEL 1: All variables
 # C_SEV is not included because the severity of the crash should not be used to predict the severity of a person in the crash
