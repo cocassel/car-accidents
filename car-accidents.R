@@ -579,7 +579,7 @@ b = matrix(1, nrow = 1, ncol = 1)
 operators = matrix('<=', nrow = 1, ncol = 1)
 
 # Set the objective function vector
-# The insurance cost a person is $2000 + (sum of all applicable factors)*1000
+# The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
 # Since every person is charged $2000 regardless, it does not need to be added to our objective function
 coeffs = categoriesMatrix*1000
 obj = colSums(coeffs)
@@ -628,7 +628,7 @@ b2 = matrix(0.25, nrow = 4, ncol = 1)
 operators2 = matrix('<=', nrow = 4, ncol = 1)
 
 # Set the objective function vector
-# The insurance cost a person is $2000 + (sum of all applicable factors)*1000
+# The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
 # Since every person is charged $2000 regardless, it does not need to be added to our objective function
 coeffs = categoriesMatrix*1000
 obj = colSums(coeffs)
@@ -712,7 +712,7 @@ for(i in 1:(NROW(vehicleYearRanks)-1)) {
 }
 
 # Set the objective function vector
-# The insurance cost a person is $2000 + (sum of all applicable factors)*1000
+# The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
 # Since every person is charged $2000 regardless, it does not need to be added to our objective function
 coeffs = categoriesMatrix*1000
 obj = colSums(coeffs)
@@ -766,7 +766,7 @@ result$x
 # ----------------------------------------- MODEL 5: FAIRNESS WITHIN VARIABLES  ---------------------------------------
 
 # In this model we add constraints for the fairness of the policy. For example, we can charge males more than females,
-# but not by too much or this will be received as unfair by the public. We will add constraints to introduce fairness 
+# but not by too much or this may be perceived as unfair by the public. We will add constraints to introduce fairness 
 # within categories. No two category values should be more than 0.1 different than each other. Note that the overall 
 # difference in what people pay can still be greater than 0.1*1000 because their total cost is based on multiple variables.
 
@@ -786,10 +786,9 @@ b5 = matrix(1, nrow = 1, ncol = 1)
 # Set the operators vector
 operators5 = matrix('<=', nrow = 1, ncol = 1)
 
-
 # Add fairness constraints for each variable
-# Need a constraint for each pair of values in a category
-# Since we are dealing with abolsolute values, we need two constraints for each pair
+# Need a constraint for each pair of category values in a variable
+# Since we are dealing with abolsolute values, we need two constraints for each pair of values
 for(i in 1:(NROW(sexCategories)-1)) {
   for(j in (i+1):(NROW(sexCategories))) {
     rowVector = vector("numeric", numVars)
@@ -833,7 +832,7 @@ for(i in 1:(NROW(vehicleYearCategories)-1)) {
 
 
 # Set the objective function vector
-# The insurance cost a person is $2000 + (sum of all applicable factors)*1000
+# The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
 # Since every person is charged $2000 regardless, it does not need to be added to our objective function
 coeffs = categoriesMatrix*1000
 obj = colSums(coeffs)
@@ -854,9 +853,9 @@ result$x
 # --------------------------------------- MODEL 6: FAIRNESS BETWEEN ALL CATEGORIES  -------------------------------------
 
 # This model is similar to model 5, but in this model, we consider fairness between all categories, rather than just 
-# within categories. In model 4, we only disallowed differences greater than 0.1 within the category. In this model,
-# we will disallow differences greater than 0.1 within the entire proble (i.e. no two categories may have a difference
-# in factors that is greater than 0.1)
+# within variables. In model 5, we only disallowed differences greater than 0.1 within the variable. In this model,
+# we will disallow differences greater than 0.1 within the entire problem (i.e. no two categories may have a difference
+# in factors that is greater than 0.1 irresepctive of which variables the categories are associated with)
 
 differenceThreshold = 0.1
 
@@ -874,8 +873,7 @@ b6 = matrix(1, nrow = 1, ncol = 1)
 # Set the operators vector
 operators6 = matrix('<=', nrow = 1, ncol = 1)
 
-
-# Add fairness constraints for all variables
+# Add fairness constraints for all categories
 # Need a constraint for each pair of category values
 # Since we are dealing with abolsolute values, we need two constraints for each pair
 for(i in 1:(numVars-1)) {
@@ -889,9 +887,8 @@ for(i in 1:(numVars-1)) {
   }
 }
 
-
 # Set the objective function vector
-# The insurance cost a person is $2000 + (sum of all applicable factors)*1000
+# The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
 # Since every person is charged $2000 regardless, it does not need to be added to our objective function
 coeffs = categoriesMatrix*1000
 obj = colSums(coeffs)
