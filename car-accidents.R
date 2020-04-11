@@ -1,5 +1,9 @@
 rm(list=ls())
 library(caTools) 
+library(ggplot2)
+library(dplyr)
+library(corrplot)
+library(cluster) 
 library(gurobi)
 
 #setwd("/Users/Ahmad Dakhqan/Desktop/MSCI 433/Project/car-accidents/")
@@ -212,10 +216,160 @@ write.csv(driverData, "cleanedDriverData.csv")
 #################################################### DATA VISUALIZATION ##################################################
 
 # ------------------------------------------------------ ALL DATA ------------------------------------------------------
+### P_SEX Visualization
+p_sexCategory = data.frame(
+  category = c("Male","Female"),
+  value = c(nrow(subset(data, P_SEX == "M")),nrow(subset(data, P_SEX == "F")))
+)
+# Compute percentages
+p_sexCategory$fraction <- p_sexCategory$value / sum(p_sexCategory$value)
 
+# Compute the cumulative percentages (top of each rectangle)
+p_sexCategory$ymax <- cumsum(p_sexCategory$fraction)
+
+# Compute the bottom of each rectangle
+p_sexCategory$ymin <- c(0, head(p_sexCategory$ymax, n=-1))
+
+# Compute label position
+p_sexCategory$labelPosition <- (p_sexCategory$ymax + p_sexCategory$ymin) / 2
+
+# Compute a good label
+p_sexCategory$label <- paste0(p_sexCategory$category, "\n value: ", p_sexCategory$value)
+
+# Make the plot
+ggplot(p_sexCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  geom_rect() +
+  geom_label( x=3.5, aes(y=labelPosition, label=label), size=6) +
+  scale_fill_brewer(palette=4) +
+  coord_polar(theta="y") +
+  xlim(c(2, 4)) +
+  theme_void() +
+  theme(legend.position = "none")
+
+### P_AGE Visualization
+p_ageCategory = data.frame(
+  category=c("less than 11","between 11 and 20","between 21 and 30","between 31 and 40","between 41 and 50","between 51 and 60","between 61 and 70","between 71 and 80","between 81 and 90","greater than 91"),  
+  value=c(nrow(subset(data, P_AGE == 1)),nrow(subset(data, P_AGE == 11)),nrow(subset(data, P_AGE == 21)),nrow(subset(data, P_AGE == 31)),nrow(subset(data, P_AGE == 41)),nrow(subset(data, P_AGE == 51)),nrow(subset(data, P_AGE == 61)),nrow(subset(data, P_AGE == 71)),nrow(subset(data, P_AGE == 81)),nrow(subset(data, P_AGE == 91)))
+)
+barplot(height=p_ageCategory$value, names=p_ageCategory$category, col="#69b3a2", las=2, main = "All Data: Age Range(s)")
+
+### V_TYPE Visualization
+v_typeCategory = data.frame(
+  category = c("Light duty vehicle","Truck","Tractor","Bus","Motorcycle & Moped","Off-Road Vehicle","Bicycle","Purpose-Built Motorhome","Farm Equipment","Construction Equipment","Fire Engine","Snowmobile","Street Car"),
+  value=c(nrow(subset(data, V_TYPE == 1)),nrow(subset(data, V_TYPE == 5)),nrow(subset(data, V_TYPE == 8)),nrow(subset(data, V_TYPE == 9)),nrow(subset(data, V_TYPE == 14)),nrow(subset(data, V_TYPE == 16)),nrow(subset(data, V_TYPE == 17)),nrow(subset(data, V_TYPE == 18)),nrow(subset(data, V_TYPE == 19)),nrow(subset(data, V_TYPE == 20)),nrow(subset(data, V_TYPE == 21)),nrow(subset(data, V_TYPE ==22)),nrow(subset(data, V_TYPE == 23)))
+)
+# Compute percentages
+v_typeCategory$fraction = v_typeCategory$value / sum(v_typeCategory$value)
+
+# Compute the cumulative percentages (top of each rectangle)
+v_typeCategory$ymax = cumsum(v_typeCategory$fraction)
+
+# Compute the bottom of each rectangle
+v_typeCategory$ymin = c(0, head(v_typeCategory$ymax, n=-1))
+
+# Make the plot
+ggplot(v_typeCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  geom_rect() +
+  coord_polar(theta="y") +
+  xlim(c(2, 4)) 
+
+### V_YEAR Visualization
+v_yearCategory = data.frame(
+  category = c("before 1951","between 1951 and 1980","between 1981 and 1990","between 1991 and 2000","between 2001 and 2010","after 2010"),
+  value = c(nrow(subset(data, V_YEAR == 1901)),nrow(subset(data, V_YEAR == 1951)),nrow(subset(data, V_YEAR == 1981)),nrow(subset(data, V_YEAR == 1991)),nrow(subset(data, V_YEAR == 2001)),nrow(subset(data, V_YEAR == 2011)))
+)
+# Compute percentages
+v_yearCategory$fraction = v_yearCategory$value / sum(v_yearCategory$value)
+
+# Compute the cumulative percentages (top of each rectangle)
+v_yearCategory$ymax = cumsum(v_yearCategory$fraction)
+
+# Compute the bottom of each rectangle
+v_yearCategory$ymin = c(0, head(v_yearCategory$ymax, n=-1))
+
+# Make the plot
+ggplot(v_yearCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  geom_rect() +
+  coord_polar(theta="y") +
+  xlim(c(2, 4)) 
 
 # ----------------------------------------------------- DRIVER DATA -----------------------------------------------------
+### P_SEX Visualization
+p_sex2_Category = data.frame(
+  category = c("Male","Female"),
+  value = c(nrow(subset(driverData, P_SEX == "M")),nrow(subset(driverData, P_SEX == "F")))
+)
+# Compute percentages
+p_sex2_Category$fraction <- p_sex2_Category$value / sum(p_sex2_Category$value)
 
+# Compute the cumulative percentages (top of each rectangle)
+p_sex2_Category$ymax <- cumsum(p_sex2_Category$fraction)
+
+# Compute the bottom of each rectangle
+p_sex2_Category$ymin <- c(0, head(p_sex2_Category$ymax, n=-1))
+
+# Compute label position
+p_sex2_Category$labelPosition <- (p_sex2_Category$ymax + p_sex2_Category$ymin) / 2
+
+# Compute a good label
+p_sex2_Category$label <- paste0(p_sex2_Category$category, "\n value: ", p_sex2_Category$value)
+
+# Make the plot
+ggplot(p_sex2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  geom_rect() +
+  geom_label( x=3.5, aes(y=labelPosition, label=label), size=6) +
+  scale_fill_brewer(palette=4) +
+  coord_polar(theta="y") +
+  xlim(c(2, 4)) +
+  theme_void() +
+  theme(legend.position = "none")
+
+### P_AGE Visualization
+p_age2_Category = data.frame(
+  category=c("less than 11","between 11 and 20","between 21 and 30","between 31 and 40","between 41 and 50","between 51 and 60","between 61 and 70","between 71 and 80","between 81 and 90","greater than 91"),  
+  value=c(nrow(subset(driverData, P_AGE == 1)),nrow(subset(driverData, P_AGE == 11)),nrow(subset(driverData, P_AGE == 21)),nrow(subset(driverData, P_AGE == 31)),nrow(subset(driverData, P_AGE == 41)),nrow(subset(driverData, P_AGE == 51)),nrow(subset(driverData, P_AGE == 61)),nrow(subset(driverData, P_AGE == 71)),nrow(subset(driverData, P_AGE == 81)),nrow(subset(driverData, P_AGE == 91)))
+)
+barplot(height=p_age2_Category$value, names=p_age2_Category$category, col="#69b3a2", las=2, main = "Driver Data: Age Range(s)")
+
+### V_TYPE Visualization
+v_type2_Category = data.frame(
+  category = c("Light duty vehicle","Truck","Tractor","Bus","Motorcycle & Moped","Off-Road Vehicle","Bicycle","Purpose-Built Motorhome","Farm Equipment","Construction Equipment","Fire Engine","Snowmobile","Street Car"),
+  value=c(nrow(subset(driverData, V_TYPE == 1)),nrow(subset(driverData, V_TYPE == 5)),nrow(subset(driverData, V_TYPE == 8)),nrow(subset(driverData, V_TYPE == 9)),nrow(subset(driverData, V_TYPE == 14)),nrow(subset(driverData, V_TYPE == 16)),nrow(subset(driverData, V_TYPE == 17)),nrow(subset(driverData, V_TYPE == 18)),nrow(subset(driverData, V_TYPE == 19)),nrow(subset(driverData, V_TYPE == 20)),nrow(subset(driverData, V_TYPE == 21)),nrow(subset(driverData, V_TYPE ==22)),nrow(subset(driverData, V_TYPE == 23)))
+)
+# Compute percentages
+v_type2_Category$fraction = v_type2_Category$value / sum(v_type2_Category$value)
+
+# Compute the cumulative percentages (top of each rectangle)
+v_type2_Category$ymax = cumsum(v_type2_Category$fraction)
+
+# Compute the bottom of each rectangle
+v_type2_Category$ymin = c(0, head(v_type2_Category$ymax, n=-1))
+
+# Make the plot
+ggplot(v_type2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  geom_rect() +
+  coord_polar(theta="y") +
+  xlim(c(2, 4)) 
+
+### V_YEAR Visualization
+v_year2_Category = data.frame(
+  category = c("before 1951","between 1951 and 1980","between 1981 and 1990","between 1991 and 2000","between 2001 and 2010","after 2010"),
+  value = c(nrow(subset(driverData, V_YEAR == 1901)),nrow(subset(driverData, V_YEAR == 1951)),nrow(subset(driverData, V_YEAR == 1981)),nrow(subset(driverData, V_YEAR == 1991)),nrow(subset(driverData, V_YEAR == 2001)),nrow(subset(driverData, V_YEAR == 2011)))
+)
+# Compute percentages
+v_year2_Category$fraction = v_year2_Category$value / sum(v_year2_Category$value)
+
+# Compute the cumulative percentages (top of each rectangle)
+v_year2_Category$ymax = cumsum(v_year2_Category$fraction)
+
+# Compute the bottom of each rectangle
+v_year2_Category$ymin = c(0, head(v_year2_Category$ymax, n=-1))
+
+# Make the plot
+ggplot(v_year2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  geom_rect() +
+  coord_polar(theta="y") +
+  xlim(c(2, 4)) 
 
 ################################################### LOGISTIC REGRESSION ##################################################
 
