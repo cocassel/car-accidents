@@ -216,7 +216,7 @@ write.csv(driverData, "cleanedDriverData.csv")
 #################################################### DATA VISUALIZATION ##################################################
 
 # ------------------------------------------------------ ALL DATA ------------------------------------------------------
-### P_SEX Visualization
+### P_SEX Visualization ##################################################################################################
 p_sexCategory = data.frame(
   category = c("Male","Female"),
   value = c(nrow(subset(data, P_SEX == "M")),nrow(subset(data, P_SEX == "F")))
@@ -238,6 +238,7 @@ p_sexCategory$label <- paste0(p_sexCategory$category, "\n value: ", p_sexCategor
 
 # Make the plot
 ggplot(p_sexCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  ggtitle("All Data: Gender Distribution") +
   geom_rect() +
   geom_label( x=3.5, aes(y=labelPosition, label=label), size=6) +
   scale_fill_brewer(palette=4) +
@@ -246,14 +247,15 @@ ggplot(p_sexCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) 
   theme_void() +
   theme(legend.position = "none")
 
-### P_AGE Visualization
+
+### P_AGE Visualization ##################################################################################################
 p_ageCategory = data.frame(
   category=c("less than 11","between 11 and 20","between 21 and 30","between 31 and 40","between 41 and 50","between 51 and 60","between 61 and 70","between 71 and 80","between 81 and 90","greater than 91"),  
   value=c(nrow(subset(data, P_AGE == 1)),nrow(subset(data, P_AGE == 11)),nrow(subset(data, P_AGE == 21)),nrow(subset(data, P_AGE == 31)),nrow(subset(data, P_AGE == 41)),nrow(subset(data, P_AGE == 51)),nrow(subset(data, P_AGE == 61)),nrow(subset(data, P_AGE == 71)),nrow(subset(data, P_AGE == 81)),nrow(subset(data, P_AGE == 91)))
 )
 barplot(height=p_ageCategory$value, names=p_ageCategory$category, col="#69b3a2", las=2, main = "All Data: Age Range(s)")
 
-### V_TYPE Visualization
+### V_TYPE Visualization #################################################################################################
 v_typeCategory = data.frame(
   category = c("Light duty vehicle","Truck","Tractor","Bus","Motorcycle & Moped","Off-Road Vehicle","Bicycle","Purpose-Built Motorhome","Farm Equipment","Construction Equipment","Fire Engine","Snowmobile","Street Car"),
   value=c(nrow(subset(data, V_TYPE == 1)),nrow(subset(data, V_TYPE == 5)),nrow(subset(data, V_TYPE == 8)),nrow(subset(data, V_TYPE == 9)),nrow(subset(data, V_TYPE == 14)),nrow(subset(data, V_TYPE == 16)),nrow(subset(data, V_TYPE == 17)),nrow(subset(data, V_TYPE == 18)),nrow(subset(data, V_TYPE == 19)),nrow(subset(data, V_TYPE == 20)),nrow(subset(data, V_TYPE == 21)),nrow(subset(data, V_TYPE ==22)),nrow(subset(data, V_TYPE == 23)))
@@ -269,11 +271,12 @@ v_typeCategory$ymin = c(0, head(v_typeCategory$ymax, n=-1))
 
 # Make the plot
 ggplot(v_typeCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  ggtitle("All Data: Vehicle Type(s)") +
   geom_rect() +
   coord_polar(theta="y") +
   xlim(c(2, 4)) 
 
-### V_YEAR Visualization
+### V_YEAR Visualization #################################################################################################
 v_yearCategory = data.frame(
   category = c("before 1951","between 1951 and 1980","between 1981 and 1990","between 1991 and 2000","between 2001 and 2010","after 2010"),
   value = c(nrow(subset(data, V_YEAR == 1901)),nrow(subset(data, V_YEAR == 1951)),nrow(subset(data, V_YEAR == 1981)),nrow(subset(data, V_YEAR == 1991)),nrow(subset(data, V_YEAR == 2001)),nrow(subset(data, V_YEAR == 2011)))
@@ -289,12 +292,13 @@ v_yearCategory$ymin = c(0, head(v_yearCategory$ymax, n=-1))
 
 # Make the plot
 ggplot(v_yearCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  ggtitle("All Data: Vehicle Year(s)") +
   geom_rect() +
   coord_polar(theta="y") +
   xlim(c(2, 4)) 
 
 # ----------------------------------------------------- DRIVER DATA -----------------------------------------------------
-### P_SEX Visualization
+### P_SEX Visualization #################################################################################################
 p_sex2_Category = data.frame(
   category = c("Male","Female"),
   value = c(nrow(subset(driverData, P_SEX == "M")),nrow(subset(driverData, P_SEX == "F")))
@@ -316,6 +320,7 @@ p_sex2_Category$label <- paste0(p_sex2_Category$category, "\n value: ", p_sex2_C
 
 # Make the plot
 ggplot(p_sex2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  ggtitle("Driver Data: Gender Distribution") +
   geom_rect() +
   geom_label( x=3.5, aes(y=labelPosition, label=label), size=6) +
   scale_fill_brewer(palette=4) +
@@ -324,14 +329,14 @@ ggplot(p_sex2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)
   theme_void() +
   theme(legend.position = "none")
 
-### P_AGE Visualization
+### P_AGE Visualization ##################################################################################################
 p_age2_Category = data.frame(
   category=c("less than 11","between 11 and 20","between 21 and 30","between 31 and 40","between 41 and 50","between 51 and 60","between 61 and 70","between 71 and 80","between 81 and 90","greater than 91"),  
   value=c(nrow(subset(driverData, P_AGE == 1)),nrow(subset(driverData, P_AGE == 11)),nrow(subset(driverData, P_AGE == 21)),nrow(subset(driverData, P_AGE == 31)),nrow(subset(driverData, P_AGE == 41)),nrow(subset(driverData, P_AGE == 51)),nrow(subset(driverData, P_AGE == 61)),nrow(subset(driverData, P_AGE == 71)),nrow(subset(driverData, P_AGE == 81)),nrow(subset(driverData, P_AGE == 91)))
 )
 barplot(height=p_age2_Category$value, names=p_age2_Category$category, col="#69b3a2", las=2, main = "Driver Data: Age Range(s)")
 
-### V_TYPE Visualization
+### V_TYPE Visualization #################################################################################################
 v_type2_Category = data.frame(
   category = c("Light duty vehicle","Truck","Tractor","Bus","Motorcycle & Moped","Off-Road Vehicle","Bicycle","Purpose-Built Motorhome","Farm Equipment","Construction Equipment","Fire Engine","Snowmobile","Street Car"),
   value=c(nrow(subset(driverData, V_TYPE == 1)),nrow(subset(driverData, V_TYPE == 5)),nrow(subset(driverData, V_TYPE == 8)),nrow(subset(driverData, V_TYPE == 9)),nrow(subset(driverData, V_TYPE == 14)),nrow(subset(driverData, V_TYPE == 16)),nrow(subset(driverData, V_TYPE == 17)),nrow(subset(driverData, V_TYPE == 18)),nrow(subset(driverData, V_TYPE == 19)),nrow(subset(driverData, V_TYPE == 20)),nrow(subset(driverData, V_TYPE == 21)),nrow(subset(driverData, V_TYPE ==22)),nrow(subset(driverData, V_TYPE == 23)))
@@ -347,11 +352,12 @@ v_type2_Category$ymin = c(0, head(v_type2_Category$ymax, n=-1))
 
 # Make the plot
 ggplot(v_type2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  ggtitle("Driver Data: Vehicle Type(s)") +
   geom_rect() +
   coord_polar(theta="y") +
   xlim(c(2, 4)) 
 
-### V_YEAR Visualization
+### V_YEAR Visualization ##################################################################################################
 v_year2_Category = data.frame(
   category = c("before 1951","between 1951 and 1980","between 1981 and 1990","between 1991 and 2000","between 2001 and 2010","after 2010"),
   value = c(nrow(subset(driverData, V_YEAR == 1901)),nrow(subset(driverData, V_YEAR == 1951)),nrow(subset(driverData, V_YEAR == 1981)),nrow(subset(driverData, V_YEAR == 1991)),nrow(subset(driverData, V_YEAR == 2001)),nrow(subset(driverData, V_YEAR == 2011)))
@@ -367,6 +373,7 @@ v_year2_Category$ymin = c(0, head(v_year2_Category$ymax, n=-1))
 
 # Make the plot
 ggplot(v_year2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  ggtitle("Driver Data: Vehicle Year(s)") +
   geom_rect() +
   coord_polar(theta="y") +
   xlim(c(2, 4)) 
