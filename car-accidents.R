@@ -216,7 +216,9 @@ write.csv(driverData, "cleanedDriverData.csv")
 #################################################### DATA VISUALIZATION ##################################################
 
 # ------------------------------------------------------ ALL DATA ------------------------------------------------------
-### P_SEX Visualization ##################################################################################################
+
+# P_SEX VISUALIZATION
+
 p_sexCategory = data.frame(
   category = c("Male","Female"),
   value = c(nrow(subset(data, P_SEX == "M")),nrow(subset(data, P_SEX == "F")))
@@ -248,14 +250,17 @@ ggplot(p_sexCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) 
   theme(legend.position = "none")
 
 
-### P_AGE Visualization ##################################################################################################
+# P_AGE VISUALIZATION
+
 p_ageCategory = data.frame(
   category=c("less than 11","between 11 and 20","between 21 and 30","between 31 and 40","between 41 and 50","between 51 and 60","between 61 and 70","between 71 and 80","between 81 and 90","greater than 91"),  
   value=c(nrow(subset(data, P_AGE == 1)),nrow(subset(data, P_AGE == 11)),nrow(subset(data, P_AGE == 21)),nrow(subset(data, P_AGE == 31)),nrow(subset(data, P_AGE == 41)),nrow(subset(data, P_AGE == 51)),nrow(subset(data, P_AGE == 61)),nrow(subset(data, P_AGE == 71)),nrow(subset(data, P_AGE == 81)),nrow(subset(data, P_AGE == 91)))
 )
 barplot(height=p_ageCategory$value, names=p_ageCategory$category, col="#69b3a2", las=2, main = "All Data: Age Range(s)")
 
-### V_TYPE Visualization #################################################################################################
+
+# V_TYPE VISUALIZATION
+
 v_typeCategory = data.frame(
   category = c("Light duty vehicle","Truck","Tractor","Bus","Motorcycle & Moped","Off-Road Vehicle","Bicycle","Purpose-Built Motorhome","Farm Equipment","Construction Equipment","Fire Engine","Snowmobile","Street Car"),
   value=c(nrow(subset(data, V_TYPE == 1)),nrow(subset(data, V_TYPE == 5)),nrow(subset(data, V_TYPE == 8)),nrow(subset(data, V_TYPE == 9)),nrow(subset(data, V_TYPE == 14)),nrow(subset(data, V_TYPE == 16)),nrow(subset(data, V_TYPE == 17)),nrow(subset(data, V_TYPE == 18)),nrow(subset(data, V_TYPE == 19)),nrow(subset(data, V_TYPE == 20)),nrow(subset(data, V_TYPE == 21)),nrow(subset(data, V_TYPE ==22)),nrow(subset(data, V_TYPE == 23)))
@@ -276,7 +281,9 @@ ggplot(v_typeCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category))
   coord_polar(theta="y") +
   xlim(c(2, 4)) 
 
-### V_YEAR Visualization #################################################################################################
+
+# V_YEAR VISUALIZATION
+
 v_yearCategory = data.frame(
   category = c("before 1951","between 1951 and 1980","between 1981 and 1990","between 1991 and 2000","between 2001 and 2010","after 2010"),
   value = c(nrow(subset(data, V_YEAR == 1901)),nrow(subset(data, V_YEAR == 1951)),nrow(subset(data, V_YEAR == 1981)),nrow(subset(data, V_YEAR == 1991)),nrow(subset(data, V_YEAR == 2001)),nrow(subset(data, V_YEAR == 2011)))
@@ -298,7 +305,9 @@ ggplot(v_yearCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category))
   xlim(c(2, 4)) 
 
 # ----------------------------------------------------- DRIVER DATA -----------------------------------------------------
-### P_SEX Visualization #################################################################################################
+
+# P_SEX VISUALIZATION
+
 p_sex2_Category = data.frame(
   category = c("Male","Female"),
   value = c(nrow(subset(driverData, P_SEX == "M")),nrow(subset(driverData, P_SEX == "F")))
@@ -329,14 +338,18 @@ ggplot(p_sex2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)
   theme_void() +
   theme(legend.position = "none")
 
-### P_AGE Visualization ##################################################################################################
+
+# P_AGE VISUALIZATION
+
 p_age2_Category = data.frame(
   category=c("less than 11","between 11 and 20","between 21 and 30","between 31 and 40","between 41 and 50","between 51 and 60","between 61 and 70","between 71 and 80","between 81 and 90","greater than 91"),  
   value=c(nrow(subset(driverData, P_AGE == 1)),nrow(subset(driverData, P_AGE == 11)),nrow(subset(driverData, P_AGE == 21)),nrow(subset(driverData, P_AGE == 31)),nrow(subset(driverData, P_AGE == 41)),nrow(subset(driverData, P_AGE == 51)),nrow(subset(driverData, P_AGE == 61)),nrow(subset(driverData, P_AGE == 71)),nrow(subset(driverData, P_AGE == 81)),nrow(subset(driverData, P_AGE == 91)))
 )
 barplot(height=p_age2_Category$value, names=p_age2_Category$category, col="#69b3a2", las=2, main = "Driver Data: Age Range(s)")
 
-### V_TYPE Visualization #################################################################################################
+
+# V_TYPE VISUALIZATION
+
 v_type2_Category = data.frame(
   category = c("Light duty vehicle","Truck","Tractor","Bus","Motorcycle & Moped","Off-Road Vehicle","Bicycle","Purpose-Built Motorhome","Farm Equipment","Construction Equipment","Fire Engine","Snowmobile","Street Car"),
   value=c(nrow(subset(driverData, V_TYPE == 1)),nrow(subset(driverData, V_TYPE == 5)),nrow(subset(driverData, V_TYPE == 8)),nrow(subset(driverData, V_TYPE == 9)),nrow(subset(driverData, V_TYPE == 14)),nrow(subset(driverData, V_TYPE == 16)),nrow(subset(driverData, V_TYPE == 17)),nrow(subset(driverData, V_TYPE == 18)),nrow(subset(driverData, V_TYPE == 19)),nrow(subset(driverData, V_TYPE == 20)),nrow(subset(driverData, V_TYPE == 21)),nrow(subset(driverData, V_TYPE ==22)),nrow(subset(driverData, V_TYPE == 23)))
@@ -357,7 +370,9 @@ ggplot(v_type2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category
   coord_polar(theta="y") +
   xlim(c(2, 4)) 
 
-### V_YEAR Visualization ##################################################################################################
+
+# V_YEAR VISUALIZATION
+
 v_year2_Category = data.frame(
   category = c("before 1951","between 1951 and 1980","between 1981 and 1990","between 1991 and 2000","between 2001 and 2010","after 2010"),
   value = c(nrow(subset(driverData, V_YEAR == 1901)),nrow(subset(driverData, V_YEAR == 1951)),nrow(subset(driverData, V_YEAR == 1981)),nrow(subset(driverData, V_YEAR == 1991)),nrow(subset(driverData, V_YEAR == 2001)),nrow(subset(driverData, V_YEAR == 2011)))
