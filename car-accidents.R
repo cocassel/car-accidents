@@ -216,7 +216,9 @@ write.csv(driverData, "cleanedDriverData.csv")
 #################################################### DATA VISUALIZATION ##################################################
 
 # ------------------------------------------------------ ALL DATA ------------------------------------------------------
-### P_SEX Visualization ##################################################################################################
+
+# P_SEX VISUALIZATION 
+
 p_sexCategory = data.frame(
   category = c("Male","Female"),
   value = c(nrow(subset(data, P_SEX == "M")),nrow(subset(data, P_SEX == "F")))
@@ -248,14 +250,17 @@ ggplot(p_sexCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) 
   theme(legend.position = "none")
 
 
-### P_AGE Visualization ##################################################################################################
+# P_AGE VISUALIZATION 
+
 p_ageCategory = data.frame(
   category=c("<= 10",">10 & <=20",">20 & <=30",">30 & <=40",">40 & <=50",">50 & <=60",">60 & <=70",">70 & <=80",">80 & <=90",">90"),  
   value=c(nrow(subset(data, P_AGE == 1)),nrow(subset(data, P_AGE == 11)),nrow(subset(data, P_AGE == 21)),nrow(subset(data, P_AGE == 31)),nrow(subset(data, P_AGE == 41)),nrow(subset(data, P_AGE == 51)),nrow(subset(data, P_AGE == 61)),nrow(subset(data, P_AGE == 71)),nrow(subset(data, P_AGE == 81)),nrow(subset(data, P_AGE == 91)))
 )
 barplot(height=p_ageCategory$value, names=p_ageCategory$category, col=rgb(0.8,0,0,0.6), las=2, main = "All Data: Age Range(s)",cex.names=0.6)
 
-### V_TYPE Visualization #################################################################################################
+
+# V_TYPE VISUALIZATION 
+
 v_typeCategory = data.frame(
   category = c("Light-duty","Truck","Tractor","Bus","Motorcycle","Off-Road","Bicycle","Motorhome","Farm Equip.","Construction","Fire Engine","Snowmobile","Street Car"),
   value=c(nrow(subset(data, V_TYPE == 1)),nrow(subset(data, V_TYPE == 5)),nrow(subset(data, V_TYPE == 8)),nrow(subset(data, V_TYPE == 9)),nrow(subset(data, V_TYPE == 14)),nrow(subset(data, V_TYPE == 16)),nrow(subset(data, V_TYPE == 17)),nrow(subset(data, V_TYPE == 18)),nrow(subset(data, V_TYPE == 19)),nrow(subset(data, V_TYPE == 20)),nrow(subset(data, V_TYPE == 21)),nrow(subset(data, V_TYPE ==22)),nrow(subset(data, V_TYPE == 23)))
@@ -263,7 +268,8 @@ v_typeCategory = data.frame(
 barplot(height=v_typeCategory$value, names=v_typeCategory$category, col=rgb(0.4,0,0,0.2), las=2, main = "All Data: Vehicle Type(s)",cex.names=0.5,horiz=T)
 
 
-### V_YEAR Visualization #################################################################################################
+# V_YEAR VISUALIZATION 
+
 v_yearCategory = data.frame(
   category = c("<= 1950",">1950 & <=1980",">1980 & <=1990",">1990 & <=2000",">2001 & <=2010",">2010"),
   value = c(nrow(subset(data, V_YEAR == 1901)),nrow(subset(data, V_YEAR == 1951)),nrow(subset(data, V_YEAR == 1981)),nrow(subset(data, V_YEAR == 1991)),nrow(subset(data, V_YEAR == 2001)),nrow(subset(data, V_YEAR == 2011)))
@@ -272,7 +278,9 @@ barplot(height=v_yearCategory$value, names=v_yearCategory$category, col=rgb(0.2,
 
 
 # ----------------------------------------------------- DRIVER DATA -----------------------------------------------------
-### P_SEX Visualization #################################################################################################
+
+# P_SEX VISUALIZATION
+
 p_sex2_Category = data.frame(
   category = c("Male","Female"),
   value = c(nrow(subset(driverData, P_SEX == "M")),nrow(subset(driverData, P_SEX == "F")))
@@ -303,21 +311,27 @@ ggplot(p_sex2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)
   theme_void() +
   theme(legend.position = "none")
 
-### P_AGE Visualization ##################################################################################################
+
+# P_AGE VISUALIZATION
+
 p_age2_Category = data.frame(
   category=c("<= 10",">10 & <=20",">20 & <=30",">30 & <=40",">40 & <=50",">50 & <=60",">60 & <=70",">70 & <=80",">80 & <=90",">90"),  
   value=c(nrow(subset(driverData, P_AGE == 1)),nrow(subset(driverData, P_AGE == 11)),nrow(subset(driverData, P_AGE == 21)),nrow(subset(driverData, P_AGE == 31)),nrow(subset(driverData, P_AGE == 41)),nrow(subset(driverData, P_AGE == 51)),nrow(subset(driverData, P_AGE == 61)),nrow(subset(driverData, P_AGE == 71)),nrow(subset(driverData, P_AGE == 81)),nrow(subset(driverData, P_AGE == 91)))
 )
 barplot(height=p_age2_Category$value, names=p_age2_Category$category, col=rgb(0.8,0,0,0.6), las=2, main = "Driver Data: Age Range(s)",cex.names=0.6)
 
-### V_TYPE Visualization #################################################################################################
+
+# V_TYPE VISUALIZATION
+
 v_type2_Category = data.frame(
   category = c("Light-duty","Truck","Tractor","Bus","Motorcycle","Off-Road","Bicycle","Motorhome","Farm Equip.","Construction","Fire Engine","Snowmobile","Street Car"),
   value=c(nrow(subset(driverData, V_TYPE == 1)),nrow(subset(driverData, V_TYPE == 5)),nrow(subset(driverData, V_TYPE == 8)),nrow(subset(driverData, V_TYPE == 9)),nrow(subset(driverData, V_TYPE == 14)),nrow(subset(driverData, V_TYPE == 16)),nrow(subset(driverData, V_TYPE == 17)),nrow(subset(driverData, V_TYPE == 18)),nrow(subset(driverData, V_TYPE == 19)),nrow(subset(driverData, V_TYPE == 20)),nrow(subset(driverData, V_TYPE == 21)),nrow(subset(driverData, V_TYPE ==22)),nrow(subset(driverData, V_TYPE == 23)))
 )
 barplot(height=v_type2_Category$value, names=v_type2_Category$category, col=rgb(0.4,0,0,0.2), las=2, main = "Driver Data: Vehicle Type(s)",cex.names=0.5,horiz=T)
 
-### V_YEAR Visualization ##################################################################################################
+
+# V_YEAR VISUALIZATION
+
 v_year2_Category = data.frame(
   category = c("<= 1950",">1950 & <=1980",">1980 & <=1990",">1990 & <=2000",">2001 & <=2010",">2010"),
   value = c(nrow(subset(driverData, V_YEAR == 1901)),nrow(subset(driverData, V_YEAR == 1951)),nrow(subset(driverData, V_YEAR == 1981)),nrow(subset(driverData, V_YEAR == 1991)),nrow(subset(driverData, V_YEAR == 2001)),nrow(subset(driverData, V_YEAR == 2011)))
@@ -1022,8 +1036,44 @@ result$x
 
 # ---------------------------------------------- MODEL 7: RISK-BASED PAY ----------------------------------------------
 
-# Use actual prediction values of injury in this model
-# Base model but multiply each obj value by prediction?
+# In this model, we use the actual prediction values from the logistic regression. Rather than using the 
+# logistic regression to derive risk rankings and constraints, we use the predictions in the objective 
+# function. 
+
+# Set the variable types
+vtype = matrix('C', nrow = 1, ncol = numVars)
+
+# Set the A matrix 
+# All the factors should add to at most 1
+A7 = matrix(1, nrow = 1, ncol = numVars)
+
+# Set the B vector
+# All the factors should add to at most 1
+b7 = matrix(1, nrow = 1, ncol = 1)
+
+# Set the operators vector
+operators7 = matrix('<=', nrow = 1, ncol = 1)
+
+# Set the objective function vector
+# The insurance cost for a person is $2000 + (sum of all applicable factors)*(prediction value)*1000
+# Since every person is charged $2000 regardless, it does not need to be added to our objective function
+# Get predictions for drivers
+driverPredictions = predict(severeLog5, type = "response", newdata = driverData)
+coeffs = categoriesMatrix*maxVariableCost*driverPredictions
+obj = colSums(coeffs)
+
+# Solve
+model = list()
+model$A = A7
+model$obj = obj
+model$modelsense = "max"
+model$rhs = b7
+model$sense = operators7
+model$vtype = vtype
+result = gurobi(model)
+
+# Resulting factors
+result$x
 
 
 # ----------------------------------------- MODEL 8: PRE-DETERMINED INTERVALS -------------------------------------------
