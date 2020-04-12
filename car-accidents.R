@@ -684,16 +684,16 @@ driverTestConfMatrix = as.data.frame(driverTestConfMatrix)
 # in accidents. In these models, the number of times someone has been in a car accident is irrelevant (our data does
 # not indicate repeat offenders)
 
-# Create out dataset for the optimization problem
+# Create our dataset for the optimization problem
 insuranceData = subset(driverData, select = c(P_SEX, P_AGE, V_TYPE, V_YEAR))
 
 fixedCost = 2000
 maxVariableCost = 1000
 
-sexTable = as.data.frame(table(driverData$P_SEX))
-ageTable = as.data.frame(table(driverData$P_AGE))
-vehicleTypeTable = as.data.frame(table(driverData$V_TYPE))
-vehicleYearTable = as.data.frame(table(driverData$V_YEAR))
+sexTable = as.data.frame(table(insuranceData$P_SEX))
+ageTable = as.data.frame(table(insuranceData$P_AGE))
+vehicleTypeTable = as.data.frame(table(insuranceData$V_TYPE))
+vehicleYearTable = as.data.frame(table(insuranceData$V_YEAR))
 
 # P_SEX: female, male
 # P_AGE: 16-20, 21-30, 31-40, 41-50, 51-60, 61-70, 71-80, 81-90, 91+
@@ -757,7 +757,7 @@ operators = matrix('<=', nrow = 1, ncol = 1)
 # Set the objective function vector
 # The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
 # Since every person is charged $2000 regardless, it does not need to be added to our objective function
-coeffs = categoriesMatrix*1000
+coeffs = categoriesMatrix*maxVariableCost
 obj = colSums(coeffs)
 
 # Solve
@@ -806,7 +806,7 @@ operators2 = matrix('<=', nrow = 4, ncol = 1)
 # Set the objective function vector
 # The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
 # Since every person is charged $2000 regardless, it does not need to be added to our objective function
-coeffs = categoriesMatrix*1000
+coeffs = categoriesMatrix*maxVariableCost
 obj = colSums(coeffs)
 
 # Solve
@@ -890,7 +890,7 @@ for(i in 1:(NROW(vehicleYearRanks)-1)) {
 # Set the objective function vector
 # The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
 # Since every person is charged $2000 regardless, it does not need to be added to our objective function
-coeffs = categoriesMatrix*1000
+coeffs = categoriesMatrix*maxVariableCost
 obj = colSums(coeffs)
 
 # Solve
@@ -923,7 +923,7 @@ b4 = rbind(b2, b3)
 operators4 = rbind(operators2, operators3)
 
 # Set the objective function vector
-coeffs = categoriesMatrix*1000
+coeffs = categoriesMatrix*maxVariableCost
 obj = colSums(coeffs)
 
 # Solve
@@ -1010,7 +1010,7 @@ for(i in 1:(NROW(vehicleYearCategories)-1)) {
 # Set the objective function vector
 # The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
 # Since every person is charged $2000 regardless, it does not need to be added to our objective function
-coeffs = categoriesMatrix*1000
+coeffs = categoriesMatrix*maxVariableCost
 obj = colSums(coeffs)
 
 # Solve
@@ -1066,7 +1066,7 @@ for(i in 1:(numVars-1)) {
 # Set the objective function vector
 # The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
 # Since every person is charged $2000 regardless, it does not need to be added to our objective function
-coeffs = categoriesMatrix*1000
+coeffs = categoriesMatrix*maxVariableCost
 obj = colSums(coeffs)
 
 # Solve
