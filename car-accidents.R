@@ -555,6 +555,21 @@ testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5)
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
 
+# Plot ROC for testing set
+ROCRpred = prediction(predictTest, dataTest$P_ISEV)
+ROCRperf = performance(ROCRpred, "tpr", "fpr")
+png("ROC1.png", width=1200, height=1200)
+par(mar=c(3,3,3,3))
+plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
+title("Model 1 - Receiver Operator Characteristic Curve", cex.main=3)
+dev.off()
+
+# Calculate AUC for testing set
+auc_ROCR = performance(ROCRpred, measure = "auc")
+auc_ROCR = auc_ROCR@y.values[[1]]
+auc_ROCR
+
+
 # MODEL 2
 
 predictTrain = predict(severeLog2, type = "response") 
@@ -566,6 +581,21 @@ predictTest = predict(severeLog2, type = "response", newdata = dataTest)
 testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
+
+# Plot ROC for testing set
+ROCRpred = prediction(predictTest, dataTest$P_ISEV)
+ROCRperf = performance(ROCRpred, "tpr", "fpr")
+png("ROC2.png", width=1200, height=1200)
+par(mar=c(3,3,3,3))
+plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
+title("Model 2 - Receiver Operator Characteristic Curve", cex.main=3)
+dev.off()
+
+# Calculate AUC for testing set
+auc_ROCR = performance(ROCRpred, measure = "auc")
+auc_ROCR = auc_ROCR@y.values[[1]]
+auc_ROCR
+
 
 # MODEL 3
 
@@ -579,6 +609,21 @@ testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5)
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
 
+# Plot ROC for testing set
+ROCRpred = prediction(predictTest, dataTest$P_ISEV)
+ROCRperf = performance(ROCRpred, "tpr", "fpr")
+png("ROC3.png", width=1200, height=1200)
+par(mar=c(3,3,3,3))
+plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
+title("Model 3 - Receiver Operator Characteristic Curve", cex.main=3)
+dev.off()
+
+# Calculate AUC for testing set
+auc_ROCR = performance(ROCRpred, measure = "auc")
+auc_ROCR = auc_ROCR@y.values[[1]]
+auc_ROCR
+
+
 # MODEL 4
 
 predictTrain = predict(severeLog4, type = "response") 
@@ -590,6 +635,21 @@ predictTest = predict(severeLog4, type = "response", newdata = dataTest)
 testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
+
+# Plot ROC for testing set
+ROCRpred = prediction(predictTest, dataTest$P_ISEV)
+ROCRperf = performance(ROCRpred, "tpr", "fpr")
+png("ROC4.png", width=1200, height=1200)
+par(mar=c(3,3,3,3))
+plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
+title("Model 4 - Receiver Operator Characteristic Curve", cex.main=3)
+dev.off()
+
+# Calculate AUC for testing set
+auc_ROCR = performance(ROCRpred, measure = "auc")
+auc_ROCR = auc_ROCR@y.values[[1]]
+auc_ROCR
+
 
 # MODEL 5
 
@@ -614,6 +674,19 @@ driverTestConfMatrix = table(driverDataTest$P_ISEV, driverPredictTest>0.5)
 driverTestConfMatrix
 driverTestConfMatrix = as.data.frame(driverTestConfMatrix)
 
+# Plot ROC for testing set
+ROCRpred = prediction(driverPredictTest, driverDataTest$P_ISEV)
+ROCRperf = performance(ROCRpred, "tpr", "fpr")
+png("ROC5.png", width=1200, height=1200)
+par(mar=c(3,3,3,3))
+plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
+title("Model 5 - Receiver Operator Characteristic Curve", cex.main=3)
+dev.off()
+
+# Calculate AUC for testing set
+auc_ROCR = performance(ROCRpred, measure = "auc")
+auc_ROCR = auc_ROCR@y.values[[1]]
+auc_ROCR
 
 ################################################## OPTIMIZATION #####################################################
 
@@ -1086,8 +1159,6 @@ result$x
 
 
 # ---------------------------- MODEL 7: FAIRNESS BETWEEN ALL CATEGORIES AND FACTOR CONSTRAINTS  ------------------------------
-
-
 
 
 
