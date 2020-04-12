@@ -401,16 +401,20 @@ severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF +
                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog1)
-# AIC = 488257
-# Highest p VALUE: V_YEAR
-# Try removing V_YEAR from Model 1.1
+# Try removing V_YEAR from Model 1.1 since all of its categories have high p-values
 # Model 1.2
 severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                    C_RSUR + C_RALN + C_TRAF + V_TYPE + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                  data = dataTrain, family = binomial(link = "logit"))
 summary(severeLog1)
-# AIC = 488724
-# Model 1.2 AIC went up so best fit model is Model 1.1
+# AIC went up so add V_YEAR back
+# Try taking out P_USER since two of its categories are NA
+# Model 1.3
+severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
+                   C_RSUR + C_RALN + C_TRAF + V_TYPE + P_SEX + P_AGE + P_PSN + P_SAFE, 
+                 data = dataTrain, family = binomial(link = "logit"))
+summary(severeLog1)
+# AIC went up so add P_USER back. Best fit model is Model 1.1
 # Final model
 severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                    C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
@@ -426,7 +430,6 @@ severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF +
                   C_RSUR + C_RALN + C_TRAF, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog2)
-# AIC = 518380
 # Highest p VALUE: C_TRAF
 # We removed C_TRAF from Model 2.1
 # Model 2.2
@@ -434,7 +437,6 @@ severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF +
                    C_RSUR + C_RALN , 
                  data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog2)
-# AIC = 518559
 # Model 2.2 AIC went up so best fit model is Model 2.1
 # Final model
 severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
@@ -450,15 +452,18 @@ summary(severeLog2)
 severeLog3 = glm(P_ISEV ~  V_TYPE + V_YEAR, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog3)
-# AIC = 526611
-# Highest p VALUE: V_YEAR
-# We removed V_YEAR from Model 3.1
+# Try removing V_YEAR
 # Model 3.2
 severeLog3 = glm(P_ISEV ~  V_TYPE , 
                  data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog3)
-# AIC = 527227
-# Model 3.2 AIC went up so best fit model is Model 3.1
+# AIC went up so add V_YEAR back in
+# Try removing V_TYPE
+severeLog3 = glm(P_ISEV ~  V_YEAR , 
+                 data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog3)
+# AIC went up so add V_TYPE back in
+# Best model is Model 3.1
 # Final model
 severeLog3 = glm(P_ISEV ~  V_TYPE + V_YEAR, 
                  data = dataTrain, family = binomial(link = "logit")) 
@@ -472,14 +477,12 @@ summary(severeLog3)
 severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog4)
-# AIC = 509650
 # Highest p VALUE: P_PSN
 # We removed P_PSN from Model 4.1
 # Model 4.2
 severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_SAFE + P_USER, 
                  data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog4)
-# AIC = 510128
 # Model 4.2 AIC went up so best fit model is Model 4.1
 # Final model
 severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
@@ -496,34 +499,29 @@ summary(severeLog4)
 severeLog5 = glm(P_ISEV ~ V_TYPE + V_YEAR + P_SEX + P_AGE, 
                  data = driverDataTrain, family = binomial(link = "logit")) 
 summary(severeLog5)
-# AIC = 33871
 # Try taking out V_TYPE
 # Model 5.2
 severeLog5 = glm(P_ISEV ~ V_YEAR + P_SEX + P_AGE, 
                  data = driverDataTrain, family = binomial(link = "logit")) 
 summary(severeLog5)
-# AIC = 34318
 # Model 5.2 AIC went up so add V_TYPE back
 # Try taking out V_YEAR
 # Model 5.3
 severeLog5 = glm(P_ISEV ~ V_TYPE + P_SEX + P_AGE, 
                  data = driverDataTrain, family = binomial(link = "logit")) 
 summary(severeLog5)
-# AIC = 33886
 # Model 5.3 AIC went up so add V_YEAR back
 # Try taking out P_SEX
 # Model 5.4
 severeLog5 = glm(P_ISEV ~ V_TYPE + V_YEAR + P_AGE, 
                  data = driverDataTrain, family = binomial(link = "logit")) 
 summary(severeLog5)
-# AIC = 34113
 # Model 5.4 AIC went up so add P_SEX back
 # Try taking out P_AGE
 # Model 5.5
 severeLog5 = glm(P_ISEV ~ V_TYPE + V_YEAR + P_SEX, 
                  data = driverDataTrain, family = binomial(link = "logit")) 
 summary(severeLog5)
-# AIC = 33972
 # Model 5.5 AIC went up so add P_AGE back. Best fit model is Model 5.1
 # Final model 
 severeLog5 = glm(P_ISEV ~ V_TYPE + V_YEAR + P_SEX + P_AGE, 
@@ -768,13 +766,14 @@ result = gurobi(model)
 # Resulting factors
 result$x
 
-# ------------------------------------------- MODEL 3: RISK CONSTRAINTS ---------------------------------------------
+# --------------------------------------- MODEL 3: RISK CONSTRAINTS FOR VARIABLES ---------------------------------------------
 
 # In this model we add constraints based on our logistic regression. The constraints are used to restrict our factors 
 # based on ranked risks of categorical factors. If males present a higher risk of injury, we should charge them more than 
 # females. The model will tell us by how much. Some of the prior models end up optimizing based on frequency of categorical
 # values (e.g. if there are more male customers than females, charge them more). Rather than using models that optimize 
-# solely based on demand, we should also consider risk. If males present a higher risk of severe car crashes, charge them more.
+# solely based on demand, we should also consider risk. If males present a higher risk of severe car crashes, they should not
+# be charged less than females.
 
 # TO DO: CHANGE THESE TO REAL !!!
 # Ordered from highest risk to lowest risk
@@ -884,6 +883,7 @@ result = gurobi(model)
 
 # Resulting factors
 result$x
+
 
 # ----------------------------------------- MODEL 5: FAIRNESS WITHIN VARIABLES  ---------------------------------------
 
@@ -1028,11 +1028,6 @@ result = gurobi(model)
 # Resulting factors
 result$x
 
-# ----------------------------- MODEL 7: FAIRNESS WITHIN VARIABLES AND FACTOR CONSTRAINTS  ------------------------------
-
-
-# ---------------------------- MODEL 7: FAIRNESS BETWEEN ALL CATEGORIES AND FACTOR CONSTRAINTS  ------------------------------
-
 
 # ---------------------------------------------- MODEL 7: RISK-BASED PAY ----------------------------------------------
 
@@ -1076,7 +1071,7 @@ result = gurobi(model)
 result$x
 
 
-# ----------------------------------------- MODEL 8: PRE-DETERMINED INTERVALS -------------------------------------------
+# ----------------------------------------- MODEL 9: PRE-DETERMINED INTERVALS -------------------------------------------
 
 # In this model, we will use predetermined intervals for pay. For example, 50% of people should pay an extra $1-$200,
 # 30% of people should pay an extra $201-$500, and 20% of peole should pay an extra $501-$1000. This is a way to create a
@@ -1084,6 +1079,70 @@ result$x
 # people should pay on the lower end while only exceptions to the rule should pay on the higher end.
 
 
-# ---------------------------------------------- MODEL 9: COMBINATION -------------------------------------------------
+# ---------------------------------------------- MODEL 10: COMBINATION -------------------------------------------------
 
 
+# ----------------------------- MODEL 7: FAIRNESS WITHIN VARIABLES AND FACTOR CONSTRAINTS  ------------------------------
+
+
+# ---------------------------- MODEL 7: FAIRNESS BETWEEN ALL CATEGORIES AND FACTOR CONSTRAINTS  ------------------------------
+
+
+
+
+
+
+
+
+# ------------------------------------- MODEL 8: RISK CONSTRAINTS FOR ALL CATEGORIES ---------------------------------------------
+
+# This model is the same as model 3, except that we will rank all the categories on one scale rather than ranking within variables.
+# The constraints will be based on the rankings as was done in model 3.
+
+# TO DO: CHANGE THESE TO REAL !!!
+# Ordered from highest risk to lowest risk
+ranks = c(12,2,3,4,5,6,7,8,9,10,11,1,13,14,15,16,17,18,19,20,21,22,23,24)
+
+# Set the variable types
+vtype = matrix('C', nrow = 1, ncol = numVars)
+
+# Set the A matrix 
+# All the factors should add to at most 1
+A8 = matrix(1, nrow = 1, ncol = numVars)
+
+# Set the B vector
+# All the factors should add to at most 1
+b8 = matrix(1, nrow = 1, ncol = 1)
+
+# Set the operators vector
+operators8 = matrix('<=', nrow = 1, ncol = 1)
+
+# Add risk constraints based on ranks
+# High risk should pay equal to or greater than low risk
+for(i in 1:(NROW(ranks)-1)) {
+  rowVector = vector("numeric", numVars)
+  rowVector[ranks[i]] = 1
+  rowVector[ranks[i+1]] = -1
+  A8 = rbind(A8, rowVector)
+  operators8 = rbind(operators8, ">=")
+  b8 = rbind(b8, 0)
+}
+
+# Set the objective function vector
+# The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
+# Since every person is charged $2000 regardless, it does not need to be added to our objective function
+coeffs = categoriesMatrix*maxVariableCost
+obj = colSums(coeffs)
+
+# Solve
+model = list()
+model$A = A8
+model$obj = obj
+model$modelsense = "max"
+model$rhs = b8
+model$sense = operators8
+model$vtype = vtype
+result = gurobi(model)
+
+# Resulting factors
+result$x
