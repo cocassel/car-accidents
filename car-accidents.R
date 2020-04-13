@@ -271,7 +271,7 @@ barplot(height=v_typeCategory$value, names=v_typeCategory$category, col=rgb(0.4,
 # V_YEAR VISUALIZATION 
 
 v_yearCategory = data.frame(
-  category = c("<= 1950",">1950 & <=1980",">1980 & <=1990",">1990 & <=2000",">2001 & <=2010",">2010"),
+  category = c("<= 1950",">1950 & <=1980",">1980 & <=1990",">1990 & <=2000",">2000 & <=2010",">2010"),
   value = c(nrow(subset(data, V_YEAR == 1901)),nrow(subset(data, V_YEAR == 1951)),nrow(subset(data, V_YEAR == 1981)),nrow(subset(data, V_YEAR == 1991)),nrow(subset(data, V_YEAR == 2001)),nrow(subset(data, V_YEAR == 2011)))
 )
 barplot(height=v_yearCategory$value, names=v_yearCategory$category, col=rgb(0.2,0.8,0.6,0.6), las=2, main = "All Data: Vehicle Model Year(s)",cex.names=0.5, horiz=T)
@@ -333,7 +333,7 @@ barplot(height=v_type2_Category$value, names=v_type2_Category$category, col=rgb(
 # V_YEAR VISUALIZATION
 
 v_year2_Category = data.frame(
-  category = c("<= 1950",">1950 & <=1980",">1980 & <=1990",">1990 & <=2000",">2001 & <=2010",">2010"),
+  category = c("<= 1950",">1950 & <=1980",">1980 & <=1990",">1990 & <=2000",">2000 & <=2010",">2010"),
   value = c(nrow(subset(driverData, V_YEAR == 1901)),nrow(subset(driverData, V_YEAR == 1951)),nrow(subset(driverData, V_YEAR == 1981)),nrow(subset(driverData, V_YEAR == 1991)),nrow(subset(driverData, V_YEAR == 2001)),nrow(subset(driverData, V_YEAR == 2011)))
 )
 barplot(height=v_year2_Category$value, names=v_year2_Category$category, col=rgb(0.2,0.8,0.6,0.6), las=2, main = "Driver Data: Vehicle Model Year(s)",cex.names=0.5, horiz=T) 
