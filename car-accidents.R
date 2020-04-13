@@ -247,7 +247,6 @@ ggplot(p_sexCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) 
   coord_polar(theta="y") +
   xlim(c(2, 4)) +
   theme_void() +
-  theme(legend.position = "none")
   theme(legend.position = "none",plot.title = element_text(hjust = 0.5))
 
 
