@@ -256,7 +256,7 @@ p_ageCategory = data.frame(
   category=c("<= 10",">10 & <=20",">20 & <=30",">30 & <=40",">40 & <=50",">50 & <=60",">60 & <=70",">70 & <=80",">80 & <=90",">90"),  
   value=c(nrow(subset(data, P_AGE == 1)),nrow(subset(data, P_AGE == 11)),nrow(subset(data, P_AGE == 21)),nrow(subset(data, P_AGE == 31)),nrow(subset(data, P_AGE == 41)),nrow(subset(data, P_AGE == 51)),nrow(subset(data, P_AGE == 61)),nrow(subset(data, P_AGE == 71)),nrow(subset(data, P_AGE == 81)),nrow(subset(data, P_AGE == 91)))
 )
-barplot(height=p_ageCategory$value, names=p_ageCategory$category, col=rgb(0.8,0,0,0.6), las=2, main = "All Data: Age Range(s)",cex.names=0.6)
+barplot(height=p_ageCategory$value, names=p_ageCategory$category, col=rgb(0.8,0,0,0.6), las=2, main = "All Data: Age Ranges",cex.names=0.6)
 
 
 # V_TYPE VISUALIZATION 
@@ -265,7 +265,7 @@ v_typeCategory = data.frame(
   category = c("Light-duty","Truck","Tractor","Bus","Motorcycle","Off-Road","Bicycle","Motorhome","Farm Equip.","Construction","Fire Engine","Snowmobile","Street Car"),
   value=c(nrow(subset(data, V_TYPE == 1)),nrow(subset(data, V_TYPE == 5)),nrow(subset(data, V_TYPE == 8)),nrow(subset(data, V_TYPE == 9)),nrow(subset(data, V_TYPE == 14)),nrow(subset(data, V_TYPE == 16)),nrow(subset(data, V_TYPE == 17)),nrow(subset(data, V_TYPE == 18)),nrow(subset(data, V_TYPE == 19)),nrow(subset(data, V_TYPE == 20)),nrow(subset(data, V_TYPE == 21)),nrow(subset(data, V_TYPE ==22)),nrow(subset(data, V_TYPE == 23)))
 )
-barplot(height=v_typeCategory$value, names=v_typeCategory$category, col=rgb(0.4,0,0,0.2), las=2, main = "All Data: Vehicle Type(s)",cex.names=0.5,horiz=T)
+barplot(height=v_typeCategory$value, names=v_typeCategory$category, col=rgb(0.4,0,0,0.2), las=2, main = "All Data: Vehicle Types",cex.names=0.5,horiz=T)
 
 
 # V_YEAR VISUALIZATION 
@@ -274,7 +274,7 @@ v_yearCategory = data.frame(
   category = c("<= 1950",">1950 & <=1980",">1980 & <=1990",">1990 & <=2000",">2001 & <=2010",">2010"),
   value = c(nrow(subset(data, V_YEAR == 1901)),nrow(subset(data, V_YEAR == 1951)),nrow(subset(data, V_YEAR == 1981)),nrow(subset(data, V_YEAR == 1991)),nrow(subset(data, V_YEAR == 2001)),nrow(subset(data, V_YEAR == 2011)))
 )
-barplot(height=v_yearCategory$value, names=v_yearCategory$category, col=rgb(0.2,0.8,0.6,0.6), las=2, main = "All Data: Vehicle Model Year(s)",cex.names=0.5, horiz=T)
+barplot(height=v_yearCategory$value, names=v_yearCategory$category, col=rgb(0.2,0.8,0.6,0.6), las=2, main = "All Data: Vehicle Model Years",cex.names=0.5, horiz=T)
 
 
 # ----------------------------------------------------- DRIVER DATA -----------------------------------------------------
@@ -318,7 +318,7 @@ p_age2_Category = data.frame(
   category=c("<= 10",">10 & <=20",">20 & <=30",">30 & <=40",">40 & <=50",">50 & <=60",">60 & <=70",">70 & <=80",">80 & <=90",">90"),  
   value=c(nrow(subset(driverData, P_AGE == 1)),nrow(subset(driverData, P_AGE == 11)),nrow(subset(driverData, P_AGE == 21)),nrow(subset(driverData, P_AGE == 31)),nrow(subset(driverData, P_AGE == 41)),nrow(subset(driverData, P_AGE == 51)),nrow(subset(driverData, P_AGE == 61)),nrow(subset(driverData, P_AGE == 71)),nrow(subset(driverData, P_AGE == 81)),nrow(subset(driverData, P_AGE == 91)))
 )
-barplot(height=p_age2_Category$value, names=p_age2_Category$category, col=rgb(0.8,0,0,0.6), las=2, main = "Driver Data: Age Range(s)",cex.names=0.6)
+barplot(height=p_age2_Category$value, names=p_age2_Category$category, col=rgb(0.8,0,0,0.6), las=2, main = "Driver Data: Age Ranges",cex.names=0.6)
 
 
 # V_TYPE VISUALIZATION
@@ -327,7 +327,7 @@ v_type2_Category = data.frame(
   category = c("Light-duty","Truck","Tractor","Bus","Motorcycle","Off-Road","Bicycle","Motorhome","Farm Equip.","Construction","Fire Engine","Snowmobile","Street Car"),
   value=c(nrow(subset(driverData, V_TYPE == 1)),nrow(subset(driverData, V_TYPE == 5)),nrow(subset(driverData, V_TYPE == 8)),nrow(subset(driverData, V_TYPE == 9)),nrow(subset(driverData, V_TYPE == 14)),nrow(subset(driverData, V_TYPE == 16)),nrow(subset(driverData, V_TYPE == 17)),nrow(subset(driverData, V_TYPE == 18)),nrow(subset(driverData, V_TYPE == 19)),nrow(subset(driverData, V_TYPE == 20)),nrow(subset(driverData, V_TYPE == 21)),nrow(subset(driverData, V_TYPE ==22)),nrow(subset(driverData, V_TYPE == 23)))
 )
-barplot(height=v_type2_Category$value, names=v_type2_Category$category, col=rgb(0.4,0,0,0.2), las=2, main = "Driver Data: Vehicle Type(s)",cex.names=0.5,horiz=T)
+barplot(height=v_type2_Category$value, names=v_type2_Category$category, col=rgb(0.4,0,0,0.2), las=2, main = "Driver Data: Vehicle Types",cex.names=0.5,horiz=T)
 
 
 # V_YEAR VISUALIZATION
@@ -336,7 +336,7 @@ v_year2_Category = data.frame(
   category = c("<= 1950",">1950 & <=1980",">1980 & <=1990",">1990 & <=2000",">2001 & <=2010",">2010"),
   value = c(nrow(subset(driverData, V_YEAR == 1901)),nrow(subset(driverData, V_YEAR == 1951)),nrow(subset(driverData, V_YEAR == 1981)),nrow(subset(driverData, V_YEAR == 1991)),nrow(subset(driverData, V_YEAR == 2001)),nrow(subset(driverData, V_YEAR == 2011)))
 )
-barplot(height=v_year2_Category$value, names=v_year2_Category$category, col=rgb(0.2,0.8,0.6,0.6), las=2, main = "Driver Data: Vehicle Model Year(s)",cex.names=0.5, horiz=T) 
+barplot(height=v_year2_Category$value, names=v_year2_Category$category, col=rgb(0.2,0.8,0.6,0.6), las=2, main = "Driver Data: Vehicle Model Years",cex.names=0.5, horiz=T) 
 
 
 ################################################### LOGISTIC REGRESSION ##################################################
