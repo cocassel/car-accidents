@@ -247,7 +247,7 @@ ggplot(p_sexCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) 
   coord_polar(theta="y") +
   xlim(c(2, 4)) +
   theme_void() +
-  theme(legend.position = "none",plot.title = element_text(hjust = 0.5))
+  theme(legend.position = "none")
 
 
 # P_AGE VISUALIZATION 
@@ -309,7 +309,7 @@ ggplot(p_sex2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)
   coord_polar(theta="y") +
   xlim(c(2, 4)) +
   theme_void() +
-  theme(legend.position = "none",plot.title = element_text(hjust = 0.5))
+  theme(legend.position = "none")
 
 
 # P_AGE VISUALIZATION
@@ -396,23 +396,65 @@ nrow(driverDataTest)
 # C_SEV is not included because the severity of the crash should not be used to predict the severity of a person in the crash
 # V_ID is a sequence number, so it is not included 
 # P_ID is a sequence number, so it is not included
-#Model 1.1
+# Model 1.1
 severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog1)
-# Try removing V_YEAR from Model 1.1 since all of its categories have high p-values
+# Try taking out C_WDAY since some of its categories are not statistically significant
 # Model 1.2
+severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
+                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
+                 data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog1)
+# AIC went up so add C_WDAY back
+# Try taking out C_RCFG since some of its categories are not statistically significant
+# Model 1.3
+severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_WTHR + 
+                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
+                 data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog1)
+# AIC went up so add C_RCFG back
+# Try taking out C_RSUR since some of its categories are not statistically significant
+# Model 1.4
+severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
+                    C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
+                 data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog1)
+# AIC went up so add C_RSUR back
+# Try taking out C_TRAF since some of its categories are not statistically significant
+# Model 1.5
+severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
+                   C_RSUR + C_RALN + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
+                 data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog1)
+# AIC went up so add C_TRAF back
+# Try taking out V_YEAR since some of its categories are not statistically significant
+# Model 1.6
 severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                    C_RSUR + C_RALN + C_TRAF + V_TYPE + P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
-                 data = dataTrain, family = binomial(link = "logit"))
+                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog1)
 # AIC went up so add V_YEAR back
-# Try taking out P_USER since two of its categories are NA
-# Model 1.3
+# Try taking out P_PSN since some of its categories are not statistically significant
+# Model 1.7
 severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
-                   C_RSUR + C_RALN + C_TRAF + V_TYPE + P_SEX + P_AGE + P_PSN + P_SAFE, 
-                 data = dataTrain, family = binomial(link = "logit"))
+                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_SAFE + P_USER, 
+                 data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog1)
+# AIC went up so add P_PSN back
+# Try taking out P_SAFE since some of its categories are not statistically significant
+# Model 1.8
+severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
+                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_USER, 
+                 data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog1)
+# AIC went up so add P_SAFE back
+# Try taking out P_USER since some of its categories are not statistically significant (two categories are NA)
+# Model 1.9
+severeLog1 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
+                   C_RSUR + C_RALN + C_TRAF + V_TYPE + V_YEAR + P_SEX + P_AGE + P_PSN + P_SAFE, 
+                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog1)
 # AIC went up so add P_USER back. Best fit model is Model 1.1
 # Final model
