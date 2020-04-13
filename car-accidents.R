@@ -702,7 +702,9 @@ auc_ROCR
 # not indicate repeat offenders)
 
 # Create our dataset for the optimization problem
-insuranceData = subset(driverData, select = c(P_SEX, P_AGE, V_TYPE, V_YEAR))
+# Since we use outuput from the logistic regression in some of our optimization models, we will exclude the training data 
+# from our dataset (i.e. we will use the testing set from the logistic regression in the optimization models)
+insuranceData = subset(driverDataTest, select = c(P_SEX, P_AGE, V_TYPE, V_YEAR))
 
 fixedCost = 2000
 maxVariableCost = 1000
@@ -839,7 +841,7 @@ result = gurobi(model)
 # Resulting factors
 result$x
 
-# --------------------------------------- MODEL 3: RISK CONSTRAINTS FOR VARIABLES ---------------------------------------------
+# ------------------------------------------ MODEL 3: RISK CONSTRAINTS ---------------------------------------------
 
 # In this model we add constraints based on our logistic regression. The constraints are used to restrict our factors 
 # based on ranked risks of categorical factors. If males present a higher risk of injury, we should charge them more than 
@@ -1126,7 +1128,7 @@ operators7 = matrix('<=', nrow = 1, ncol = 1)
 # The insurance cost for a person is $2000 + (sum of all applicable factors)*(prediction value)*1000
 # Since every person is charged $2000 regardless, it does not need to be added to our objective function
 # Get predictions for drivers
-driverPredictions = predict(severeLog5, type = "response", newdata = driverData)
+driverPredictions = predict(severeLog5, type = "response", newdata = driverDataTest)
 coeffs = categoriesMatrix*maxVariableCost*driverPredictions
 obj = colSums(coeffs)
 
@@ -1143,15 +1145,6 @@ result = gurobi(model)
 # Resulting factors
 result$x
 
-
-# ----------------------------------------- MODEL 9: PRE-DETERMINED INTERVALS -------------------------------------------
-
-# In this model, we will use predetermined intervals for pay. For example, 50% of people should pay an extra $1-$200,
-# 30% of people should pay an extra $201-$500, and 20% of peole should pay an extra $501-$1000. This is a way to create a
-# a policy that creates a reasonable dispersion of people throughout the pay range. The idea here is that the majority of
-# people should pay on the lower end while only exceptions to the rule should pay on the higher end.
-
-
 # ---------------------------------------------- MODEL 10: COMBINATION -------------------------------------------------
 
 
@@ -1161,59 +1154,3 @@ result$x
 # ---------------------------- MODEL 7: FAIRNESS BETWEEN ALL CATEGORIES AND FACTOR CONSTRAINTS  ------------------------------
 
 
-
-
-
-
-# ------------------------------------- MODEL 8: RISK CONSTRAINTS FOR ALL CATEGORIES ---------------------------------------------
-
-# This model is the same as model 3, except that we will rank all the categories on one scale rather than ranking within variables.
-# The constraints will be based on the rankings as was done in model 3.
-
-# TO DO: CHANGE THESE TO REAL !!!
-# Ordered from highest risk to lowest risk
-ranks = c(12,2,3,4,5,6,7,8,9,10,11,1,13,14,15,16,17,18,19,20,21,22,23,24)
-
-# Set the variable types
-vtype = matrix('C', nrow = 1, ncol = numVars)
-
-# Set the A matrix 
-# All the factors should add to at most 1
-A8 = matrix(1, nrow = 1, ncol = numVars)
-
-# Set the B vector
-# All the factors should add to at most 1
-b8 = matrix(1, nrow = 1, ncol = 1)
-
-# Set the operators vector
-operators8 = matrix('<=', nrow = 1, ncol = 1)
-
-# Add risk constraints based on ranks
-# High risk should pay equal to or greater than low risk
-for(i in 1:(NROW(ranks)-1)) {
-  rowVector = vector("numeric", numVars)
-  rowVector[ranks[i]] = 1
-  rowVector[ranks[i+1]] = -1
-  A8 = rbind(A8, rowVector)
-  operators8 = rbind(operators8, ">=")
-  b8 = rbind(b8, 0)
-}
-
-# Set the objective function vector
-# The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
-# Since every person is charged $2000 regardless, it does not need to be added to our objective function
-coeffs = categoriesMatrix*maxVariableCost
-obj = colSums(coeffs)
-
-# Solve
-model = list()
-model$A = A8
-model$obj = obj
-model$modelsense = "max"
-model$rhs = b8
-model$sense = operators8
-model$vtype = vtype
-result = gurobi(model)
-
-# Resulting factors
-result$x
