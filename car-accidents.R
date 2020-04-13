@@ -430,14 +430,34 @@ severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF +
                   C_RSUR + C_RALN + C_TRAF, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog2)
-# Highest p VALUE: C_TRAF
-# We removed C_TRAF from Model 2.1
+# Try taking out C_YEAR since some of its categories are not statistically significant
 # Model 2.2
+severeLog2 = glm(P_ISEV ~ C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
+                   C_RSUR + C_RALN + C_TRAF, 
+                 data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog2)
+# Model 2.2 AIC did not decrease so add C_YEAR back in
+# Try taking out C_WDAY since some of its categories are not statistically significant
+# Model 2.3
+severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
+                   C_RSUR + C_RALN + C_TRAF, 
+                 data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog2)
+# Model 2.3 AIC did not decrease so add C_WDAY back in
+# Try taking out C_RCFG since some of its categories are not statistically significant
+# Model 2.4
+severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_WTHR + 
+                   C_RSUR + C_RALN + C_TRAF, 
+                 data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog2)
+# Model 2.4 AIC did not decrease so add C_RCFG back in
+# Try taking out C_TRAF since some of its categories are not statistically significant
+# Model 2.5
 severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                    C_RSUR + C_RALN , 
                  data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog2)
-# Model 2.2 AIC went up so best fit model is Model 2.1
+# Model 2.5 AIC did not decrease so add C_TRAF back in. Best fit model is Model 2.1
 # Final model
 severeLog2 = glm(P_ISEV ~  C_YEAR + C_MNTH + C_WDAY + C_HOUR + C_VEHS + C_CONF + C_RCFG + C_WTHR + 
                    C_RSUR + C_RALN + C_TRAF, 
@@ -452,6 +472,7 @@ summary(severeLog2)
 severeLog3 = glm(P_ISEV ~  V_TYPE + V_YEAR, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog3)
+# There are only two predictor variables so we can easily try removing both 
 # Try removing V_YEAR
 # Model 3.2
 severeLog3 = glm(P_ISEV ~  V_TYPE , 
@@ -477,13 +498,18 @@ summary(severeLog3)
 severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                 data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog4)
-# Highest p VALUE: P_PSN
-# We removed P_PSN from Model 4.1
+# Try taking out P_PSN since some of its categories are not statistically significant
 # Model 4.2
 severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_SAFE + P_USER, 
                  data = dataTrain, family = binomial(link = "logit")) 
 summary(severeLog4)
-# Model 4.2 AIC went up so best fit model is Model 4.1
+# Model 4.2 AIC went up so add P_PSN back in
+# Try taking out P_SAFE since some of its categories are not statistically significant
+# Model 4.3
+severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_USER, 
+                 data = dataTrain, family = binomial(link = "logit")) 
+summary(severeLog4)
+# Model 4.3 AIC went up so add P_SAFE back in. Best fit model is Model 4.1
 # Final model
 severeLog4 = glm(P_ISEV ~ P_SEX + P_AGE + P_PSN + P_SAFE + P_USER, 
                  data = dataTrain, family = binomial(link = "logit")) 
@@ -499,30 +525,18 @@ summary(severeLog4)
 severeLog5 = glm(P_ISEV ~ V_TYPE + V_YEAR + P_SEX + P_AGE, 
                  data = driverDataTrain, family = binomial(link = "logit")) 
 summary(severeLog5)
-# Try taking out V_TYPE
+# Try taking out V_YEAR since some of its categories are not statistically significant
 # Model 5.2
-severeLog5 = glm(P_ISEV ~ V_YEAR + P_SEX + P_AGE, 
-                 data = driverDataTrain, family = binomial(link = "logit")) 
-summary(severeLog5)
-# Model 5.2 AIC went up so add V_TYPE back
-# Try taking out V_YEAR
-# Model 5.3
 severeLog5 = glm(P_ISEV ~ V_TYPE + P_SEX + P_AGE, 
                  data = driverDataTrain, family = binomial(link = "logit")) 
 summary(severeLog5)
-# Model 5.3 AIC went up so add V_YEAR back
-# Try taking out P_SEX
-# Model 5.4
-severeLog5 = glm(P_ISEV ~ V_TYPE + V_YEAR + P_AGE, 
-                 data = driverDataTrain, family = binomial(link = "logit")) 
-summary(severeLog5)
-# Model 5.4 AIC went up so add P_SEX back
-# Try taking out P_AGE
-# Model 5.5
+# Model 5.2 AIC went up so add V_YEAR back
+# Try taking out P_AGE since some of its categories are not statistically significant
+# Model 5.3
 severeLog5 = glm(P_ISEV ~ V_TYPE + V_YEAR + P_SEX, 
                  data = driverDataTrain, family = binomial(link = "logit")) 
 summary(severeLog5)
-# Model 5.5 AIC went up so add P_AGE back. Best fit model is Model 5.1
+# Model 5.3 AIC went up so add P_AGE back. Best fit model is Model 5.1
 # Final model 
 severeLog5 = glm(P_ISEV ~ V_TYPE + V_YEAR + P_SEX + P_AGE, 
                  data = driverDataTrain, family = binomial(link = "logit")) 
@@ -807,6 +821,15 @@ result = gurobi(model)
 # Resulting factors
 result$x
 
+# Total variable costs based on decided factors
+result$objval
+
+# Total fixed costs (each person pays $2000)
+NROW(insuranceData)*fixedCost
+
+# Get total revenue including both the variable and fixed costs
+NROW(insuranceData)*fixedCost + result$objval
+
 # ------------------------------------------- MODEL 2: FACTOR CONSTRAINTS ---------------------------------------------
 
 # In this model, we set upper bounds for factors based on category. All factors for sex must sum to at most 0.25,
@@ -855,6 +878,15 @@ result = gurobi(model)
 
 # Resulting factors
 result$x
+
+# Total variable costs based on decided factors
+result$objval
+
+# Total fixed costs (each person pays $2000)
+NROW(insuranceData)*fixedCost
+
+# Get total revenue including both the variable and fixed costs
+NROW(insuranceData)*fixedCost + result$objval
 
 # ------------------------------------------ MODEL 3: RISK CONSTRAINTS ---------------------------------------------
 
@@ -941,6 +973,16 @@ result = gurobi(model)
 # Resulting factors
 result$x
 
+# Total variable costs based on decided factors
+result$objval
+
+# Total fixed costs (each person pays $2000)
+NROW(insuranceData)*fixedCost
+
+# Get total revenue including both the variable and fixed costs
+NROW(insuranceData)*fixedCost + result$objval
+
+
 # --------------------------------------- MODEL 4: RISK AND FACTOR CONSTRAINTS -------------------------------------------
 
 # This model combines model 2 and model 5 (uses constraints from both)
@@ -973,6 +1015,15 @@ result = gurobi(model)
 
 # Resulting factors
 result$x
+
+# Total variable costs based on decided factors
+result$objval
+
+# Total fixed costs (each person pays $2000)
+NROW(insuranceData)*fixedCost
+
+# Get total revenue including both the variables and fixed costs
+NROW(insuranceData)*fixedCost + result$objval
 
 
 # ----------------------------------------- MODEL 5: FAIRNESS WITHIN VARIABLES  ---------------------------------------
@@ -1062,6 +1113,16 @@ result = gurobi(model)
 # Resulting factors
 result$x
 
+# Total variable costs based on decided factors
+result$objval
+
+# Total fixed costs (each person pays $2000)
+NROW(insuranceData)*fixedCost
+
+# Get total revenue including both the variables and fixed costs
+NROW(insuranceData)*fixedCost + result$objval
+
+
 # --------------------------------------- MODEL 6: FAIRNESS BETWEEN ALL CATEGORIES  -------------------------------------
 
 # This model is similar to model 5, but in this model, we consider fairness between all categories, rather than just 
@@ -1118,8 +1179,17 @@ result = gurobi(model)
 # Resulting factors
 result$x
 
+# Total variable costs based on decided factors
+result$objval
 
-# ---------------------------------------------- MODEL 7: RISK-BASED PAY ----------------------------------------------
+# Total fixed costs (each person pays $2000)
+NROW(insuranceData)*fixedCost
+
+# Get total revenue including both the variables and fixed costs
+NROW(insuranceData)*fixedCost + result$objval
+
+
+# ------------------------------------------ MODEL 7: OPTIMIZING REVENUE WEIGHTED BY RISK -------------------------------------------
 
 # In this model, we use the actual prediction values from the logistic regression. Rather than using the 
 # logistic regression to derive risk rankings and constraints, we use the predictions in the objective function 
@@ -1161,10 +1231,17 @@ result = gurobi(model)
 # Resulting factors
 result$x
 
-# Resulting revenue
+# Total variable costs based on decided factors (cannot use objective function value since it uses weighted revenue)
 sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
 
-# ------------------------------------- MODEL 8: RISK-BASED PAY AND FACTOR CONSTRAINTS------------------------------------------
+# Total fixed costs (each person pays $2000)
+NROW(insuranceData)*fixedCost
+
+# Get total revenue including both the variables and fixed costs
+NROW(insuranceData)*fixedCost + sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
+
+
+# --------------------------- MODEL 8: MODEL 7: OPTIMIZING REVENUE WEIGHTED BY RISK WITH FACTOR CONSTRAINTS---------------------------
 
 # This model combines model 2 and model 7 (uses constraints from model 2 and the objective function from model 7)
 
@@ -1202,8 +1279,14 @@ result = gurobi(model)
 # Resulting factors
 result$x
 
-# Resulting revenue
+# Total variable costs based on decided factors (cannot use objective function value since it uses weighted revenue)
 sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
+
+# Total fixed costs (each person pays $2000)
+NROW(insuranceData)*fixedCost
+
+# Get total revenue including both the variables and fixed costs
+NROW(insuranceData)*fixedCost + sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
 
 
 # ----------------------------- MODEL 9: FAIRNESS WITHIN VARIABLES AND FACTOR CONSTRAINTS  ------------------------------
