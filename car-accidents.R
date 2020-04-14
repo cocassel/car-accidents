@@ -220,6 +220,7 @@ write.csv(driverData, "cleanedDriverData.csv")
 summary(data)
 
 # c_CONF VISUALIZATION
+
 c_confCategory = data.frame(
   category = c("Single Vehicle in Motion","Two Vehicles in Motion (same direction of travel)","Two Vehicles in Motion (different direction of travel)","Two Vehicles (hit a parked vehicle)"),
   value = c(nrow(subset(data, C_CONF == 1)),nrow(subset(data, C_CONF == 21)),nrow(subset(data, C_CONF == 31)),nrow(subset(data, C_CONF == 41)))
@@ -245,22 +246,11 @@ p_sexCategory = data.frame(
   category = c("Male","Female"),
   value = c(nrow(subset(data, P_SEX == "M")),nrow(subset(data, P_SEX == "F")))
 )
-# Compute percentages
 p_sexCategory$fraction <- p_sexCategory$value / sum(p_sexCategory$value)
-
-# Compute the cumulative percentages (top of each rectangle)
 p_sexCategory$ymax <- cumsum(p_sexCategory$fraction)
-
-# Compute the bottom of each rectangle
 p_sexCategory$ymin <- c(0, head(p_sexCategory$ymax, n=-1))
-
-# Compute label position
 p_sexCategory$labelPosition <- (p_sexCategory$ymax + p_sexCategory$ymin) / 2
-
-# Compute a good label
 p_sexCategory$label <- paste0(p_sexCategory$category, "\n value: ", p_sexCategory$value)
-
-# Make the plot
 ggplot(p_sexCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
   ggtitle("All Data: Gender Distribution") +
   geom_rect() +
@@ -275,34 +265,24 @@ ggplot(p_sexCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) 
 # P_AGE VISUALIZATION 
 
 p_ageCategory = data.frame(
-  category=c("<= 10",">10 & <=20",">20 & <=30",">30 & <=40",">40 & <=50",">50 & <=60",">60 & <=70",">70 & <=80",">80 & <=90",">90"),  
+  category=c("1 - 10","11 - 20","21 - 30","31 - 40","41 - 50","51 - 60","61 - 70","71 - 80","81 - 90","91 -"),  
   value=c(nrow(subset(data, P_AGE == 1)),nrow(subset(data, P_AGE == 11)),nrow(subset(data, P_AGE == 21)),nrow(subset(data, P_AGE == 31)),nrow(subset(data, P_AGE == 41)),nrow(subset(data, P_AGE == 51)),nrow(subset(data, P_AGE == 61)),nrow(subset(data, P_AGE == 71)),nrow(subset(data, P_AGE == 81)),nrow(subset(data, P_AGE == 91)))
 )
 par(mar=c(6,6,4,2)+0.1,mgp=c(5,1,0))
 barplot(height=p_ageCategory$value, names=p_ageCategory$category, xlab = "Age Range(s)",ylab = "Count", col=rgb(0.8,0,0,0.6), las=2, main = "All Data: Age Ranges",cex.names=0.6)
 
 # P_ISEV VISUALIZATION 
+
 p_isevCategory = data.frame(
   category=c("No Injury","Injury"),
   value=c(nrow(subset(data, P_ISEV == 0)),nrow(subset(data, P_ISEV == 1)))
 )
 
-# Compute percentages
 p_isevCategory$fraction <- p_isevCategory$value / sum(p_isevCategory$value)
-
-# Compute the cumulative percentages (top of each rectangle)
 p_isevCategory$ymax <- cumsum(p_isevCategory$fraction)
-
-# Compute the bottom of each rectangle
 p_isevCategory$ymin <- c(0, head(p_isevCategory$ymax, n=-1))
-
-# Compute label position
 p_isevCategory$labelPosition <- (p_isevCategory$ymax + p_isevCategory$ymin) / 2
-
-# Compute a good label
 p_isevCategory$label <- paste0(p_isevCategory$category, "\n value: ", p_isevCategory$value)
-
-# Make the plot
 ggplot(p_isevCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
   ggtitle("All Data: Injury Severity") +
   geom_rect() +
@@ -326,7 +306,7 @@ barplot(height=v_typeCategory$value, names=v_typeCategory$category, xlab = "Coun
 # V_YEAR VISUALIZATION 
 
 v_yearCategory = data.frame(
-  category = c("<= 1950",">1950 & <=1980",">1980 & <=1990",">1990 & <=2000",">2000 & <=2010",">2010"),
+  category = c("1901 - 1950","1951 - 1980","1981 - 1990","1991 - 2000","2001 - 2010","2010 -"),
   value = c(nrow(subset(data, V_YEAR == 1901)),nrow(subset(data, V_YEAR == 1951)),nrow(subset(data, V_YEAR == 1981)),nrow(subset(data, V_YEAR == 1991)),nrow(subset(data, V_YEAR == 2001)),nrow(subset(data, V_YEAR == 2011)))
 )
 par(mar=c(6,6,4,2)+0.1,mgp=c(5,1,0))
@@ -338,6 +318,7 @@ barplot(height=v_yearCategory$value, names=v_yearCategory$category, xlab = "Coun
 summary(driverData)
 
 # c_CONF VISUALIZATION
+
 c_conf2_Category = data.frame(
   category = c("Single Vehicle in Motion","Two Vehicles in Motion (same direction of travel)","Two Vehicles in Motion (different direction of travel)","Two Vehicles (hit a parked vehicle)"),
   value = c(nrow(subset(driverData, C_CONF == 1)),nrow(subset(driverData, C_CONF == 21)),nrow(subset(driverData, C_CONF == 31)),nrow(subset(driverData, C_CONF == 41)))
@@ -350,6 +331,7 @@ ggplot(c_conf2_Category, aes(x="", y=value, fill=category)) +
   theme(plot.title = element_text(hjust = 0.5))
 
 # c_RCFG VISUALIZATION
+
 c_rcfg2_Category = data.frame(
   category = c("Non-Intersection","Two-Way Intersections","Parking/Intersection","Railroad Crossing","Bridge","Tunnel","Passing","Ramp","Traffic Circle","Highway Express Lane", "Highway Collector Lane","Highway Transfer Lane"),
   value = c(nrow(subset(driverData, C_RCFG == "01")),nrow(subset(driverData, C_RCFG == "02")),nrow(subset(driverData, C_RCFG == "03")),nrow(subset(driverData, C_RCFG == "04")),nrow(subset(driverData, C_RCFG == "05")),nrow(subset(driverData, C_RCFG == "06")),nrow(subset(driverData, C_RCFG == "07")),nrow(subset(driverData, C_RCFG == "08")),nrow(subset(driverData, C_RCFG == "09")),nrow(subset(driverData, C_RCFG == "10")),nrow(subset(driverData, C_RCFG == "11")),nrow(subset(driverData, C_RCFG == "12")))
@@ -364,22 +346,11 @@ p_sex2_Category = data.frame(
   category = c("Male","Female"),
   value = c(nrow(subset(driverData, P_SEX == "M")),nrow(subset(driverData, P_SEX == "F")))
 )
-# Compute percentages
 p_sex2_Category$fraction <- p_sex2_Category$value / sum(p_sex2_Category$value)
-
-# Compute the cumulative percentages (top of each rectangle)
 p_sex2_Category$ymax <- cumsum(p_sex2_Category$fraction)
-
-# Compute the bottom of each rectangle
 p_sex2_Category$ymin <- c(0, head(p_sex2_Category$ymax, n=-1))
-
-# Compute label position
 p_sex2_Category$labelPosition <- (p_sex2_Category$ymax + p_sex2_Category$ymin) / 2
-
-# Compute a good label
 p_sex2_Category$label <- paste0(p_sex2_Category$category, "\n value: ", p_sex2_Category$value)
-
-# Make the plot
 ggplot(p_sex2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
   ggtitle("Driver Data: Gender Distribution") +
   geom_rect() +
@@ -394,8 +365,8 @@ ggplot(p_sex2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)
 # P_AGE VISUALIZATION
 
 p_age2_Category = data.frame(
-  category=c("<= 10",">10 & <=20",">20 & <=30",">30 & <=40",">40 & <=50",">50 & <=60",">60 & <=70",">70 & <=80",">80 & <=90",">90"),  
-  value=c(nrow(subset(driverData, P_AGE == 1)),nrow(subset(driverData, P_AGE == 11)),nrow(subset(driverData, P_AGE == 21)),nrow(subset(driverData, P_AGE == 31)),nrow(subset(driverData, P_AGE == 41)),nrow(subset(driverData, P_AGE == 51)),nrow(subset(driverData, P_AGE == 61)),nrow(subset(driverData, P_AGE == 71)),nrow(subset(driverData, P_AGE == 81)),nrow(subset(driverData, P_AGE == 91)))
+  category=c("1 - 10","11 - 20","21 - 30","31 - 40","41 - 50","51 - 60","61 - 70","71 - 80","81 - 90","91 -"),  
+  value=c(nrow(subset(driverData, P_AGE == 1)), nrow(subset(driverData, P_AGE == 11)),nrow(subset(driverData, P_AGE == 21)),nrow(subset(driverData, P_AGE == 31)),nrow(subset(driverData, P_AGE == 41)),nrow(subset(driverData, P_AGE == 51)),nrow(subset(driverData, P_AGE == 61)),nrow(subset(driverData, P_AGE == 71)),nrow(subset(driverData, P_AGE == 81)),nrow(subset(driverData, P_AGE == 91)))
 )
 par(mar=c(6,6,4,2)+0.1,mgp=c(5,1,0))
 barplot(height=p_age2_Category$value, names=p_age2_Category$category,  xlab = "Age Range(s)",ylab = "Count",col=rgb(0.8,0,0,0.6), las=2, main = "Driver Data: Age Ranges",cex.names=0.6)
@@ -405,23 +376,11 @@ p_isev2_Category = data.frame(
   category=c("No Injury","Injury"),
   value=c(nrow(subset(driverData, P_ISEV == 0)),nrow(subset(driverData, P_ISEV == 1)))
 )
-
-# Compute percentages
 p_isev2_Category$fraction <- p_isev2_Category$value / sum(p_isev2_Category$value)
-
-# Compute the cumulative percentages (top of each rectangle)
 p_isev2_Category$ymax <- cumsum(p_isev2_Category$fraction)
-
-# Compute the bottom of each rectangle
 p_isev2_Category$ymin <- c(0, head(p_isev2_Category$ymax, n=-1))
-
-# Compute label position
 p_isev2_Category$labelPosition <- (p_isev2_Category$ymax + p_isev2_Category$ymin) / 2
-
-# Compute a good label
 p_isev2_Category$label <- paste0(p_isev2_Category$category, "\n value: ", p_isev2_Category$value)
-
-# Make the plot
 ggplot(p_isev2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
   ggtitle("Driver Data: Injury Severity") +
   geom_rect() +
@@ -446,7 +405,7 @@ barplot(height=v_type2_Category$value, names=v_type2_Category$category,xlab = "C
 # V_YEAR VISUALIZATION
 
 v_year2_Category = data.frame(
-  category = c("<= 1950",">1950 & <=1980",">1980 & <=1990",">1990 & <=2000",">2000 & <=2010",">2010"),
+  category = c("1901 - 1950","1951 - 1980","1981 - 1990","1991 - 2000","2001 - 2010","2010 -"),
   value = c(nrow(subset(driverData, V_YEAR == 1901)),nrow(subset(driverData, V_YEAR == 1951)),nrow(subset(driverData, V_YEAR == 1981)),nrow(subset(driverData, V_YEAR == 1991)),nrow(subset(driverData, V_YEAR == 2001)),nrow(subset(driverData, V_YEAR == 2011)))
 )
 par(mar=c(6,6,4,2)+0.1,mgp=c(5,1,0))
