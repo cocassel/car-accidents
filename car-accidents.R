@@ -705,7 +705,7 @@ summary(severeLog5)
 injuredFreq = as.data.frame(table(data$P_ISEV))
 injuredFreq
 
-# Get baseline accuracy
+# Get baseline accuracy (using whole dataset)
 if(injuredFreq$Freq[2] > injuredFreq$Freq[1]) {
   injuredFreq$Freq[2]/(injuredFreq$Freq[1] + injuredFreq$Freq[2])
 } else {
@@ -743,21 +743,30 @@ testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5)
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
 # Accuracy
-
+truePositivesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == TRUE)
+trueNegativesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == FALSE)
+(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[trueNegativesRow])/sum(testConfMatrix$Freq)
 # Sensitvity
-
+falseNegativesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == FALSE)
+testConfMatrix$Freq[truePositivesRow]/(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[falseNegativesRow])
 # Specificity
-
+falsePositivesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == TRUE)
+testConfMatrix$Freq[trueNegativesRow]/(testConfMatrix$Freq[trueNegativesRow] + testConfMatrix$Freq[falsePositivesRow])
 
 # Get confusion matrix for threshold of 0.6
 testConfMatrix = table(dataTest$P_ISEV, predictTest>0.6) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
 # Accuracy
-
+truePositivesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == TRUE)
+trueNegativesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == FALSE)
+(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[trueNegativesRow])/sum(testConfMatrix$Freq)
 # Sensitvity
-
+falseNegativesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == FALSE)
+testConfMatrix$Freq[truePositivesRow]/(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[falseNegativesRow])
 # Specificity
+falsePositivesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == TRUE)
+testConfMatrix$Freq[trueNegativesRow]/(testConfMatrix$Freq[trueNegativesRow] + testConfMatrix$Freq[falsePositivesRow])
 
 
 # MODEL 2
@@ -790,21 +799,30 @@ testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5)
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
 # Accuracy
-
+truePositivesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == TRUE)
+trueNegativesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == FALSE)
+(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[trueNegativesRow])/sum(testConfMatrix$Freq)
 # Sensitvity
-
+falseNegativesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == FALSE)
+testConfMatrix$Freq[truePositivesRow]/(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[falseNegativesRow])
 # Specificity
-
+falsePositivesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == TRUE)
+testConfMatrix$Freq[trueNegativesRow]/(testConfMatrix$Freq[trueNegativesRow] + testConfMatrix$Freq[falsePositivesRow])
 
 # Get confusion matrix for threshold of 0.6
 testConfMatrix = table(dataTest$P_ISEV, predictTest>0.6) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
 # Accuracy
-
+truePositivesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == TRUE)
+trueNegativesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == FALSE)
+(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[trueNegativesRow])/sum(testConfMatrix$Freq)
 # Sensitvity
-
+falseNegativesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == FALSE)
+testConfMatrix$Freq[truePositivesRow]/(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[falseNegativesRow])
 # Specificity
+falsePositivesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == TRUE)
+testConfMatrix$Freq[trueNegativesRow]/(testConfMatrix$Freq[trueNegativesRow] + testConfMatrix$Freq[falsePositivesRow])
 
 
 # MODEL 3
@@ -837,21 +855,30 @@ testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5)
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
 # Accuracy
-
+truePositivesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == TRUE)
+trueNegativesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == FALSE)
+(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[trueNegativesRow])/sum(testConfMatrix$Freq)
 # Sensitvity
-
+falseNegativesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == FALSE)
+testConfMatrix$Freq[truePositivesRow]/(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[falseNegativesRow])
 # Specificity
-
+falsePositivesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == TRUE)
+testConfMatrix$Freq[trueNegativesRow]/(testConfMatrix$Freq[trueNegativesRow] + testConfMatrix$Freq[falsePositivesRow])
 
 # Get confusion matrix for threshold of 0.6
 testConfMatrix = table(dataTest$P_ISEV, predictTest>0.6) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
 # Accuracy
-
+truePositivesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == TRUE)
+trueNegativesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == FALSE)
+(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[trueNegativesRow])/sum(testConfMatrix$Freq)
 # Sensitvity
-
+falseNegativesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == FALSE)
+testConfMatrix$Freq[truePositivesRow]/(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[falseNegativesRow])
 # Specificity
+falsePositivesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == TRUE)
+testConfMatrix$Freq[trueNegativesRow]/(testConfMatrix$Freq[trueNegativesRow] + testConfMatrix$Freq[falsePositivesRow])
 
 
 # MODEL 4
@@ -883,21 +910,30 @@ testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5)
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
 # Accuracy
-
+truePositivesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == TRUE)
+trueNegativesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == FALSE)
+(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[trueNegativesRow])/sum(testConfMatrix$Freq)
 # Sensitvity
-
+falseNegativesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == FALSE)
+testConfMatrix$Freq[truePositivesRow]/(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[falseNegativesRow])
 # Specificity
-
+falsePositivesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == TRUE)
+testConfMatrix$Freq[trueNegativesRow]/(testConfMatrix$Freq[trueNegativesRow] + testConfMatrix$Freq[falsePositivesRow])
 
 # Get confusion matrix for threshold of 0.6
 testConfMatrix = table(dataTest$P_ISEV, predictTest>0.6) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
 # Accuracy
-
+truePositivesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == TRUE)
+trueNegativesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == FALSE)
+(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[trueNegativesRow])/sum(testConfMatrix$Freq)
 # Sensitvity
-
+falseNegativesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == FALSE)
+testConfMatrix$Freq[truePositivesRow]/(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[falseNegativesRow])
 # Specificity
+falsePositivesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == TRUE)
+testConfMatrix$Freq[trueNegativesRow]/(testConfMatrix$Freq[trueNegativesRow] + testConfMatrix$Freq[falsePositivesRow])
 
 
 # MODEL 5
