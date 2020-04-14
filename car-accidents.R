@@ -987,7 +987,7 @@ NROW(insuranceData)*fixedCost
 NROW(insuranceData)*fixedCost + sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
 
 
-# ---------------------------- MODEL 3B: OPTIMIZING REVENUE WEIGHTED BY RISK WITH FACTOR CONSTRAINTS---------------------------
+# ----------------------------- MODEL 3B: OPTIMIZING REVENUE WEIGHTED BY RISK WITH FACTOR CONSTRAINTS---------------------------
 
 # This model combines model 2 and model 3A (uses constraints from model 2 and the objective function from model 3A)
 
@@ -1039,7 +1039,7 @@ NROW(insuranceData)*fixedCost + sum(colSums(categoriesMatrix*maxVariableCost)*(r
 
 # In this model we add constraints based on our logistic regression. The constraints are used to restrict our factors 
 # based on ranked risks of categorical factors. If males present a higher risk of injury, we should charge them more than 
-# females. The model will tell us by how much. Some of the prior models end up optimizing based on frequency of categorical
+# females. The model will tell us by how much. The prior models end up optimizing in part based on frequency of categorical
 # values (e.g. if there are more male customers than females, charge them more). Rather than using models that optimize 
 # solely based on demand, we should also consider risk. If males present a higher risk of severe car crashes, they should not
 # be charged less than females.
@@ -1348,3 +1348,82 @@ NROW(insuranceData)*fixedCost + result$objval
 # ---------------------------------- MODEL 7: FAIRNESS, RISK, AND FACTOR CONSTRAINTS -------------------------------------------------
 
 
+# --------------------------- MODEL 7A: FAIRNESS BETWEEN ALL CATEGORIES WITH RISK CONSTRAINTS --------------------------------------------
+
+# Set the variable types
+vtype = matrix('C', nrow = 1, ncol = numVars)
+
+# Set the A matrix 
+A7a = rbind(A6, A4a)
+
+# Set the B vector
+b7a = rbind(b6, b4a)
+
+# Set the operators vector
+operators7a = rbind(operators6, operators4a)
+
+# Set the objective function vector
+coeffs = categoriesMatrix*maxVariableCost
+obj = colSums(coeffs)
+
+# Solve
+model = list()
+model$A = A7a
+model$obj = obj
+model$modelsense = "max"
+model$rhs = b7a
+model$sense = operators7a
+model$vtype = vtype
+result = gurobi(model)
+
+# Resulting factors
+result$x
+
+# Total variable costs based on decided factors
+result$objval
+
+# Total fixed costs (each person pays $2000)
+NROW(insuranceData)*fixedCost
+
+# Get total revenue including both the variables and fixed costs
+NROW(insuranceData)*fixedCost + result$objval
+
+# --------------------------- MODEL 7B: FAIRNESS BETWEEN ALL CATEGORIES WITH RISK AND FACTOR CONSTRAINTS --------------------------------------------
+
+# Set the variable types
+vtype = matrix('C', nrow = 1, ncol = numVars)
+
+# Set the A matrix 
+A7b = rbind(A6, A4a, A2)
+
+# Set the B vector
+b7b = rbind(b6, b4a, b2)
+
+# Set the operators vector
+operators7b = rbind(operators6, operators4a, operators2)
+
+# Set the objective function vector
+coeffs = categoriesMatrix*maxVariableCost
+obj = colSums(coeffs)
+
+# Solve
+model = list()
+model$A = A7b
+model$obj = obj
+model$modelsense = "max"
+model$rhs = b7b
+model$sense = operators7b
+model$vtype = vtype
+result = gurobi(model)
+
+# Resulting factors
+result$x
+
+# Total variable costs based on decided factors
+result$objval
+
+# Total fixed costs (each person pays $2000)
+NROW(insuranceData)*fixedCost
+
+# Get total revenue including both the variables and fixed costs
+NROW(insuranceData)*fixedCost + result$objval
