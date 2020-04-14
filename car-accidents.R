@@ -746,7 +746,7 @@ testConfMatrix = as.data.frame(testConfMatrix)
 truePositivesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == TRUE)
 trueNegativesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == FALSE)
 (testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[trueNegativesRow])/sum(testConfMatrix$Freq)
-# Sensitvity
+# Sensitivity
 falseNegativesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == FALSE)
 testConfMatrix$Freq[truePositivesRow]/(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[falseNegativesRow])
 # Specificity
@@ -761,7 +761,7 @@ testConfMatrix = as.data.frame(testConfMatrix)
 truePositivesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == TRUE)
 trueNegativesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == FALSE)
 (testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[trueNegativesRow])/sum(testConfMatrix$Freq)
-# Sensitvity
+# Sensitivity
 falseNegativesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == FALSE)
 testConfMatrix$Freq[truePositivesRow]/(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[falseNegativesRow])
 # Specificity
@@ -802,7 +802,7 @@ testConfMatrix = as.data.frame(testConfMatrix)
 truePositivesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == TRUE)
 trueNegativesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == FALSE)
 (testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[trueNegativesRow])/sum(testConfMatrix$Freq)
-# Sensitvity
+# Sensitivity
 falseNegativesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == FALSE)
 testConfMatrix$Freq[truePositivesRow]/(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[falseNegativesRow])
 # Specificity
@@ -817,7 +817,7 @@ testConfMatrix = as.data.frame(testConfMatrix)
 truePositivesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == TRUE)
 trueNegativesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == FALSE)
 (testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[trueNegativesRow])/sum(testConfMatrix$Freq)
-# Sensitvity
+# Sensitivity
 falseNegativesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == FALSE)
 testConfMatrix$Freq[truePositivesRow]/(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[falseNegativesRow])
 # Specificity
@@ -858,7 +858,7 @@ testConfMatrix = as.data.frame(testConfMatrix)
 truePositivesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == TRUE)
 trueNegativesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == FALSE)
 (testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[trueNegativesRow])/sum(testConfMatrix$Freq)
-# Sensitvity
+# Sensitivity
 falseNegativesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == FALSE)
 testConfMatrix$Freq[truePositivesRow]/(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[falseNegativesRow])
 # Specificity
@@ -873,7 +873,7 @@ testConfMatrix = as.data.frame(testConfMatrix)
 truePositivesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == TRUE)
 trueNegativesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == FALSE)
 (testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[trueNegativesRow])/sum(testConfMatrix$Freq)
-# Sensitvity
+# Sensitivity
 falseNegativesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == FALSE)
 testConfMatrix$Freq[truePositivesRow]/(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[falseNegativesRow])
 # Specificity
@@ -913,7 +913,7 @@ testConfMatrix = as.data.frame(testConfMatrix)
 truePositivesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == TRUE)
 trueNegativesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == FALSE)
 (testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[trueNegativesRow])/sum(testConfMatrix$Freq)
-# Sensitvity
+# Sensitivity
 falseNegativesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == FALSE)
 testConfMatrix$Freq[truePositivesRow]/(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[falseNegativesRow])
 # Specificity
@@ -928,7 +928,7 @@ testConfMatrix = as.data.frame(testConfMatrix)
 truePositivesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == TRUE)
 trueNegativesRow = which(testConfMatrix$Var1 == 0 & testConfMatrix$Var2 == FALSE)
 (testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[trueNegativesRow])/sum(testConfMatrix$Freq)
-# Sensitvity
+# Sensitivity
 falseNegativesRow = which(testConfMatrix$Var1 == 1 & testConfMatrix$Var2 == FALSE)
 testConfMatrix$Freq[truePositivesRow]/(testConfMatrix$Freq[truePositivesRow] + testConfMatrix$Freq[falseNegativesRow])
 # Specificity
@@ -943,7 +943,7 @@ testConfMatrix$Freq[trueNegativesRow]/(testConfMatrix$Freq[trueNegativesRow] + t
 driverInjuredFreq = as.data.frame(table(driverData$P_ISEV))
 driverInjuredFreq
 
-# Get baseline accuracy
+# Get baseline accuracy (using whole driver dataset)
 if(driverInjuredFreq$Freq[2] > driverInjuredFreq$Freq[1]) {
   driverInjuredFreq$Freq[2]/(driverInjuredFreq$Freq[1] + driverInjuredFreq$Freq[2])
 } else {
@@ -981,7 +981,7 @@ driverTestConfMatrix = as.data.frame(driverTestConfMatrix)
 truePositivesRow = which(driverTestConfMatrix$Var1 == 1 & driverTestConfMatrix$Var2 == TRUE)
 trueNegativesRow = which(driverTestConfMatrix$Var1 == 0 & driverTestConfMatrix$Var2 == FALSE)
 (driverTestConfMatrix$Freq[truePositivesRow] + driverTestConfMatrix$Freq[trueNegativesRow])/sum(driverTestConfMatrix$Freq)
-# Sensitvity
+# Sensitivity
 falseNegativesRow = which(driverTestConfMatrix$Var1 == 1 & driverTestConfMatrix$Var2 == FALSE)
 driverTestConfMatrix$Freq[truePositivesRow]/(driverTestConfMatrix$Freq[truePositivesRow] + driverTestConfMatrix$Freq[falseNegativesRow])
 # Specificity
@@ -996,7 +996,7 @@ driverTestConfMatrix = as.data.frame(driverTestConfMatrix)
 truePositivesRow = which(driverTestConfMatrix$Var1 == 1 & driverTestConfMatrix$Var2 == TRUE)
 trueNegativesRow = which(driverTestConfMatrix$Var1 == 0 & driverTestConfMatrix$Var2 == FALSE)
 (driverTestConfMatrix$Freq[truePositivesRow] + driverTestConfMatrix$Freq[trueNegativesRow])/sum(driverTestConfMatrix$Freq)
-# Sensitvity
+# Sensitivity
 falseNegativesRow = which(driverTestConfMatrix$Var1 == 1 & driverTestConfMatrix$Var2 == FALSE)
 driverTestConfMatrix$Freq[truePositivesRow]/(driverTestConfMatrix$Freq[truePositivesRow] + driverTestConfMatrix$Freq[falseNegativesRow])
 # Specificity
