@@ -247,7 +247,7 @@ ggplot(p_sexCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) 
   coord_polar(theta="y") +
   xlim(c(2, 4)) +
   theme_void() +
-  theme(legend.position = "none")
+  theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
 
 
 # P_AGE VISUALIZATION 
@@ -259,6 +259,37 @@ p_ageCategory = data.frame(
 par(mar=c(6,6,4,2)+0.1,mgp=c(5,1,0))
 barplot(height=p_ageCategory$value, names=p_ageCategory$category, xlab = "Age Range(s)",ylab = "Count", col=rgb(0.8,0,0,0.6), las=2, main = "All Data: Age Ranges",cex.names=0.6)
 
+# P_ISEV VISUALIZATION 
+p_isevCategory = data.frame(
+  category=c("No Injury","Injury"),
+  value=c(nrow(subset(data, P_ISEV == 0)),nrow(subset(data, P_ISEV == 1)))
+)
+
+# Compute percentages
+p_isevCategory$fraction <- p_isevCategory$value / sum(p_isevCategory$value)
+
+# Compute the cumulative percentages (top of each rectangle)
+p_isevCategory$ymax <- cumsum(p_isevCategory$fraction)
+
+# Compute the bottom of each rectangle
+p_isevCategory$ymin <- c(0, head(p_isevCategory$ymax, n=-1))
+
+# Compute label position
+p_isevCategory$labelPosition <- (p_isevCategory$ymax + p_isevCategory$ymin) / 2
+
+# Compute a good label
+p_isevCategory$label <- paste0(p_isevCategory$category, "\n value: ", p_isevCategory$value)
+
+# Make the plot
+ggplot(p_isevCategory, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  ggtitle("All Data: Injury Severity") +
+  geom_rect() +
+  geom_label( x=3.5, aes(y=labelPosition, label=label), size=6) +
+  scale_fill_brewer(palette=4) +
+  coord_polar(theta="y") +
+  xlim(c(2, 4)) +
+  theme_void() +
+  theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
 
 # V_TYPE VISUALIZATION 
 
@@ -312,7 +343,7 @@ ggplot(p_sex2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)
   coord_polar(theta="y") +
   xlim(c(2, 4)) +
   theme_void() +
-  theme(legend.position = "none")
+  theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
 
 
 # P_AGE VISUALIZATION
@@ -323,6 +354,38 @@ p_age2_Category = data.frame(
 )
 par(mar=c(6,6,4,2)+0.1,mgp=c(5,1,0))
 barplot(height=p_age2_Category$value, names=p_age2_Category$category,  xlab = "Age Range(s)",ylab = "Count",col=rgb(0.8,0,0,0.6), las=2, main = "Driver Data: Age Ranges",cex.names=0.6)
+
+# P_ISEV VISUALIZATION 
+p_isev2_Category = data.frame(
+  category=c("No Injury","Injury"),
+  value=c(nrow(subset(driverData, P_ISEV == 0)),nrow(subset(driverData, P_ISEV == 1)))
+)
+
+# Compute percentages
+p_isev2_Category$fraction <- p_isev2_Category$value / sum(p_isev2_Category$value)
+
+# Compute the cumulative percentages (top of each rectangle)
+p_isev2_Category$ymax <- cumsum(p_isev2_Category$fraction)
+
+# Compute the bottom of each rectangle
+p_isev2_Category$ymin <- c(0, head(p_isev2_Category$ymax, n=-1))
+
+# Compute label position
+p_isev2_Category$labelPosition <- (p_isev2_Category$ymax + p_isev2_Category$ymin) / 2
+
+# Compute a good label
+p_isev2_Category$label <- paste0(p_isev2_Category$category, "\n value: ", p_isev2_Category$value)
+
+# Make the plot
+ggplot(p_isev2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  ggtitle("All Data: Injury Severity") +
+  geom_rect() +
+  geom_label( x=3.5, aes(y=labelPosition, label=label), size=6) +
+  scale_fill_brewer(palette=4) +
+  coord_polar(theta="y") +
+  xlim(c(2, 4)) +
+  theme_void() +
+  theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
 
 
 # V_TYPE VISUALIZATION
