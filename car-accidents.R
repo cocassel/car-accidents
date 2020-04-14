@@ -619,6 +619,7 @@ par(mar=c(3,3,3,3))
 plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
 title("Model 1 - Receiver Operator Characteristic Curve", cex.main=3)
 dev.off()
+# By examining the curve, we can see that 0.5 and 0.6 are reasonable thresholds
 
 # Calculate AUC for testing set
 auc_ROCR = performance(ROCRpred, measure = "auc")
@@ -646,6 +647,7 @@ par(mar=c(3,3,3,3))
 plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
 title("Model 2 - Receiver Operator Characteristic Curve", cex.main=3)
 dev.off()
+# By examining the curve, we can see that 0.5 and 0.6 are reasonable thresholds
 
 # Calculate AUC for testing set
 auc_ROCR = performance(ROCRpred, measure = "auc")
@@ -673,6 +675,7 @@ par(mar=c(3,3,3,3))
 plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
 title("Model 3 - Receiver Operator Characteristic Curve", cex.main=3)
 dev.off()
+# By examining the curve, we can see that 0.5 and 0.6 are reasonable thresholds
 
 # Calculate AUC for testing set
 auc_ROCR = performance(ROCRpred, measure = "auc")
@@ -700,6 +703,7 @@ par(mar=c(3,3,3,3))
 plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
 title("Model 4 - Receiver Operator Characteristic Curve", cex.main=3)
 dev.off()
+# By examining the curve, we can see that 0.5 and 0.6 are reasonable thresholds
 
 # Calculate AUC for testing set
 auc_ROCR = performance(ROCRpred, measure = "auc")
@@ -739,6 +743,7 @@ par(mar=c(3,3,3,3))
 plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
 title("Model 5 - Receiver Operator Characteristic Curve", cex.main=3)
 dev.off()
+# By examining the curve, we can see that 0.5 and 0.6 are reasonable thresholds
 
 # Calculate AUC for testing set
 auc_ROCR = performance(ROCRpred, measure = "auc")
@@ -930,7 +935,107 @@ NROW(insuranceData)*fixedCost
 # Get total revenue including both the variable and fixed costs
 NROW(insuranceData)*fixedCost + result$objval
 
-# ------------------------------------------ MODEL 3: RISK CONSTRAINTS ---------------------------------------------
+# ------------------------------------------ MODEL 3A: OPTIMIZING REVENUE WEIGHTED BY RISK -------------------------------------------
+
+# In this model, we use the actual prediction values from the logistic regression. Rather than using the 
+# logistic regression to derive risk rankings and constraints, we use the predictions in the objective function 
+# as weights. Hence, we are trying to maximize the total sum of weighted revenues of all drivers.
+
+# Set the variable types
+vtype = matrix('C', nrow = 1, ncol = numVars)
+
+# Set the A matrix 
+# All the factors should add to at most 1
+A3a = matrix(1, nrow = 1, ncol = numVars)
+
+# Set the B vector
+# All the factors should add to at most 1
+b3a = matrix(1, nrow = 1, ncol = 1)
+
+# Set the operators vector
+operators3a = matrix('<=', nrow = 1, ncol = 1)
+
+# Set the objective function vector
+# The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
+# Since every person is charged $2000 regardless, it does not need to be added to our objective function
+# In this model, we are trying to maximize the weighted revenue (weights are the logistic regression probabilities)
+# Get predictions for drivers
+driverPredictions = predict(severeLog5, type = "response", newdata = driverDataTest)
+coeffs = categoriesMatrix*maxVariableCost*driverPredictions
+obj = colSums(coeffs)
+
+# Solve
+model = list()
+model$A = A3a
+model$obj = obj
+model$modelsense = "max"
+model$rhs = b3a
+model$sense = operators3a
+model$vtype = vtype
+result = gurobi(model)
+
+# Resulting factors
+result$x
+
+# Total variable costs based on decided factors (cannot use objective function value since it uses weighted revenue)
+sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
+
+# Total fixed costs (each person pays $2000)
+NROW(insuranceData)*fixedCost
+
+# Get total revenue including both the variables and fixed costs
+NROW(insuranceData)*fixedCost + sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
+
+
+# ---------------------------- MODEL 3B: OPTIMIZING REVENUE WEIGHTED BY RISK WITH FACTOR CONSTRAINTS---------------------------
+
+# This model combines model 2 and model 3A (uses constraints from model 2 and the objective function from model 3A)
+
+# Set the variable types
+vtype = matrix('C', nrow = 1, ncol = numVars)
+
+# Set the A matrix 
+A3b = A2
+
+# Set the B vector
+b3b = b2
+
+# Set the operators vector
+operators3b = operators2
+
+# Set the objective function vector
+# The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
+# Since every person is charged $2000 regardless, it does not need to be added to our objective function
+# In this model, we are trying to maximize the weighted revenue (weights are the logistic regression probabilities)
+# Get predictions for drivers
+driverPredictions = predict(severeLog5, type = "response", newdata = driverDataTest)
+coeffs = categoriesMatrix*maxVariableCost*driverPredictions
+obj = colSums(coeffs)
+
+# Solve
+model = list()
+model$A = A3b
+model$obj = obj
+model$modelsense = "max"
+model$rhs = b3b
+model$sense = operators3b
+model$vtype = vtype
+result = gurobi(model)
+
+# Resulting factors
+result$x
+
+# Total variable costs based on decided factors (cannot use objective function value since it uses weighted revenue)
+sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
+
+# Total fixed costs (each person pays $2000)
+NROW(insuranceData)*fixedCost
+
+# Get total revenue including both the variables and fixed costs
+NROW(insuranceData)*fixedCost + sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
+
+
+# ------------------------------------------ MODEL 4A: RISK CONSTRAINTS ---------------------------------------------
 
 # In this model we add constraints based on our logistic regression. The constraints are used to restrict our factors 
 # based on ranked risks of categorical factors. If males present a higher risk of injury, we should charge them more than 
@@ -952,14 +1057,14 @@ vtype = matrix('C', nrow = 1, ncol = numVars)
 
 # Set the A matrix 
 # All the factors should add to at most 1
-A3 = matrix(1, nrow = 1, ncol = numVars)
+A4a = matrix(1, nrow = 1, ncol = numVars)
 
 # Set the B vector
 # All the factors should add to at most 1
-b3 = matrix(1, nrow = 1, ncol = 1)
+b4a = matrix(1, nrow = 1, ncol = 1)
 
 # Set the operators vector
-operators3 = matrix('<=', nrow = 1, ncol = 1)
+operators4a = matrix('<=', nrow = 1, ncol = 1)
 
 # Add risk constraints based on ranks
 # High risk should pay equal to or greater than low risk
@@ -967,33 +1072,33 @@ for(i in 1:(NROW(sexRanks)-1)) {
   rowVector = vector("numeric", numVars)
   rowVector[sexRanks[i]] = 1
   rowVector[sexRanks[i+1]] = -1
-  A3 = rbind(A3, rowVector)
-  operators3 = rbind(operators3, ">=")
-  b3 = rbind(b3, 0)
+  A4a = rbind(A4a, rowVector)
+  operators4a = rbind(operators4a, ">=")
+  b4a = rbind(b4a, 0)
 }
 for(i in 1:(NROW(ageRanks)-1)) {
   rowVector = vector("numeric", numVars)
   rowVector[ageStartIndex -1 + ageRanks[i]] = 1
   rowVector[ageStartIndex -1 + ageRanks[i+1]] = -1
-  A3 = rbind(A3, rowVector)
-  operators3 = rbind(operators3, ">=")
-  b3 = rbind(b3, 0)
+  A4a = rbind(A4a, rowVector)
+  operators4a = rbind(operators4a, ">=")
+  b4a = rbind(b4a, 0)
 }
 for(i in 1:(NROW(vehicleTypeRanks)-1)) {
   rowVector = vector("numeric", numVars)
   rowVector[vehicleTypeStartIndex -1 + vehicleTypeRanks[i]] = 1
   rowVector[vehicleTypeStartIndex -1 + vehicleTypeRanks[i+1]] = -1
-  A3 = rbind(A3, rowVector)
-  operators3 = rbind(operators3, ">=")
-  b3 = rbind(b3, 0)
+  A4a = rbind(A4a, rowVector)
+  operators4a = rbind(operators4a, ">=")
+  b4a = rbind(b4a, 0)
 }
 for(i in 1:(NROW(vehicleYearRanks)-1)) {
   rowVector = vector("numeric", numVars)
   rowVector[vehicleYearStartIndex -1 + vehicleYearRanks[i]] = 1
   rowVector[vehicleYearStartIndex -1 + vehicleYearRanks[i+1]] = -1
-  A3 = rbind(A3, rowVector)
-  operators3 = rbind(operators3, ">=")
-  b3 = rbind(b3, 0)
+  A4a = rbind(A4a, rowVector)
+  operators4a = rbind(operators4a, ">=")
+  b4a = rbind(b4a, 0)
 }
 
 # Set the objective function vector
@@ -1004,11 +1109,11 @@ obj = colSums(coeffs)
 
 # Solve
 model = list()
-model$A = A3
+model$A = A4a
 model$obj = obj
 model$modelsense = "max"
-model$rhs = b3
-model$sense = operators3
+model$rhs = b4a
+model$sense = operators4a
 model$vtype = vtype
 result = gurobi(model)
 
@@ -1025,21 +1130,21 @@ NROW(insuranceData)*fixedCost
 NROW(insuranceData)*fixedCost + result$objval
 
 
-# --------------------------------------- MODEL 4: RISK AND FACTOR CONSTRAINTS -------------------------------------------
+# --------------------------------------- MODEL 4B: RISK AND FACTOR CONSTRAINTS -------------------------------------------
 
-# This model combines model 2 and model 5 (uses constraints from both)
+# This model combines model 2 and model 4A (uses constraints from both)
 
 # Set the variable types
 vtype = matrix('C', nrow = 1, ncol = numVars)
 
 # Set the A matrix 
-A4 = rbind(A2,A3)
+A4b = rbind(A2,A4a)
 
 # Set the B vector
-b4 = rbind(b2, b3)
+b4b = rbind(b2, b4a)
 
 # Set the operators vector
-operators4 = rbind(operators2, operators3)
+operators4b = rbind(operators2, operators4a)
 
 # Set the objective function vector
 coeffs = categoriesMatrix*maxVariableCost
@@ -1047,11 +1152,11 @@ obj = colSums(coeffs)
 
 # Solve
 model = list()
-model$A = A4
+model$A = A4b
 model$obj = obj
 model$modelsense = "max"
-model$rhs = b4
-model$sense = operators4
+model$rhs = b4b
+model$sense = operators4b
 model$vtype = vtype
 result = gurobi(model)
 
@@ -1231,115 +1336,15 @@ NROW(insuranceData)*fixedCost
 NROW(insuranceData)*fixedCost + result$objval
 
 
-# ------------------------------------------ MODEL 7: OPTIMIZING REVENUE WEIGHTED BY RISK -------------------------------------------
-
-# In this model, we use the actual prediction values from the logistic regression. Rather than using the 
-# logistic regression to derive risk rankings and constraints, we use the predictions in the objective function 
-# as weights. Hence, we are trying to maximize the total sum of weighted revenues of all drivers.
-
-# Set the variable types
-vtype = matrix('C', nrow = 1, ncol = numVars)
-
-# Set the A matrix 
-# All the factors should add to at most 1
-A7 = matrix(1, nrow = 1, ncol = numVars)
-
-# Set the B vector
-# All the factors should add to at most 1
-b7 = matrix(1, nrow = 1, ncol = 1)
-
-# Set the operators vector
-operators7 = matrix('<=', nrow = 1, ncol = 1)
-
-# Set the objective function vector
-# The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
-# Since every person is charged $2000 regardless, it does not need to be added to our objective function
-# In this model, we are trying to maximize the weighted revenue (weights are the logistic regression probabilities)
-# Get predictions for drivers
-driverPredictions = predict(severeLog5, type = "response", newdata = driverDataTest)
-coeffs = categoriesMatrix*maxVariableCost*driverPredictions
-obj = colSums(coeffs)
-
-# Solve
-model = list()
-model$A = A7
-model$obj = obj
-model$modelsense = "max"
-model$rhs = b7
-model$sense = operators7
-model$vtype = vtype
-result = gurobi(model)
-
-# Resulting factors
-result$x
-
-# Total variable costs based on decided factors (cannot use objective function value since it uses weighted revenue)
-sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
-
-# Total fixed costs (each person pays $2000)
-NROW(insuranceData)*fixedCost
-
-# Get total revenue including both the variables and fixed costs
-NROW(insuranceData)*fixedCost + sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
+# ----------------------------- MODEL 5B: FAIRNESS WITHIN VARIABLES AND FACTOR CONSTRAINTS  ------------------------------
 
 
-# --------------------------- MODEL 8: MODEL 7: OPTIMIZING REVENUE WEIGHTED BY RISK WITH FACTOR CONSTRAINTS---------------------------
-
-# This model combines model 2 and model 7 (uses constraints from model 2 and the objective function from model 7)
-
-# Set the variable types
-vtype = matrix('C', nrow = 1, ncol = numVars)
-
-# Set the A matrix 
-A8 = A2
-
-# Set the B vector
-b8 = b2
-
-# Set the operators vector
-operators8 = operators2
-
-# Set the objective function vector
-# The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
-# Since every person is charged $2000 regardless, it does not need to be added to our objective function
-# In this model, we are trying to maximize the weighted revenue (weights are the logistic regression probabilities)
-# Get predictions for drivers
-driverPredictions = predict(severeLog5, type = "response", newdata = driverDataTest)
-coeffs = categoriesMatrix*maxVariableCost*driverPredictions
-obj = colSums(coeffs)
-
-# Solve
-model = list()
-model$A = A8
-model$obj = obj
-model$modelsense = "max"
-model$rhs = b8
-model$sense = operators8
-model$vtype = vtype
-result = gurobi(model)
-
-# Resulting factors
-result$x
-
-# Total variable costs based on decided factors (cannot use objective function value since it uses weighted revenue)
-sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
-
-# Total fixed costs (each person pays $2000)
-NROW(insuranceData)*fixedCost
-
-# Get total revenue including both the variables and fixed costs
-NROW(insuranceData)*fixedCost + sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
+# ---------------------------- MODEL 6B: FAIRNESS BETWEEN ALL CATEGORIES AND FACTOR CONSTRAINTS  ------------------------------
 
 
-# ----------------------------- MODEL 9: FAIRNESS WITHIN VARIABLES AND FACTOR CONSTRAINTS  ------------------------------
+# ---------------------------------------------- MODEL 7: COMBINATION -------------------------------------------------
 
 
-# ---------------------------- MODEL 10: FAIRNESS BETWEEN ALL CATEGORIES AND FACTOR CONSTRAINTS  ------------------------------
-
-
-# ---------------------------------------------- MODEL 11: COMBINATION -------------------------------------------------
-
-
-# ---------------------------------- MODEL 11: FAIRNESS, RISK, AND FACTOR CONSTRAINTS -------------------------------------------------
+# ---------------------------------- MODEL 7: FAIRNESS, RISK, AND FACTOR CONSTRAINTS -------------------------------------------------
 
 
