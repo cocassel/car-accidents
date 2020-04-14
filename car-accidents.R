@@ -217,6 +217,8 @@ write.csv(driverData, "cleanedDriverData.csv")
 
 # ------------------------------------------------------ ALL DATA ------------------------------------------------------
 
+summary(data)
+
 # P_SEX VISUALIZATION 
 
 p_sexCategory = data.frame(
@@ -312,6 +314,8 @@ barplot(height=v_yearCategory$value, names=v_yearCategory$category, xlab = "Coun
 
 
 # ----------------------------------------------------- DRIVER DATA -----------------------------------------------------
+
+summary(driverData)
 
 # P_SEX VISUALIZATION
 
@@ -676,9 +680,6 @@ trainConfMatrix
 trainConfMatrix = as.data.frame(trainConfMatrix)
 
 predictTest = predict(severeLog1, type = "response", newdata = dataTest)
-testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
-testConfMatrix
-testConfMatrix = as.data.frame(testConfMatrix)
 
 # Plot ROC for testing set
 ROCRpred = prediction(predictTest, dataTest$P_ISEV)
@@ -688,12 +689,23 @@ par(mar=c(3,3,3,3))
 plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
 title("Model 1 - Receiver Operator Characteristic Curve", cex.main=3)
 dev.off()
-# By examining the curve, we can see that 0.5 and 0.6 are reasonable thresholds
 
 # Calculate AUC for testing set
 auc_ROCR = performance(ROCRpred, measure = "auc")
 auc_ROCR = auc_ROCR@y.values[[1]]
 auc_ROCR
+
+# By examining the ROC curve, we can see that 0.5 and 0.6 are reasonable thresholds
+
+# Get confusion matrix for threshold of 0.5
+testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
+testConfMatrix
+testConfMatrix = as.data.frame(testConfMatrix)
+
+# Get confusion matrix for threshold of 0.6
+testConfMatrix = table(dataTest$P_ISEV, predictTest>0.6) 
+testConfMatrix
+testConfMatrix = as.data.frame(testConfMatrix)
 
 
 # MODEL 2
@@ -704,9 +716,6 @@ trainConfMatrix
 trainConfMatrix = as.data.frame(trainConfMatrix)
 
 predictTest = predict(severeLog2, type = "response", newdata = dataTest)
-testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
-testConfMatrix
-testConfMatrix = as.data.frame(testConfMatrix)
 
 # Plot ROC for testing set
 ROCRpred = prediction(predictTest, dataTest$P_ISEV)
@@ -716,12 +725,23 @@ par(mar=c(3,3,3,3))
 plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
 title("Model 2 - Receiver Operator Characteristic Curve", cex.main=3)
 dev.off()
-# By examining the curve, we can see that 0.5 and 0.6 are reasonable thresholds
 
 # Calculate AUC for testing set
 auc_ROCR = performance(ROCRpred, measure = "auc")
 auc_ROCR = auc_ROCR@y.values[[1]]
 auc_ROCR
+
+# By examining the ROC curve, we can see that 0.5 and 0.6 are reasonable thresholds
+
+# Get confusion matrix for threshold of 0.5
+testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
+testConfMatrix
+testConfMatrix = as.data.frame(testConfMatrix)
+
+# Get confusion matrix for threshold of 0.6
+testConfMatrix = table(dataTest$P_ISEV, predictTest>0.6) 
+testConfMatrix
+testConfMatrix = as.data.frame(testConfMatrix)
 
 
 # MODEL 3
@@ -732,9 +752,6 @@ trainConfMatrix
 trainConfMatrix = as.data.frame(trainConfMatrix)
 
 predictTest = predict(severeLog3, type = "response", newdata = dataTest)
-testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
-testConfMatrix
-testConfMatrix = as.data.frame(testConfMatrix)
 
 # Plot ROC for testing set
 ROCRpred = prediction(predictTest, dataTest$P_ISEV)
@@ -744,12 +761,23 @@ par(mar=c(3,3,3,3))
 plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
 title("Model 3 - Receiver Operator Characteristic Curve", cex.main=3)
 dev.off()
-# By examining the curve, we can see that 0.5 and 0.6 are reasonable thresholds
 
 # Calculate AUC for testing set
 auc_ROCR = performance(ROCRpred, measure = "auc")
 auc_ROCR = auc_ROCR@y.values[[1]]
 auc_ROCR
+
+# By examining the ROC curve, we can see that 0.5 and 0.6 are reasonable thresholds
+
+# Get confusion matrix for threshold of 0.5
+testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
+testConfMatrix
+testConfMatrix = as.data.frame(testConfMatrix)
+
+# Get confusion matrix for threshold of 0.6
+testConfMatrix = table(dataTest$P_ISEV, predictTest>0.6) 
+testConfMatrix
+testConfMatrix = as.data.frame(testConfMatrix)
 
 
 # MODEL 4
@@ -757,12 +785,8 @@ auc_ROCR
 predictTrain = predict(severeLog4, type = "response") 
 trainConfMatrix = table(dataTrain$P_ISEV, predictTrain>0.5)
 trainConfMatrix
-trainConfMatrix = as.data.frame(trainConfMatrix)
 
 predictTest = predict(severeLog4, type = "response", newdata = dataTest)
-testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
-testConfMatrix
-testConfMatrix = as.data.frame(testConfMatrix)
 
 # Plot ROC for testing set
 ROCRpred = prediction(predictTest, dataTest$P_ISEV)
@@ -772,12 +796,23 @@ par(mar=c(3,3,3,3))
 plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
 title("Model 4 - Receiver Operator Characteristic Curve", cex.main=3)
 dev.off()
-# By examining the curve, we can see that 0.5 and 0.6 are reasonable thresholds
 
 # Calculate AUC for testing set
 auc_ROCR = performance(ROCRpred, measure = "auc")
 auc_ROCR = auc_ROCR@y.values[[1]]
 auc_ROCR
+
+# By examining the ROC curve, we can see that 0.5 and 0.6 are reasonable thresholds
+
+# Get confusion matrix for threshold of 0.5
+testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
+testConfMatrix
+testConfMatrix = as.data.frame(testConfMatrix)
+
+# Get confusion matrix for threshold of 0.6
+testConfMatrix = table(dataTest$P_ISEV, predictTest>0.6) 
+testConfMatrix
+testConfMatrix = as.data.frame(testConfMatrix)
 
 
 # MODEL 5
@@ -800,9 +835,6 @@ driverTrainConfMatrix
 driverTrainConfMatrix = as.data.frame(driverTrainConfMatrix)
 
 driverPredictTest = predict(severeLog5, type = "response", newdata = driverDataTest)
-driverTestConfMatrix = table(driverDataTest$P_ISEV, driverPredictTest>0.5) 
-driverTestConfMatrix
-driverTestConfMatrix = as.data.frame(driverTestConfMatrix)
 
 # Plot ROC for testing set
 ROCRpred = prediction(driverPredictTest, driverDataTest$P_ISEV)
@@ -812,26 +844,38 @@ par(mar=c(3,3,3,3))
 plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
 title("Model 5 - Receiver Operator Characteristic Curve", cex.main=3)
 dev.off()
-# By examining the curve, we can see that 0.5 and 0.6 are reasonable thresholds
 
 # Calculate AUC for testing set
 auc_ROCR = performance(ROCRpred, measure = "auc")
 auc_ROCR = auc_ROCR@y.values[[1]]
 auc_ROCR
 
+# By examining the ROC curve, we can see that 0.5 and 0.6 are reasonable thresholds
+
+# Get confusion matrix for threshold of 0.5
+driverTestConfMatrix = table(driverDataTest$P_ISEV, driverPredictTest>0.5) 
+driverTestConfMatrix
+driverTestConfMatrix = as.data.frame(driverTestConfMatrix)
+# Accuracy
+truePositivesRow = which(driverTestConfMatrix$Var1 == 1 & driverTestConfMatrix$Var2 == TRUE)
+trueNegativesRow = which(driverTestConfMatrix$Var1 == 0 & driverTestConfMatrix$Var2 == FALSE)
+(driverTestConfMatrix$Freq[truePositivesRow] + driverTestConfMatrix$Freq[trueNegativesRow])/sum(driverTestConfMatrix$Freq)
+# Sensitvity
+
+# Specificity
 
 
+# Get confusion matrix for threshold of 0.6
+driverTestConfMatrix = table(driverDataTest$P_ISEV, driverPredictTest>0.6) 
+driverTestConfMatrix
+driverTestConfMatrix = as.data.frame(driverTestConfMatrix)
+# Accuracy
+truePositivesRow = which(driverTestConfMatrix$Var1 == 1 & driverTestConfMatrix$Var2 == TRUE)
+trueNegativesRow = which(driverTestConfMatrix$Var1 == 0 & driverTestConfMatrix$Var2 == FALSE)
+(driverTestConfMatrix$Freq[truePositivesRow] + driverTestConfMatrix$Freq[trueNegativesRow])/sum(driverTestConfMatrix$Freq)
+# Sensitvity
 
-
-# Calculate accuracy for different thresholds
-
-# Calculate specificity for different thresholds
-
-# Calculate sensitivity for different thresholds
-
-
-
-
+# Specificity
 
 ################################################## OPTIMIZATION #####################################################
 
@@ -1212,7 +1256,7 @@ NROW(insuranceData)*fixedCost + result$objval
 vtype = matrix('C', nrow = 1, ncol = numVars)
 
 # Set the A matrix 
-A4b = rbind(A2,A4a)
+A4b = rbind(A2, A4a)
 
 # Set the B vector
 b4b = rbind(b2, b4a)
