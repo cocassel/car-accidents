@@ -219,6 +219,26 @@ write.csv(driverData, "cleanedDriverData.csv")
 
 summary(data)
 
+# c_CONF VISUALIZATION
+c_confCategory = data.frame(
+  category = c("Single Vehicle in Motion","Two Vehicles in Motion (same direction of travel)","Two Vehicles in Motion (different direction of travel)","Two Vehicles (hit a parked vehicle)"),
+  value = c(nrow(subset(data, C_CONF == 1)),nrow(subset(data, C_CONF == 21)),nrow(subset(data, C_CONF == 31)),nrow(subset(data, C_CONF == 41)))
+)
+ggplot(c_confCategory, aes(x="", y=value, fill=category)) +
+  ggtitle("All Data: Collision Configuration") +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0) +
+  theme_void() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# c_RCFG VISUALIZATION
+c_rcfgCategory = data.frame(
+  category = c("Non-Intersection","Two-Way Intersections","Parking/Intersection","Railroad Crossing","Bridge","Tunnel","Passing","Ramp","Traffic Circle","Highway Express Lane", "Highway Collector Lane","Highway Transfer Lane"),
+  value = c(nrow(subset(data, C_RCFG == "01")),nrow(subset(data, C_RCFG == "02")),nrow(subset(data, C_RCFG == "03")),nrow(subset(data, C_RCFG == "04")),nrow(subset(data, C_RCFG == "05")),nrow(subset(data, C_RCFG == "06")),nrow(subset(data, C_RCFG == "07")),nrow(subset(data, C_RCFG == "08")),nrow(subset(data, C_RCFG == "09")),nrow(subset(data, C_RCFG == "10")),nrow(subset(data, C_RCFG == "11")),nrow(subset(data, C_RCFG == "12")))
+)
+par(mar=c(6,6,4,2)+0.1,mgp=c(5,1,0))
+barplot(height=c_rcfgCategory$value, names=c_rcfgCategory$category, xlab = "Roadway Configuration",ylab = "Count", col=rgb(0,0,0.6,0.6), las=2, main = "All Data: Roadway Configuration",cex.names=0.5)
+
 # P_SEX VISUALIZATION 
 
 p_sexCategory = data.frame(
@@ -317,6 +337,27 @@ barplot(height=v_yearCategory$value, names=v_yearCategory$category, xlab = "Coun
 
 summary(driverData)
 
+# c_CONF VISUALIZATION
+c_conf2_Category = data.frame(
+  category = c("Single Vehicle in Motion","Two Vehicles in Motion (same direction of travel)","Two Vehicles in Motion (different direction of travel)","Two Vehicles (hit a parked vehicle)"),
+  value = c(nrow(subset(driverData, C_CONF == 1)),nrow(subset(driverData, C_CONF == 21)),nrow(subset(driverData, C_CONF == 31)),nrow(subset(driverData, C_CONF == 41)))
+)
+ggplot(c_conf2_Category, aes(x="", y=value, fill=category)) +
+  ggtitle("Driver Data: Collision Configuration") +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0) +
+  theme_void() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# c_RCFG VISUALIZATION
+c_rcfg2_Category = data.frame(
+  category = c("Non-Intersection","Two-Way Intersections","Parking/Intersection","Railroad Crossing","Bridge","Tunnel","Passing","Ramp","Traffic Circle","Highway Express Lane", "Highway Collector Lane","Highway Transfer Lane"),
+  value = c(nrow(subset(driverData, C_RCFG == "01")),nrow(subset(driverData, C_RCFG == "02")),nrow(subset(driverData, C_RCFG == "03")),nrow(subset(driverData, C_RCFG == "04")),nrow(subset(driverData, C_RCFG == "05")),nrow(subset(driverData, C_RCFG == "06")),nrow(subset(driverData, C_RCFG == "07")),nrow(subset(driverData, C_RCFG == "08")),nrow(subset(driverData, C_RCFG == "09")),nrow(subset(driverData, C_RCFG == "10")),nrow(subset(driverData, C_RCFG == "11")),nrow(subset(driverData, C_RCFG == "12")))
+)
+par(mar=c(6,6,4,2)+0.1,mgp=c(5,1,0))
+barplot(height=c_rcfg2_Category$value, names=c_rcfg2_Category$category, xlab = "Roadway Configuration",ylab = "Count", col=rgb(0,0,0.6,0.6), las=2, main = "Driver Data: Roadway Configuration",cex.names=0.5)
+
+
 # P_SEX VISUALIZATION
 
 p_sex2_Category = data.frame(
@@ -382,7 +423,7 @@ p_isev2_Category$label <- paste0(p_isev2_Category$category, "\n value: ", p_isev
 
 # Make the plot
 ggplot(p_isev2_Category, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
-  ggtitle("All Data: Injury Severity") +
+  ggtitle("Driver Data: Injury Severity") +
   geom_rect() +
   geom_label( x=3.5, aes(y=labelPosition, label=label), size=6) +
   scale_fill_brewer(palette=4) +
