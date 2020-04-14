@@ -1050,12 +1050,15 @@ NROW(insuranceData)*fixedCost + sum(colSums(categoriesMatrix*maxVariableCost)*(r
 # solely based on demand, we should also consider risk. If males present a higher risk of severe car crashes, they should not
 # be charged less than females.
 
-# TO DO: CHANGE THESE TO REAL !!!
-# Ordered from highest risk to lowest risk
+# Ordered from highest risk to lowest risk (numbers correspond to index within category vectors)
+# These ranks are created by ranking the logistic regression coefficients of a variable's categories from highest to lowest
+# Example coefficients ranked: 0.03, 0, -0.05, -0.12. Positive coefficients mean the category makes it more likely the accident 
+# is severe in comparison to the reference category (which has a coefficient of 0). Negative coefficients mean the category makes 
+# it less liley the accident is severe.
 sexRanks = c(1,2)
-ageRanks = c(1,9,3,8,4,2,5,6,7)
-vehicleTypeRanks = c(1,7,2,4,5,3,6)
-vehicleYearRanks = c(4,2,3,1,6,5)
+ageRanks = c(9,1,5,2,3,8,4,6,7)
+vehicleTypeRanks = c(1,3,2,5,6,4,7)
+vehicleYearRanks = c(1,2,3,4,5,6)
 
 
 # Set the variable types
