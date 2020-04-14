@@ -217,6 +217,18 @@ write.csv(driverData, "cleanedDriverData.csv")
 
 # ------------------------------------------------------ ALL DATA ------------------------------------------------------
 
+# c_CONF VISUALIZATION
+c_confCategory = data.frame(
+  category = c("Single Vehicle in Motion","Two Vehicles in Motion (same direction of travel)","Two Vehicles in Motion (different direction of travel)","Two Vehicles (hit a parked vehicle)"),
+  value = c(nrow(subset(data, C_CONF == 1)),nrow(subset(data, C_CONF == 21)),nrow(subset(data, C_CONF == 31)),nrow(subset(data, C_CONF == 41)))
+)
+ggplot(c_confCategory, aes(x="", y=value, fill=category)) +
+  ggtitle("All Data: Collision Configuration") +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0) +
+  theme_void() +
+  theme(plot.title = element_text(hjust = 0.5))
+
 # c_RCFG VISUALIZATION
 c_rcfgCategory = data.frame(
   category = c("Non-Intersection","Two-Way Intersections","Parking/Intersection","Railroad Crossing","Bridge","Tunnel","Passing","Ramp","Traffic Circle","Highway Express Lane", "Highway Collector Lane","Highway Transfer Lane"),
@@ -320,6 +332,18 @@ barplot(height=v_yearCategory$value, names=v_yearCategory$category, xlab = "Coun
 
 
 # ----------------------------------------------------- DRIVER DATA -----------------------------------------------------
+
+# c_CONF VISUALIZATION
+c_conf2_Category = data.frame(
+  category = c("Single Vehicle in Motion","Two Vehicles in Motion (same direction of travel)","Two Vehicles in Motion (different direction of travel)","Two Vehicles (hit a parked vehicle)"),
+  value = c(nrow(subset(driverData, C_CONF == 1)),nrow(subset(driverData, C_CONF == 21)),nrow(subset(driverData, C_CONF == 31)),nrow(subset(driverData, C_CONF == 41)))
+)
+ggplot(c_conf2_Category, aes(x="", y=value, fill=category)) +
+  ggtitle("Driver Data: Collision Configuration") +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0) +
+  theme_void() +
+  theme(plot.title = element_text(hjust = 0.5))
 
 # c_RCFG VISUALIZATION
 c_rcfg2_Category = data.frame(
