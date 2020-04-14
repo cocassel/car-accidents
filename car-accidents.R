@@ -1117,7 +1117,7 @@ NROW(insuranceData)*fixedCost + sum(colSums(categoriesMatrix*maxVariableCost)*(r
 # These ranks are created by ranking the logistic regression coefficients of a variable's categories from highest to lowest
 # Example coefficients ranked: 0.03, 0, -0.05, -0.12. Positive coefficients mean the category makes it more likely the accident 
 # is severe in comparison to the reference category (which has a coefficient of 0). Negative coefficients mean the category makes 
-# it less liley the accident is severe.
+# it less likley the accident is severe.
 sexRanks = c(1,2)
 ageRanks = c(9,1,5,2,3,8,4,6,7)
 vehicleTypeRanks = c(1,3,2,5,6,4,7)
@@ -1139,7 +1139,9 @@ b4a = matrix(1, nrow = 1, ncol = 1)
 operators4a = matrix('<=', nrow = 1, ncol = 1)
 
 # Add risk constraints based on ranks
-# High risk should pay equal to or greater than low risk
+# High risk factors should be greater than or equal to low risk factors
+# E.g. Females are higher risk than males, so the factor for females must be greater than or equal to males
+# This will result in women paying more than men for this particular variable. 
 for(i in 1:(NROW(sexRanks)-1)) {
   rowVector = vector("numeric", numVars)
   rowVector[sexRanks[i]] = 1
