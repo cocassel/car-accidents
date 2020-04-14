@@ -1107,6 +1107,21 @@ result = gurobi(model)
 
 # Resulting factors
 result$x
+# Sex factors
+sexFactors = result$x[sexStartIndex:(ageStartIndex-1)]
+sexFactors
+# Age factors
+ageFactors = result$x[ageStartIndex:(vehicleTypeStartIndex-1)]
+ageFactors
+# Vehicle type factors
+vehicleTypeFactors = result$x[vehicleTypeStartIndex:(vehicleYearStartIndex-1)]
+vehicleTypeFactors
+# Vehicle year factors
+vehicleYearFactors = result$x[vehicleYearStartIndex:numVars]
+vehicleYearFactors
+# Get sums of factors for each variable
+factorSums = c(sum(sexFactors), sum(ageFactors), sum(vehicleTypeFactors), sum(vehicleYearFactors))
+factorSums
 
 # Total variable costs based on decided factors
 result$objval
@@ -1165,6 +1180,21 @@ result = gurobi(model)
 
 # Resulting factors
 result$x
+# Sex factors
+sexFactors = result$x[sexStartIndex:(ageStartIndex-1)]
+sexFactors
+# Age factors
+ageFactors = result$x[ageStartIndex:(vehicleTypeStartIndex-1)]
+ageFactors
+# Vehicle type factors
+vehicleTypeFactors = result$x[vehicleTypeStartIndex:(vehicleYearStartIndex-1)]
+vehicleTypeFactors
+# Vehicle year factors
+vehicleYearFactors = result$x[vehicleYearStartIndex:numVars]
+vehicleYearFactors
+# Get sums of factors for each variable
+factorSums = c(sum(sexFactors), sum(ageFactors), sum(vehicleTypeFactors), sum(vehicleYearFactors))
+factorSums
 
 # Total variable costs based on decided factors
 result$objval
@@ -1175,7 +1205,7 @@ NROW(insuranceData)*fixedCost
 # Get total revenue including both the variable and fixed costs
 NROW(insuranceData)*fixedCost + result$objval
 
-# ------------------------------------------ MODEL 3A: OPTIMIZING REVENUE WEIGHTED BY RISK -------------------------------------------
+# ----------------------------------- MODEL 3A: OPTIMIZING REVENUE WEIGHTED BY RISK -------------------------------------------
 
 # In this model, we use the actual prediction values from the logistic regression. Rather than using the 
 # logistic regression to derive risk rankings and constraints, we use the predictions in the objective function 
@@ -1216,6 +1246,21 @@ result = gurobi(model)
 
 # Resulting factors
 result$x
+# Sex factors
+sexFactors = result$x[sexStartIndex:(ageStartIndex-1)]
+sexFactors
+# Age factors
+ageFactors = result$x[ageStartIndex:(vehicleTypeStartIndex-1)]
+ageFactors
+# Vehicle type factors
+vehicleTypeFactors = result$x[vehicleTypeStartIndex:(vehicleYearStartIndex-1)]
+vehicleTypeFactors
+# Vehicle year factors
+vehicleYearFactors = result$x[vehicleYearStartIndex:numVars]
+vehicleYearFactors
+# Get sums of factors for each variable
+factorSums = c(sum(sexFactors), sum(ageFactors), sum(vehicleTypeFactors), sum(vehicleYearFactors))
+factorSums
 
 # Total variable costs based on decided factors (cannot use objective function value since it uses weighted revenue)
 sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
@@ -1227,7 +1272,7 @@ NROW(insuranceData)*fixedCost
 NROW(insuranceData)*fixedCost + sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
 
 
-# ----------------------------- MODEL 3B: OPTIMIZING REVENUE WEIGHTED BY RISK WITH FACTOR CONSTRAINTS---------------------------
+# --------------------------- MODEL 3B: OPTIMIZING REVENUE WEIGHTED BY RISK WITH FACTOR CONSTRAINTS---------------------------
 
 # This model combines model 2 and model 3A (uses constraints from model 2 and the objective function from model 3A)
 
@@ -1264,6 +1309,21 @@ result = gurobi(model)
 
 # Resulting factors
 result$x
+# Sex factors
+sexFactors = result$x[sexStartIndex:(ageStartIndex-1)]
+sexFactors
+# Age factors
+ageFactors = result$x[ageStartIndex:(vehicleTypeStartIndex-1)]
+ageFactors
+# Vehicle type factors
+vehicleTypeFactors = result$x[vehicleTypeStartIndex:(vehicleYearStartIndex-1)]
+vehicleTypeFactors
+# Vehicle year factors
+vehicleYearFactors = result$x[vehicleYearStartIndex:numVars]
+vehicleYearFactors
+# Get sums of factors for each variable
+factorSums = c(sum(sexFactors), sum(ageFactors), sum(vehicleTypeFactors), sum(vehicleYearFactors))
+factorSums
 
 # Total variable costs based on decided factors (cannot use objective function value since it uses weighted revenue)
 sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
@@ -1275,7 +1335,7 @@ NROW(insuranceData)*fixedCost
 NROW(insuranceData)*fixedCost + sum(colSums(categoriesMatrix*maxVariableCost)*(result$x))
 
 
-# ------------------------------------------ MODEL 4A: RISK CONSTRAINTS ---------------------------------------------
+# --------------------------------------------- MODEL 4A: RISK CONSTRAINTS ---------------------------------------------
 
 # In this model we add constraints based on our logistic regression. The constraints are used to restrict our factors 
 # based on ranked risks of categorical factors. If males present a higher risk of injury, we should charge them more than 
@@ -1364,6 +1424,21 @@ result = gurobi(model)
 
 # Resulting factors
 result$x
+# Sex factors
+sexFactors = result$x[sexStartIndex:(ageStartIndex-1)]
+sexFactors
+# Age factors
+ageFactors = result$x[ageStartIndex:(vehicleTypeStartIndex-1)]
+ageFactors
+# Vehicle type factors
+vehicleTypeFactors = result$x[vehicleTypeStartIndex:(vehicleYearStartIndex-1)]
+vehicleTypeFactors
+# Vehicle year factors
+vehicleYearFactors = result$x[vehicleYearStartIndex:numVars]
+vehicleYearFactors
+# Get sums of factors for each variable
+factorSums = c(sum(sexFactors), sum(ageFactors), sum(vehicleTypeFactors), sum(vehicleYearFactors))
+factorSums
 
 # Total variable costs based on decided factors
 result$objval
@@ -1407,6 +1482,21 @@ result = gurobi(model)
 
 # Resulting factors
 result$x
+# Sex factors
+sexFactors = result$x[sexStartIndex:(ageStartIndex-1)]
+sexFactors
+# Age factors
+ageFactors = result$x[ageStartIndex:(vehicleTypeStartIndex-1)]
+ageFactors
+# Vehicle type factors
+vehicleTypeFactors = result$x[vehicleTypeStartIndex:(vehicleYearStartIndex-1)]
+vehicleTypeFactors
+# Vehicle year factors
+vehicleYearFactors = result$x[vehicleYearStartIndex:numVars]
+vehicleYearFactors
+# Get sums of factors for each variable
+factorSums = c(sum(sexFactors), sum(ageFactors), sum(vehicleTypeFactors), sum(vehicleYearFactors))
+factorSums
 
 # Total variable costs based on decided factors
 result$objval
@@ -1418,10 +1508,10 @@ NROW(insuranceData)*fixedCost
 NROW(insuranceData)*fixedCost + result$objval
 
 
-# ----------------------------------------- MODEL 5: FAIRNESS WITHIN VARIABLES  ---------------------------------------
+# ----------------------------------------- MODEL 5A: FAIRNESS WITHIN VARIABLES  ---------------------------------------
 
 # In this model we add constraints for the fairness of the policy. For example, we can charge males more than females,
-# but not by too much or this may be perceived as unfair by the public. We will add constraints to introduce fairness 
+# but not by too much or this may be perceived as unfair by customers. We will add constraints to introduce fairness 
 # within categories. No two category values should be more than 0.1 different than each other. Note that the overall 
 # difference in what people pay can still be greater than 0.1*1000 because their total cost is based on multiple variables.
 
@@ -1432,14 +1522,14 @@ vtype = matrix('C', nrow = 1, ncol = numVars)
 
 # Set the A matrix 
 # All the factors should add to at most 1
-A5 = matrix(1, nrow = 1, ncol = numVars)
+A5a = matrix(1, nrow = 1, ncol = numVars)
 
 # Set the B vector
 # All the factors should add to at most 1
-b5 = matrix(1, nrow = 1, ncol = 1)
+b5a = matrix(1, nrow = 1, ncol = 1)
 
 # Set the operators vector
-operators5 = matrix('<=', nrow = 1, ncol = 1)
+operators5a = matrix('<=', nrow = 1, ncol = 1)
 
 # Add fairness constraints for each variable
 # Need a constraint for each pair of category values in a variable
@@ -1449,9 +1539,9 @@ for(i in 1:(NROW(sexCategories)-1)) {
     rowVector = vector("numeric", numVars)
     rowVector[i] = 1
     rowVector[j] = -1
-    A5 = rbind(A5, rowVector, rowVector)
-    operators5 = rbind(operators5, "<=", ">=")
-    b5 = rbind(b5, differenceThreshold, (-1)*differenceThreshold)
+    A5a = rbind(A5a, rowVector, rowVector)
+    operators5a = rbind(operators5a, "<=", ">=")
+    b5a = rbind(b5a, differenceThreshold, (-1)*differenceThreshold)
   }
 }
 for(i in 1:(NROW(ageCategories)-1)) {
@@ -1459,9 +1549,9 @@ for(i in 1:(NROW(ageCategories)-1)) {
     rowVector = vector("numeric", numVars)
     rowVector[ageStartIndex -1 + i] = 1
     rowVector[ageStartIndex -1 + j] = -1
-    A5 = rbind(A5, rowVector, rowVector)
-    operators5 = rbind(operators5, "<=", ">=")
-    b5 = rbind(b5, differenceThreshold, (-1)*differenceThreshold)
+    A5a = rbind(A5a, rowVector, rowVector)
+    operators5a = rbind(operators5a, "<=", ">=")
+    b5a = rbind(b5a, differenceThreshold, (-1)*differenceThreshold)
   }
 }
 for(i in 1:(NROW(vehicleTypeCategories)-1)) {
@@ -1469,9 +1559,9 @@ for(i in 1:(NROW(vehicleTypeCategories)-1)) {
     rowVector = vector("numeric", numVars)
     rowVector[vehicleTypeStartIndex -1 + i] = 1
     rowVector[vehicleTypeStartIndex -1 + j] = -1
-    A5 = rbind(A5, rowVector, rowVector)
-    operators5 = rbind(operators5, "<=", ">=")
-    b5 = rbind(b5, differenceThreshold, (-1)*differenceThreshold)
+    A5a = rbind(A5a, rowVector, rowVector)
+    operators5a = rbind(operators5a, "<=", ">=")
+    b5a = rbind(b5a, differenceThreshold, (-1)*differenceThreshold)
   }
 }
 for(i in 1:(NROW(vehicleYearCategories)-1)) {
@@ -1479,9 +1569,9 @@ for(i in 1:(NROW(vehicleYearCategories)-1)) {
     rowVector = vector("numeric", numVars)
     rowVector[vehicleYearStartIndex -1 + i] = 1
     rowVector[vehicleYearStartIndex -1 + j] = -1
-    A5 = rbind(A5, rowVector, rowVector)
-    operators5 = rbind(operators5, "<=", ">=")
-    b5 = rbind(b5, differenceThreshold, (-1)*differenceThreshold)
+    A5a = rbind(A5a, rowVector, rowVector)
+    operators5a = rbind(operators5a, "<=", ">=")
+    b5a = rbind(b5a, differenceThreshold, (-1)*differenceThreshold)
   }
 }
 
@@ -1494,82 +1584,31 @@ obj = colSums(coeffs)
 
 # Solve
 model = list()
-model$A = A5
+model$A = A5a
 model$obj = obj
 model$modelsense = "max"
-model$rhs = b5
-model$sense = operators5
+model$rhs = b5a
+model$sense = operators5a
 model$vtype = vtype
 result = gurobi(model)
 
 # Resulting factors
 result$x
-
-# Total variable costs based on decided factors
-result$objval
-
-# Total fixed costs (each person pays $2000)
-NROW(insuranceData)*fixedCost
-
-# Get total revenue including both the variables and fixed costs
-NROW(insuranceData)*fixedCost + result$objval
-
-
-# --------------------------------------- MODEL 6: FAIRNESS BETWEEN ALL CATEGORIES  -------------------------------------
-
-# This model is similar to model 5, but in this model, we consider fairness between all categories, rather than just 
-# within variables. In model 5, we only disallowed differences greater than 0.1 within the variable. In this model,
-# we will disallow differences greater than 0.1 within the entire problem (i.e. no two categories may have a difference
-# in factors that is greater than 0.1 irresepctive of which variables the categories are associated with)
-
-differenceThreshold = 0.1
-
-# Set the variable types
-vtype = matrix('C', nrow = 1, ncol = numVars)
-
-# Set the A matrix 
-# All the factors should add to at most 1
-A6 = matrix(1, nrow = 1, ncol = numVars)
-
-# Set the B vector
-# All the factors should add to at most 1
-b6 = matrix(1, nrow = 1, ncol = 1)
-
-# Set the operators vector
-operators6 = matrix('<=', nrow = 1, ncol = 1)
-
-# Add fairness constraints for all categories
-# Need a constraint for each pair of category values
-# Since we are dealing with abolsolute values, we need two constraints for each pair
-for(i in 1:(numVars-1)) {
-  for(j in (i+1):numVars) {
-    rowVector = vector("numeric", numVars)
-    rowVector[i] = 1
-    rowVector[j] = -1
-    A6 = rbind(A6, rowVector, rowVector)
-    operators6 = rbind(operators6, "<=", ">=")
-    b6 = rbind(b6, differenceThreshold, (-1)*differenceThreshold)
-  }
-}
-
-# Set the objective function vector
-# The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
-# Since every person is charged $2000 regardless, it does not need to be added to our objective function
-coeffs = categoriesMatrix*maxVariableCost
-obj = colSums(coeffs)
-
-# Solve
-model = list()
-model$A = A6
-model$obj = obj
-model$modelsense = "max"
-model$rhs = b6
-model$sense = operators6
-model$vtype = vtype
-result = gurobi(model)
-
-# Resulting factors
-result$x
+# Sex factors
+sexFactors = result$x[sexStartIndex:(ageStartIndex-1)]
+sexFactors
+# Age factors
+ageFactors = result$x[ageStartIndex:(vehicleTypeStartIndex-1)]
+ageFactors
+# Vehicle type factors
+vehicleTypeFactors = result$x[vehicleTypeStartIndex:(vehicleYearStartIndex-1)]
+vehicleTypeFactors
+# Vehicle year factors
+vehicleYearFactors = result$x[vehicleYearStartIndex:numVars]
+vehicleYearFactors
+# Get sums of factors for each variable
+factorSums = c(sum(sexFactors), sum(ageFactors), sum(vehicleTypeFactors), sum(vehicleYearFactors))
+factorSums
 
 # Total variable costs based on decided factors
 result$objval
@@ -1583,29 +1622,216 @@ NROW(insuranceData)*fixedCost + result$objval
 
 # ----------------------------- MODEL 5B: FAIRNESS WITHIN VARIABLES AND FACTOR CONSTRAINTS  ------------------------------
 
-
-# ---------------------------- MODEL 6B: FAIRNESS BETWEEN ALL CATEGORIES AND FACTOR CONSTRAINTS  ------------------------------
-
-
-# ---------------------------------------------- MODEL 7: COMBINATION -------------------------------------------------
-
-
-# ---------------------------------- MODEL 7: FAIRNESS, RISK, AND FACTOR CONSTRAINTS -------------------------------------------------
-
-
-# --------------------------- MODEL 7A: FAIRNESS BETWEEN ALL CATEGORIES WITH RISK CONSTRAINTS --------------------------------------------
+# This model combines model 2 and model 5A (uses constraints from both)
 
 # Set the variable types
 vtype = matrix('C', nrow = 1, ncol = numVars)
 
 # Set the A matrix 
-A7a = rbind(A6, A4a)
+A5b = rbind(A2, A5a)
 
 # Set the B vector
-b7a = rbind(b6, b4a)
+b5b = rbind(b2, b5a)
 
 # Set the operators vector
-operators7a = rbind(operators6, operators4a)
+operators5b = rbind(operators2, operators5a)
+
+# Set the objective function vector
+coeffs = categoriesMatrix*maxVariableCost
+obj = colSums(coeffs)
+
+# Solve
+model = list()
+model$A = A5b
+model$obj = obj
+model$modelsense = "max"
+model$rhs = b5b
+model$sense = operators5b
+model$vtype = vtype
+result = gurobi(model)
+
+# Resulting factors
+result$x
+# Sex factors
+sexFactors = result$x[sexStartIndex:(ageStartIndex-1)]
+sexFactors
+# Age factors
+ageFactors = result$x[ageStartIndex:(vehicleTypeStartIndex-1)]
+ageFactors
+# Vehicle type factors
+vehicleTypeFactors = result$x[vehicleTypeStartIndex:(vehicleYearStartIndex-1)]
+vehicleTypeFactors
+# Vehicle year factors
+vehicleYearFactors = result$x[vehicleYearStartIndex:numVars]
+vehicleYearFactors
+# Get sums of factors for each variable
+factorSums = c(sum(sexFactors), sum(ageFactors), sum(vehicleTypeFactors), sum(vehicleYearFactors))
+factorSums
+
+# Total variable costs based on decided factors
+result$objval
+
+# Total fixed costs (each person pays $2000)
+NROW(insuranceData)*fixedCost
+
+# Get total revenue including both the variables and fixed costs
+NROW(insuranceData)*fixedCost + result$objval
+
+
+# --------------------------------------- MODEL 6A: FAIRNESS BETWEEN ALL CATEGORIES  -------------------------------------
+
+# This model is similar to model 5a, but in this model, we consider fairness between all categories, rather than just 
+# within variables. In model 5a, we only disallowed differences greater than 0.1 within the variable. In this model,
+# we will disallow differences greater than 0.1 within the entire problem (i.e. no two categories may have a difference
+# in factors that is greater than 0.1 irresepctive of which variables the categories are associated with)
+
+differenceThreshold = 0.1
+
+# Set the variable types
+vtype = matrix('C', nrow = 1, ncol = numVars)
+
+# Set the A matrix 
+# All the factors should add to at most 1
+A6a = matrix(1, nrow = 1, ncol = numVars)
+
+# Set the B vector
+# All the factors should add to at most 1
+b6a = matrix(1, nrow = 1, ncol = 1)
+
+# Set the operators vector
+operators6a = matrix('<=', nrow = 1, ncol = 1)
+
+# Add fairness constraints for all categories
+# Need a constraint for each pair of category values
+# Since we are dealing with abolsolute values, we need two constraints for each pair
+for(i in 1:(numVars-1)) {
+  for(j in (i+1):numVars) {
+    rowVector = vector("numeric", numVars)
+    rowVector[i] = 1
+    rowVector[j] = -1
+    A6a = rbind(A6a, rowVector, rowVector)
+    operators6a = rbind(operators6a, "<=", ">=")
+    b6a = rbind(b6a, differenceThreshold, (-1)*differenceThreshold)
+  }
+}
+
+# Set the objective function vector
+# The insurance cost for a person is $2000 + (sum of all applicable factors)*1000
+# Since every person is charged $2000 regardless, it does not need to be added to our objective function
+coeffs = categoriesMatrix*maxVariableCost
+obj = colSums(coeffs)
+
+# Solve
+model = list()
+model$A = A6a
+model$obj = obj
+model$modelsense = "max"
+model$rhs = b6a
+model$sense = operators6a
+model$vtype = vtype
+result = gurobi(model)
+
+# Resulting factors
+result$x
+# Sex factors
+sexFactors = result$x[sexStartIndex:(ageStartIndex-1)]
+sexFactors
+# Age factors
+ageFactors = result$x[ageStartIndex:(vehicleTypeStartIndex-1)]
+ageFactors
+# Vehicle type factors
+vehicleTypeFactors = result$x[vehicleTypeStartIndex:(vehicleYearStartIndex-1)]
+vehicleTypeFactors
+# Vehicle year factors
+vehicleYearFactors = result$x[vehicleYearStartIndex:numVars]
+vehicleYearFactors
+# Get sums of factors for each variable
+factorSums = c(sum(sexFactors), sum(ageFactors), sum(vehicleTypeFactors), sum(vehicleYearFactors))
+factorSums
+
+# Total variable costs based on decided factors
+result$objval
+
+# Total fixed costs (each person pays $2000)
+NROW(insuranceData)*fixedCost
+
+# Get total revenue including both the variables and fixed costs
+NROW(insuranceData)*fixedCost + result$objval
+
+
+# ---------------------------- MODEL 6B: FAIRNESS BETWEEN ALL CATEGORIES AND FACTOR CONSTRAINTS  ------------------------------
+
+# This model combines model 2 and model 6A (uses constraints from both)
+
+# Set the variable types
+vtype = matrix('C', nrow = 1, ncol = numVars)
+
+# Set the A matrix 
+A6b = rbind(A2, A6a)
+
+# Set the B vector
+b6b = rbind(b2, b6a)
+
+# Set the operators vector
+operators6b = rbind(operators2, operators6a)
+
+# Set the objective function vector
+coeffs = categoriesMatrix*maxVariableCost
+obj = colSums(coeffs)
+
+# Solve
+model = list()
+model$A = A6b
+model$obj = obj
+model$modelsense = "max"
+model$rhs = b6b
+model$sense = operators6b
+model$vtype = vtype
+result = gurobi(model)
+
+# Resulting factors
+result$x
+# Sex factors
+sexFactors = result$x[sexStartIndex:(ageStartIndex-1)]
+sexFactors
+# Age factors
+ageFactors = result$x[ageStartIndex:(vehicleTypeStartIndex-1)]
+ageFactors
+# Vehicle type factors
+vehicleTypeFactors = result$x[vehicleTypeStartIndex:(vehicleYearStartIndex-1)]
+vehicleTypeFactors
+# Vehicle year factors
+vehicleYearFactors = result$x[vehicleYearStartIndex:numVars]
+vehicleYearFactors
+# Get sums of factors for each variable
+factorSums = c(sum(sexFactors), sum(ageFactors), sum(vehicleTypeFactors), sum(vehicleYearFactors))
+factorSums
+
+# Total variable costs based on decided factors
+result$objval
+
+# Total fixed costs (each person pays $2000)
+NROW(insuranceData)*fixedCost
+
+# Get total revenue including both the variables and fixed costs
+NROW(insuranceData)*fixedCost + result$objval
+
+
+# -------------------------- MODEL 7A: FAIRNESS BETWEEN ALL CATEGORIES WITH RISK CONSTRAINTS -----------------------------
+
+# This model combines models 4A and 6A (uses constraints from both)
+
+# Set the variable types
+vtype = matrix('C', nrow = 1, ncol = numVars)
+
+# Set the A matrix 
+A7a = rbind(A6a, A4a)
+
+# Set the B vector
+b7a = rbind(b6a, b4a)
+
+# Set the operators vector
+operators7a = rbind(operators6a, operators4a)
 
 # Set the objective function vector
 coeffs = categoriesMatrix*maxVariableCost
@@ -1623,6 +1849,21 @@ result = gurobi(model)
 
 # Resulting factors
 result$x
+# Sex factors
+sexFactors = result$x[sexStartIndex:(ageStartIndex-1)]
+sexFactors
+# Age factors
+ageFactors = result$x[ageStartIndex:(vehicleTypeStartIndex-1)]
+ageFactors
+# Vehicle type factors
+vehicleTypeFactors = result$x[vehicleTypeStartIndex:(vehicleYearStartIndex-1)]
+vehicleTypeFactors
+# Vehicle year factors
+vehicleYearFactors = result$x[vehicleYearStartIndex:numVars]
+vehicleYearFactors
+# Get sums of factors for each variable
+factorSums = c(sum(sexFactors), sum(ageFactors), sum(vehicleTypeFactors), sum(vehicleYearFactors))
+factorSums
 
 # Total variable costs based on decided factors
 result$objval
@@ -1633,19 +1874,22 @@ NROW(insuranceData)*fixedCost
 # Get total revenue including both the variables and fixed costs
 NROW(insuranceData)*fixedCost + result$objval
 
-# --------------------------- MODEL 7B: FAIRNESS BETWEEN ALL CATEGORIES WITH RISK AND FACTOR CONSTRAINTS --------------------------------------------
+
+# ---------------------- MODEL 7B: FAIRNESS BETWEEN ALL CATEGORIES WITH RISK AND FACTOR CONSTRAINTS --------------------------
+
+# This model combines models 2, 4A, and 6A (uses constraints from all three)
 
 # Set the variable types
 vtype = matrix('C', nrow = 1, ncol = numVars)
 
 # Set the A matrix 
-A7b = rbind(A6, A4a, A2)
+A7b = rbind(A6a, A4a, A2)
 
 # Set the B vector
-b7b = rbind(b6, b4a, b2)
+b7b = rbind(b6a, b4a, b2)
 
 # Set the operators vector
-operators7b = rbind(operators6, operators4a, operators2)
+operators7b = rbind(operators6a, operators4a, operators2)
 
 # Set the objective function vector
 coeffs = categoriesMatrix*maxVariableCost
@@ -1663,6 +1907,21 @@ result = gurobi(model)
 
 # Resulting factors
 result$x
+# Sex factors
+sexFactors = result$x[sexStartIndex:(ageStartIndex-1)]
+sexFactors
+# Age factors
+ageFactors = result$x[ageStartIndex:(vehicleTypeStartIndex-1)]
+ageFactors
+# Vehicle type factors
+vehicleTypeFactors = result$x[vehicleTypeStartIndex:(vehicleYearStartIndex-1)]
+vehicleTypeFactors
+# Vehicle year factors
+vehicleYearFactors = result$x[vehicleYearStartIndex:numVars]
+vehicleYearFactors
+# Get sums of factors for each variable
+factorSums = c(sum(sexFactors), sum(ageFactors), sum(vehicleTypeFactors), sum(vehicleYearFactors))
+factorSums
 
 # Total variable costs based on decided factors
 result$objval
