@@ -742,11 +742,22 @@ auc_ROCR
 testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
+# Accuracy
+
+# Sensitvity
+
+# Specificity
+
 
 # Get confusion matrix for threshold of 0.6
 testConfMatrix = table(dataTest$P_ISEV, predictTest>0.6) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
+# Accuracy
+
+# Sensitvity
+
+# Specificity
 
 
 # MODEL 2
@@ -778,11 +789,22 @@ auc_ROCR
 testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
+# Accuracy
+
+# Sensitvity
+
+# Specificity
+
 
 # Get confusion matrix for threshold of 0.6
 testConfMatrix = table(dataTest$P_ISEV, predictTest>0.6) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
+# Accuracy
+
+# Sensitvity
+
+# Specificity
 
 
 # MODEL 3
@@ -814,11 +836,22 @@ auc_ROCR
 testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
+# Accuracy
+
+# Sensitvity
+
+# Specificity
+
 
 # Get confusion matrix for threshold of 0.6
 testConfMatrix = table(dataTest$P_ISEV, predictTest>0.6) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
+# Accuracy
+
+# Sensitvity
+
+# Specificity
 
 
 # MODEL 4
@@ -849,11 +882,22 @@ auc_ROCR
 testConfMatrix = table(dataTest$P_ISEV, predictTest>0.5) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
+# Accuracy
+
+# Sensitvity
+
+# Specificity
+
 
 # Get confusion matrix for threshold of 0.6
 testConfMatrix = table(dataTest$P_ISEV, predictTest>0.6) 
 testConfMatrix
 testConfMatrix = as.data.frame(testConfMatrix)
+# Accuracy
+
+# Sensitvity
+
+# Specificity
 
 
 # MODEL 5
@@ -902,9 +946,11 @@ truePositivesRow = which(driverTestConfMatrix$Var1 == 1 & driverTestConfMatrix$V
 trueNegativesRow = which(driverTestConfMatrix$Var1 == 0 & driverTestConfMatrix$Var2 == FALSE)
 (driverTestConfMatrix$Freq[truePositivesRow] + driverTestConfMatrix$Freq[trueNegativesRow])/sum(driverTestConfMatrix$Freq)
 # Sensitvity
-
+falseNegativesRow = which(driverTestConfMatrix$Var1 == 1 & driverTestConfMatrix$Var2 == FALSE)
+driverTestConfMatrix$Freq[truePositivesRow]/(driverTestConfMatrix$Freq[truePositivesRow] + driverTestConfMatrix$Freq[falseNegativesRow])
 # Specificity
-
+falsePositivesRow = which(driverTestConfMatrix$Var1 == 0 & driverTestConfMatrix$Var2 == TRUE)
+driverTestConfMatrix$Freq[trueNegativesRow]/(driverTestConfMatrix$Freq[trueNegativesRow] + driverTestConfMatrix$Freq[falsePositivesRow])
 
 # Get confusion matrix for threshold of 0.6
 driverTestConfMatrix = table(driverDataTest$P_ISEV, driverPredictTest>0.6) 
@@ -915,8 +961,12 @@ truePositivesRow = which(driverTestConfMatrix$Var1 == 1 & driverTestConfMatrix$V
 trueNegativesRow = which(driverTestConfMatrix$Var1 == 0 & driverTestConfMatrix$Var2 == FALSE)
 (driverTestConfMatrix$Freq[truePositivesRow] + driverTestConfMatrix$Freq[trueNegativesRow])/sum(driverTestConfMatrix$Freq)
 # Sensitvity
-
+falseNegativesRow = which(driverTestConfMatrix$Var1 == 1 & driverTestConfMatrix$Var2 == FALSE)
+driverTestConfMatrix$Freq[truePositivesRow]/(driverTestConfMatrix$Freq[truePositivesRow] + driverTestConfMatrix$Freq[falseNegativesRow])
 # Specificity
+falsePositivesRow = which(driverTestConfMatrix$Var1 == 0 & driverTestConfMatrix$Var2 == TRUE)
+driverTestConfMatrix$Freq[trueNegativesRow]/(driverTestConfMatrix$Freq[trueNegativesRow] + driverTestConfMatrix$Freq[falsePositivesRow])
+
 
 ################################################## OPTIMIZATION #####################################################
 
