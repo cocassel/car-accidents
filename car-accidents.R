@@ -306,7 +306,7 @@ barplot(height=v_typeCategory$value, names=v_typeCategory$category, xlab = "Coun
 # V_YEAR VISUALIZATION 
 
 v_yearCategory = data.frame(
-  category = c("1901 - 1950","1951 - 1980","1981 - 1990","1991 - 2000","2001 - 2010","2010 -"),
+  category = c("1901 - 1950","1951 - 1980","1981 - 1990","1991 - 2000","2001 - 2010","2010+"),
   value = c(nrow(subset(data, V_YEAR == 1901)),nrow(subset(data, V_YEAR == 1951)),nrow(subset(data, V_YEAR == 1981)),nrow(subset(data, V_YEAR == 1991)),nrow(subset(data, V_YEAR == 2001)),nrow(subset(data, V_YEAR == 2011)))
 )
 par(mar=c(6,6,4,2)+0.1,mgp=c(5,1,0))
@@ -405,7 +405,7 @@ barplot(height=v_type2_Category$value, names=v_type2_Category$category,xlab = "C
 # V_YEAR VISUALIZATION
 
 v_year2_Category = data.frame(
-  category = c("1901 - 1950","1951 - 1980","1981 - 1990","1991 - 2000","2001 - 2010","2010 -"),
+  category = c("1901 - 1950","1951 - 1980","1981 - 1990","1991 - 2000","2001 - 2010","2010+"),
   value = c(nrow(subset(driverData, V_YEAR == 1901)),nrow(subset(driverData, V_YEAR == 1951)),nrow(subset(driverData, V_YEAR == 1981)),nrow(subset(driverData, V_YEAR == 1991)),nrow(subset(driverData, V_YEAR == 2001)),nrow(subset(driverData, V_YEAR == 2011)))
 )
 par(mar=c(6,6,4,2)+0.1,mgp=c(5,1,0))
@@ -684,10 +684,10 @@ predictTest = predict(severeLog1, type = "response", newdata = dataTest)
 # Plot ROC for testing set
 ROCRpred = prediction(predictTest, dataTest$P_ISEV)
 ROCRperf = performance(ROCRpred, "tpr", "fpr")
-png("ROC1.png", width=1200, height=1200)
-par(mar=c(3,3,3,3))
+png("ROC1.png", width=700, height=700)
+par(mar=c(5,5,5,5))
 plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
-title("Model 1 - Receiver Operator Characteristic Curve", cex.main=3)
+title("Model 1 - Receiver Operator Characteristic Curve", cex.main=1.5)
 dev.off()
 
 # Calculate AUC for testing set
@@ -740,10 +740,10 @@ predictTest = predict(severeLog2, type = "response", newdata = dataTest)
 # Plot ROC for testing set
 ROCRpred = prediction(predictTest, dataTest$P_ISEV)
 ROCRperf = performance(ROCRpred, "tpr", "fpr")
-png("ROC2.png", width=1200, height=1200)
-par(mar=c(3,3,3,3))
+png("ROC2.png", width=700, height=700)
+par(mar=c(5,5,5,5))
 plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
-title("Model 2 - Receiver Operator Characteristic Curve", cex.main=3)
+title("Model 2 - Receiver Operator Characteristic Curve", cex.main=1.5)
 dev.off()
 
 # Calculate AUC for testing set
@@ -796,10 +796,10 @@ predictTest = predict(severeLog3, type = "response", newdata = dataTest)
 # Plot ROC for testing set
 ROCRpred = prediction(predictTest, dataTest$P_ISEV)
 ROCRperf = performance(ROCRpred, "tpr", "fpr")
-png("ROC3.png", width=1200, height=1200)
-par(mar=c(3,3,3,3))
+png("ROC3.png", width=700, height=700)
+par(mar=c(5,5,5,5))
 plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
-title("Model 3 - Receiver Operator Characteristic Curve", cex.main=3)
+title("Model 3 - Receiver Operator Characteristic Curve", cex.main=1.5)
 dev.off()
 
 # Calculate AUC for testing set
@@ -851,10 +851,10 @@ predictTest = predict(severeLog4, type = "response", newdata = dataTest)
 # Plot ROC for testing set
 ROCRpred = prediction(predictTest, dataTest$P_ISEV)
 ROCRperf = performance(ROCRpred, "tpr", "fpr")
-png("ROC4.png", width=1200, height=1200)
-par(mar=c(3,3,3,3))
+png("ROC4.png", width=700, height=700)
+par(mar=c(5,5,5,5))
 plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
-title("Model 4 - Receiver Operator Characteristic Curve", cex.main=3)
+title("Model 4 - Receiver Operator Characteristic Curve", cex.main=1.5)
 dev.off()
 
 # Calculate AUC for testing set
@@ -919,10 +919,10 @@ driverPredictTest = predict(severeLog5, type = "response", newdata = driverDataT
 # Plot ROC for testing set
 ROCRpred = prediction(driverPredictTest, driverDataTest$P_ISEV)
 ROCRperf = performance(ROCRpred, "tpr", "fpr")
-png("ROC5.png", width=1200, height=1200)
-par(mar=c(3,3,3,3))
+png("ROC5.png", width=700, height=700)
+par(mar=c(5,5,5,5))
 plot(ROCRperf, colorize = TRUE, print.cutoffs.at = seq(0,1,0.1), text.adj=c(-0.2,2.0)) 
-title("Model 5 - Receiver Operator Characteristic Curve", cex.main=3)
+title("Model 5 - Receiver Operator Characteristic Curve", cex.main=1.5)
 dev.off()
 
 # Calculate AUC for testing set
