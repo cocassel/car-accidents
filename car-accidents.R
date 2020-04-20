@@ -6,7 +6,6 @@ library(corrplot)
 library(cluster) 
 library(gurobi)
 
-#setwd("/Users/Ahmad Dakhqan/Desktop/MSCI 433/Project/car-accidents/")
 setwd("/Users/Celeste/Documents/GitHub/car-accidents/")
 set.seed(3859)
 
