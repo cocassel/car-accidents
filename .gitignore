@@ -2,5 +2,6 @@
 .Rhistory
 .DS_Store
 .RData
+.ipynb_checkpoints
 
 *.zip
