@@ -218,7 +218,7 @@ write.csv(driverData, "cleanedDriverData.csv")
 
 summary(data)
 
-# c_CONF VISUALIZATION
+# C_CONF VISUALIZATION
 
 c_confCategory = data.frame(
   category = c("Single Vehicle in Motion","Two Vehicles in Motion (same direction of travel)","Two Vehicles in Motion (different direction of travel)","Two Vehicles (hit a parked vehicle)"),
