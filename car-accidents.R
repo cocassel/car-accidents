@@ -29,10 +29,6 @@ data$P_ISEV = as.numeric(as.character(data$P_ISEV))
 data$P_ISEV[data$P_ISEV == 1 ] = 0
 data$P_ISEV[data$P_ISEV == 2 | data$P_ISEV == 3] = 1
 
-# data cleaning: P_SEX
-data = data[data$P_SEX != "N",]
-data = data[data$P_SEX != "U",] 
-
 # data cleaning: C_MNTH
 data = data[data$C_MNTH != "UU",]
 data = data[data$C_MNTH != "XX",]
@@ -143,6 +139,10 @@ data$V_YEAR[data$V_YEAR > 2010] = 2011
 # data cleaning: P_ID
 data = data[data$P_ID != "NN",]
 data = data[data$P_ID != "UU",]
+
+# data cleaning: P_SEX
+data = data[data$P_SEX != "N",]
+data = data[data$P_SEX != "U",] 
 
 # data cleaning: P_PSN
 data = data[data$P_PSN != "NN",]
